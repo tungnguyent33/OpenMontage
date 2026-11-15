@@ -273,11 +273,25 @@ class KetQuaGhi:
     canh_bao: list[str] = field(default_factory=list)
 
 
-def kiem_tra_cot_may(tab: Tab, dong: Iterable[dict]) -> None:
+# NGOẠI LỆ DUY NHẤT máy được ghi cột của người (docs/may-reels/NGUYEN-TAC.md mục 2):
+#   khoi_tao: dòng MỚI của Hàng chờ được ghi duyet = "Chờ duyệt" (dòng đã có: không đụng)
+#   sua     : lệnh `sua` đưa duyet từ "Sửa" về "Chờ duyệt" sau khi dựng lại (ô khác "Sửa": không đụng)
+COT_DUYET = "duyet"
+GIA_TRI_CHO = "Chờ duyệt"
+NGOAI_LE_DUYET = {"khoi_tao": None, "sua": "Sửa"}  # tên -> giá trị hiện tại bắt buộc (None = chỉ dòng mới)
+
+
+def kiem_tra_cot_may(tab: Tab, dong: Iterable[dict], ngoai_le_duyet: str | None = None) -> None:
     """Báo lỗi nếu có dòng định ghi vào cột của người hoặc cột không khai báo. Gọi trước khi chạm mạng."""
     nguoi = set(tab.cot_nguoi)
     co = set(tab.ten_cot)
+    if ngoai_le_duyet is not None and ngoai_le_duyet not in NGOAI_LE_DUYET:
+        raise LoiSheet(f"Ngoại lệ không tồn tại: {ngoai_le_duyet!r}")
     for d in dong:
+        if ngoai_le_duyet and COT_DUYET in nguoi and COT_DUYET in d:
+            if d[COT_DUYET] != GIA_TRI_CHO:
+                raise LoiGhiCotNguoi(f"Ngoại lệ {ngoai_le_duyet}: cột duyet chỉ được ghi {GIA_TRI_CHO!r}")
+            d = {k: v for k, v in d.items() if k != COT_DUYET}
         sai = sorted(set(d) & nguoi)
         if sai:
             raise LoiGhiCotNguoi(f"Tab {tab.ten!r}: máy không được ghi cột của người {sai}")
@@ -304,6 +318,7 @@ def ghi_theo_khoa(
     chi_khi_trong: Iterable[str] = (),
     thu: bool = False,
     bay_gio: Callable[[], str] = bay_gio_vn,
+    ngoai_le_duyet: str | None = None,
 ) -> KetQuaGhi:
     """Thêm hoặc cập nhật dòng theo khóa của tab. Chỉ ghi cột của máy.
 
@@ -314,7 +329,7 @@ def ghi_theo_khoa(
     """
     if tab.chi_them:
         raise LoiSheet(f"Tab {tab.ten!r} không có khóa; dùng them_nhat_ky()")
-    kiem_tra_cot_may(tab, dong)
+    kiem_tra_cot_may(tab, dong, ngoai_le_duyet)
     chi_khi_trong = set(chi_khi_trong)
     da_thay: set[tuple[str, ...]] = set()
     for d in dong:
@@ -360,6 +375,9 @@ def ghi_theo_khoa(
                     if v is None or ten in tab.khoa:
                         continue
                     hien = _o(h, cot[ten])
+                    if ten == COT_DUYET and ngoai_le_duyet:
+                        if NGOAI_LE_DUYET[ngoai_le_duyet] is None or hien != NGOAI_LE_DUYET[ngoai_le_duyet]:
+                            continue  # khoi_tao không đụng dòng cũ; sua chỉ đổi ô đang là "Sửa"
                     if ten in chi_khi_trong and hien:
                         continue
                     if chuan(v) != hien:
@@ -374,6 +392,8 @@ def ghi_theo_khoa(
             else:
                 moi = [""] * so_cot_tieu_de
                 for ten, v in d.items():
+                    if ten == COT_DUYET and ngoai_le_duyet != "khoi_tao":
+                        continue
                     if v is not None:
                         moi[cot[ten] - 1] = chuan(v)
                 if tab.tu_dong_cap_nhat:

@@ -212,7 +212,7 @@ Người dùng trả lời ngày 2026-11-15. Số câu giữ đúng thứ tự c
 
 9. Chọn **phương án 2**: manifest riêng `pipeline_defs/may-reels.yaml`. Đã ghi vào "Điểm chạm upstream" của `NGUYEN-TAC.md`.
 10. Chạy `claude -p` theo lịch của Windows Task Scheduler trên chính máy này. Điều kiện: **phải chạy thử thật ở bước sản xuất** trước khi tin dùng. Sổ chi phí ghi **số lượt chạy** và **thời gian chạy** của trợ lý, không đo token.
-11. Runtime là **HyperFrames**, chốt một lần trong `brand/vanxuan/`, sau đó máy không hỏi lại. Điều kiện: phải dựng xong được một video từ đầu đến cuối. **Chưa đạt**, vì `projects/vx-demo-01/renders/` vẫn trống. Do đó chưa ghi runtime vào `brand/vanxuan/cau-hinh.yaml`.
+11. Runtime là **HyperFrames**, chốt một lần trong `brand/vanxuan/`, sau đó máy không hỏi lại. Điều kiện: phải dựng xong được một video từ đầu đến cuối. **Đã đạt ngày 2026-11-15** với `projects/vx-005-a1-xe-150cc` (xem mục 8). Runtime đã ghi vào `brand/vanxuan/san-xuat.yaml`.
 12. Ngưỡng **75 điểm**. Trượt sau 2 vòng sửa thì video vẫn vào hàng chờ, kèm cảnh báo "Dưới ngưỡng".
 
 **Nội dung và quyền**
@@ -221,7 +221,7 @@ Người dùng trả lời ngày 2026-11-15. Số câu giữ đúng thứ tự c
 14. Với mỗi nguồn luật, lưu vào dự án: link, ngày mở, và điều khoản được dẫn. **Người duyệt chủ đề** chịu trách nhiệm xác nhận điều khoản đúng.
 15. Máy **được tự cắt khung** theo vùng ghi trong `can_xu_ly`. Máy **không tự làm mờ** mặt người và biển số. Cảnh cần làm mờ thì chỉ dùng đoạn không cần xử lý.
 16. **Chưa dùng nhạc nền.**
-17. Dùng giọng VieNeu "Hải Đăng" làm tool chính thức hay chờ người dùng kiểm tra giấy phép: **chưa chốt** (bản trả lời còn để trống). Trong lúc chờ, không viết `tools/audio/vieneu_tts.py`.
+17. Dùng giọng VieNeu "Hải Đăng" làm tool chính thức hay chờ người dùng kiểm tra giấy phép: bản trả lời ban đầu còn để trống. **Cập nhật 2026-11-15:** người dùng chốt giọng VieNeu "Hải Đăng" trong `brand/vanxuan/san-xuat.yaml`. Máy gọi VieNeu qua `may_reels/giong.py`, không qua tool trong `tools/audio/`. Giấy phép thương mại của VieNeu vẫn **chưa xác minh**.
 
 **Dữ liệu trên repo public**
 
@@ -241,9 +241,44 @@ Người dùng trả lời ngày 2026-11-15. Số câu giữ đúng thứ tự c
 
 - Câu 5: có quyền admin Fanpage chưa; kênh YouTube nào.
 - Câu 6: số video mỗi ngày (xác nhận 1), giờ đăng 11:30 hay 19:30.
-- Câu 17: giọng VieNeu.
-- Câu 11: chốt runtime sau khi dựng xong một video từ đầu đến cuối.
+- Giấy phép thương mại của VieNeu và PhoWhisper (câu 17): chưa xác minh.
 - Có viết lại lịch sử git để xóa bản `brand.json` cũ khỏi GitHub hay không (xem câu 18).
+
+---
+
+## 8. Dựng một video từ đầu đến cuối (Việc 1, ngày 2026-11-15)
+
+- **Dự án:** `projects/vx-005-a1-xe-150cc`, cùng chủ đề với vx-demo-01, dựng bằng manifest `pipeline_defs/may-reels.yaml`.
+  - Có checkpoint ở cả 7 stage.
+  - Có file `renders/final.mp4`: 1080×1920, 30 fps, 49,3 giây, −14,0 LUFS.
+  - `final_review` đạt `pass`.
+  - Stage publish chỉ dùng `export_bundle` và dừng ở `awaiting_human`.
+  - Cổng idea ghi `human_approved=True` kèm tham chiếu ô `duyet_chu_de = "Làm"` trên Sheet.
+- **Thời gian từng stage** (lần chạy cuối):
+
+  | Stage | Thời gian |
+  |---|---|
+  | idea | 2,4 giây |
+  | script | 0,1 giây |
+  | scene_plan | 0,1 giây |
+  | assets | khoảng 12 phút ở lần sinh giọng thật (29 lần sinh và nghe lại); 31 giây khi dùng lại cache |
+  | edit | 0,2 giây |
+  | compose | khoảng 2,5 phút (render 147 giây) |
+  | publish | 0,2 giây |
+
+- **Các chỗ agent còn muốn hỏi người**, kèm cách đã xử lý:
+  1. Chọn runtime: chốt trong `san-xuat.yaml`.
+  2. Chọn giọng: chốt trong `san-xuat.yaml`.
+  3. Có nhạc không: chốt trong `san-xuat.yaml`.
+  4. Đổi cảnh trùng ở s6: thành luật "không lặp cảnh trong video".
+  5. Thời lượng giữ màn kết: thành `khung_hinh.giu_man_ket_giay`.
+  6. Bản giọng nào đúng: PhoWhisper nghe lại, thay cho việc người nghe.
+  7. Âm lượng sau khi HyperFrames trộn lại (−12,2 LUFS): thêm bước chuẩn hóa sau render.
+  8. Hook dài 6,2 giây: thành luật "hook trong 3 giây". Luật này có sau khi `vx-005` đã dựng, nên `vx-005` vẫn vi phạm.
+- **Đã sửa trong quá trình dựng:**
+  - Giọng VieNeu đôi khi nuốt số hoặc đọc sai, nên bước sinh giọng có nghe lại tự động (`may_reels/giong.py`).
+  - Bản đầu ghi checkpoint compose là `completed` dù `final_review` = `revise`; đã sửa thành chỉ ghi `completed` khi kết quả là `pass`.
+- **Kiểm tra bộ dựng chung `may_reels/dung/`:** dự án `projects/vx-thu-may` (cùng nội dung, hook rút còn 2,7 giây) đạt điểm QA 100, dài 45,3 giây.
 
 ---
 

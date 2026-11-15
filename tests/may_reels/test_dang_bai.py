@@ -83,6 +83,10 @@ def moi_truong(tmp_path, monkeypatch):
     video.write_bytes(b"video-1")
     cap = tmp_path / "caption.txt"
     cap.write_text("Ngã tư không đèn: ai đi trước?\nXem hết video nhé.", encoding="utf-8")
+    xem_thu = tmp_path / "drive-dong-bo"
+    xem_thu.mkdir()
+    monkeypatch.setenv("MAY_REELS_XEM_THU_DIR", str(xem_thu))
+    monkeypatch.setenv("MAY_REELS_XEM_THU_LINK", "https://drive.example/thu-muc")
     bang = BangGia()
     S.khoi_tao(bang)
     api = APIGia()
@@ -95,11 +99,10 @@ def moi_truong(tmp_path, monkeypatch):
                            do=lambda p: CHUAN, ngu=ngu.append, **kw)
 
     def them(**kw):
-        return them_video(bang, video=video, kenh="kenhthu", caption_file=cap, drive=DriveGia(), goc=goc,
-                          do=lambda p: CHUAN, **kw)
+        return them_video(bang, video=video, kenh="kenhthu", caption_file=cap, goc=goc, do=lambda p: CHUAN, **kw)
 
     return {"goc": goc, "bang": bang, "api": api, "so": so, "chay": chay, "them": them, "video": video,
-            "cap": cap, "ngu": ngu}
+            "cap": cap, "ngu": ngu, "xem_thu": xem_thu}
 
 
 def hc(bang):
@@ -130,20 +133,37 @@ def test_hang_cho_them_tao_moi_nen_tang_mot_dong_cot_nguoi_trong(moi_truong):
     b = moi_truong["bang"]
     for nt, tag in (("fb_reels", "#fb"), ("yt_shorts", "#yt"), ("tiktok", "#tt")):
         d = dong(b, "video-thu", nt)
-        assert d["duyet"] == "" and d["ghi_chu_sua"] == "" and d["gio_dang"] == ""
+        assert d["duyet"] == "Chờ duyệt" and d["ghi_chu_sua"] == "" and d["gio_dang"] == ""
+        assert d["trang_thai_dang"] == "" and d["id_bai"] == ""
         assert d["hashtag"] == tag and d["canh_bao"] == CANH_BAO_CO_SAN
-        assert d["link_xem_thu"].startswith("https://drive.example/file/")
+        assert d["link_xem_thu"] == "video-thu.mp4 — https://drive.example/thu-muc"
+        thu_muc = moi_truong["goc"] / d["ghi_chu_may"].split(": ", 1)[1]
+        assert (thu_muc / "metadata" / "description.txt").is_file() and list((thu_muc / "video").glob("*.mp4"))
+    assert (moi_truong["xem_thu"] / "video-thu.mp4").read_bytes() == b"video-1"
     ban_ghi = json.loads((moi_truong["goc"] / "projects/_may_reels/hang_cho/video-thu.json").read_text(encoding="utf-8"))
     assert ban_ghi["sha1"] and ban_ghi["video"].endswith("Video Thử.mp4")
 
 
-def test_hang_cho_them_chay_lai_khong_trung_khong_tai_lai(moi_truong):
+def test_hang_cho_them_chay_lai_khong_trung(moi_truong):
     moi_truong["them"]()
-    d = DriveGia()
-    kq = them_video(moi_truong["bang"], video=moi_truong["video"], kenh="kenhthu", caption_file=moi_truong["cap"],
-                    drive=d, goc=moi_truong["goc"], do=lambda p: CHUAN)
-    assert kq.them == 0 and d.tai == []
+    kq = moi_truong["them"]()
+    assert kq.them == 0 and kq.loi == []
     assert len(hc(moi_truong["bang"]).doc_tat_ca()) == 4
+
+
+def test_hang_cho_thieu_thu_muc_xem_thu_thi_ghi_duong_dan_may(moi_truong, monkeypatch):
+    monkeypatch.delenv("MAY_REELS_XEM_THU_DIR")
+    kq = moi_truong["them"]()
+    assert kq.link_xem_thu == str(moi_truong["video"].resolve())
+    assert any("MAY_REELS_XEM_THU_DIR" in c for c in kq.canh_bao)
+    assert "MAY_REELS_XEM_THU_DIR" in dong(moi_truong["bang"], "video-thu", "fb_reels")["canh_bao"]
+
+
+def test_hang_cho_khoi_tao_khong_de_duyet_cua_nguoi(moi_truong):
+    moi_truong["them"]()
+    nguoi_dat(moi_truong["bang"], "video-thu", "fb_reels", "duyet", "")  # người xóa ô
+    moi_truong["them"]()
+    assert dong(moi_truong["bang"], "video-thu", "fb_reels")["duyet"] == ""
 
 
 @pytest.mark.parametrize("caption,tim", [("Tỉ lệ đỗ 100%", "tỉ lệ đỗ"), ("CAM TUYỆT ĐỐI", "cam tuyệt đối")])
@@ -155,7 +175,7 @@ def test_hang_cho_them_tu_choi_cum_tu_cam(moi_truong, caption, tim):
 
 def test_hang_cho_them_tu_choi_sai_thong_so(moi_truong):
     kq = them_video(moi_truong["bang"], video=moi_truong["video"], kenh="kenhthu", caption_file=moi_truong["cap"],
-                    drive=DriveGia(), goc=moi_truong["goc"], do=lambda p: ThongSo(1920, 1080, 120.0, 30.0))
+                    goc=moi_truong["goc"], do=lambda p: ThongSo(1920, 1080, 120.0, 30.0))
     assert any("9:16" in x for x in kq.loi) and any("fb_reels" in x and "90" in x for x in kq.loi)
     assert len(hc(moi_truong["bang"]).doc_tat_ca()) == 1
 
@@ -169,10 +189,10 @@ def test_hang_cho_them_khong_doi_dong_da_duyet(moi_truong):
 
 
 def test_hang_cho_them_che_do_thu_khong_ghi(moi_truong):
-    d = DriveGia()
     kq = them_video(moi_truong["bang"], video=moi_truong["video"], kenh="kenhthu", caption_file=moi_truong["cap"],
-                    drive=d, goc=moi_truong["goc"], do=lambda p: CHUAN, thu=True)
-    assert kq.them == 3 and d.tai == [] and len(hc(moi_truong["bang"]).doc_tat_ca()) == 1
+                    goc=moi_truong["goc"], do=lambda p: CHUAN, thu=True)
+    assert kq.them == 3 and len(hc(moi_truong["bang"]).doc_tat_ca()) == 1
+    assert list(moi_truong["xem_thu"].iterdir()) == []
 
 
 # ---------------------------------------------------------------- dang: duyệt và chạy thử

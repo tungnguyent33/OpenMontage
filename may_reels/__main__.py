@@ -3,6 +3,9 @@
     python -m may_reels sheet init [--thu]
     python -m may_reels sheet nap-chu-de --kenh <mã> [--thu]
     python -m may_reels hang-cho them --video <mp4> --kenh <mã> --caption-file <txt> [--ma <mã video>] [--thu]
+    python -m may_reels dung --du-an <ma_video> [--stage ...]
+    python -m may_reels san-xuat --kenh <mã> --so-luong 3
+    python -m may_reels sua
     python -m may_reels dang [--that]
     python -m may_reels dang-nhap drive
     python -m may_reels dang-nhap youtube --kenh <mã>
@@ -13,6 +16,7 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 import sys
 import time
 
@@ -154,6 +158,47 @@ def lenh_dang_nhap(a) -> int:
     return 0
 
 
+def lenh_dung(a) -> int:
+    """Dựng một dự án có ke_hoach.json. Dòng cuối stdout là JSON tóm tắt. Mã thoát: 0 ok, 10 kế hoạch sai,
+    11 thiếu cảnh, 12 không qua tự kiểm, 13 cổng idea chưa mở, 1 lỗi khác."""
+    import json
+    from may_reels.dung.pipeline import LoiCongDuyet, LoiKeHoach, LoiQA, LoiThieuCanhDung, Pipeline
+    tom: dict = {"ma_video": a.du_an}
+    ma = 0
+    try:
+        kq = Pipeline(a.du_an).chay(a.stage or None)
+        tom.update(diem_qa=kq.diem_qa, canh_bao=kq.canh_bao, thoi_gian=kq.thoi_gian,
+                   video=str(kq.video) if kq.video else None)
+        c = Path("projects") / a.du_an / "checkpoint_compose.json"
+        if c.exists():
+            tom["tru_diem"] = json.loads(c.read_text(encoding="utf-8"))["artifacts"]["final_review"]["metadata"].get("tru_diem")
+    except LoiKeHoach as e:
+        ma, tom["loi"] = 10, str(e)
+    except LoiThieuCanhDung as e:
+        ma, tom["loi"], tom["thieu_canh"] = 11, str(e), e.thieu
+    except LoiQA as e:
+        ma, tom["loi"] = 12, str(e)
+    except LoiCongDuyet as e:
+        ma, tom["loi"] = 13, str(e)
+    print(json.dumps(tom, ensure_ascii=False))
+    return ma
+
+
+def lenh_san_xuat(a) -> int:
+    from may_reels.san_xuat import san_xuat
+    ds = san_xuat(mo_tu_env(), a.kenh, a.so_luong)
+    for k in ds:
+        print(f"{k.ma_video}: {k.trang_thai} | QA {k.diem_qa} | {k.giay:.0f}s (agent {k.giay_agent:.0f}s, "
+              f"{k.so_luot_agent} lượt, vòng sửa {k.vong}) | {'; '.join(k.canh_bao)} {k.loi}")
+    return 0 if all(k.trang_thai != "loi" for k in ds) else 1
+
+
+def lenh_sua(a) -> int:
+    from may_reels.sua import sua
+    ds = sua(mo_tu_env())
+    return 0 if all(k["trang_thai"] != "loi" for k in ds) else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="python -m may_reels")
     sub = ap.add_subparsers(dest="nhom", required=True)
@@ -180,6 +225,19 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("dang", help="đăng các dòng đã Duyệt trong Hàng chờ (mặc định chạy thử)")
     p.add_argument("--that", action="store_true", help="ĐĂNG THẬT")
     p.set_defaults(ham=lenh_dang)
+
+    p = sub.add_parser("dung", help="dựng một dự án từ ke_hoach.json (pipeline may-reels)")
+    p.add_argument("--du-an", required=True, help="mã video = tên thư mục trong projects/")
+    p.add_argument("--stage", nargs="+", choices=["idea", "script", "scene_plan", "assets", "edit", "compose", "publish"])
+    p.set_defaults(ham=lenh_dung)
+
+    p = sub.add_parser("san-xuat", help="sản xuất các chủ đề đã chọn Làm (agent + dựng + hàng chờ)")
+    p.add_argument("--kenh", required=True)
+    p.add_argument("--so-luong", type=int, default=3)
+    p.set_defaults(ham=lenh_san_xuat)
+
+    p = sub.add_parser("sua", help="sửa và dựng lại các video được chọn Sửa trên Hàng chờ")
+    p.set_defaults(ham=lenh_sua)
 
     p = sub.add_parser("dang-nhap", help="đăng nhập OAuth Google một lần (mở trình duyệt)")
     p.add_argument("dich_vu", choices=["drive", "youtube"])

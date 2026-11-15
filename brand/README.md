@@ -8,6 +8,8 @@ brand/
 │   ├── brand.json              SINH TỰ ĐỘNG từ thư mục kênh — đừng sửa tay
 │   ├── quy-tac-rieng.yaml      SỬA TAY — cụm từ cấm, quy tắc nội dung, nguồn cảnh bị loại
 │   ├── cau-hinh.yaml           SỬA TAY — tiền tố mã video, thư mục video, font
+│   ├── san-xuat.yaml           SỬA TAY — quyết định sản xuất chốt một lần (runtime, giọng, nhạc, khung nhịp...)
+│   ├── dang-bai.yaml           SỬA TAY — tên biến token + ID Page/kênh (không chứa khóa)
 │   ├── assets/                 logo.png, logo-emblem.png, fonts/
 │   └── _local/                 SINH TỰ ĐỘNG, GITIGNORE — toàn văn context/*.md (không đưa lên repo public)
 └── <kênh-khác>/                (thêm sau, cùng cấu trúc)

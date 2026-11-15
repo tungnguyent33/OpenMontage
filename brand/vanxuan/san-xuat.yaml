@@ -1,0 +1,100 @@
+# Quyết định sản xuất của kênh, CHỐT MỘT LẦN. Máy đọc file này thay vì dừng lại hỏi người.
+# File này SỬA TAY. Đổi một quyết định ở đây = đổi cho mọi video sau của kênh.
+# Nguồn quyết định: docs/may-reels/KE-HOACH.md mục 6 và prompt ngày 2026-11-15.
+# Đọc bởi: may_reels/dung/ (dựng tất định) và skills/may-reels/san-xuat-khong-hoi.md (agent viết kế hoạch).
+
+pipeline: may-reels
+runtime: hyperframes            # Remotion đã cân nhắc và loại (KE-HOACH.md câu 11). Đã dựng được vx-005-a1-xe-150cc.
+hyperframes_phien_ban: "0.9.46"
+
+giong:
+  cong_cu: vieneu               # VieNeu-TTS v3 Turbo, ONNX, CPU, offline
+  ten: "Hải Đăng"
+  nghe_lai: kiendt/PhoWhisper-large-ct2   # máy nghe lại từng đoạn và chọn bản đúng (may_reels/giong.py)
+  so_lan_thu: 10
+  nguong_khop: 0.95
+  nghi_giua_doan_giay: 0.30
+
+nhac_nen: khong                 # KE-HOACH.md câu 16
+
+khung_hinh:
+  rong: 1080
+  cao: 1920
+  fps: 30
+  thoi_luong_giay: [30, 50]     # ngoài khoảng này thì không vào hàng chờ (kiểm tra cả lúc lập kế hoạch và sau khi dựng)
+  giu_man_ket_giay: 1.5         # giữ màn kết sau câu CTA
+
+am_thanh:
+  lufs: -14
+  dinh_dbtp: -1.0
+
+phu_de:
+  bat: true
+  kieu: tung-chu                # hiện theo từng chữ theo mốc PhoWhisper; từ khóa (số, mã hạng bằng) màu cam
+  chu_hoa: true
+
+man_ket:
+  logo: true
+  hotline: true                 # lấy từ brand.json lien_he.zalo / hotline, chèn nguyên văn
+  dia_chi: true
+  logo_chu:                     # chữ cạnh logo trên khung và màn kết
+    dong1: "ĐÀO TẠO LÁI XE"
+    dong2: "VẠN"
+    dong2_nhan: "XUÂN"          # phần tô màu cam
+
+chi_phi:
+  tran_usd: 0                   # chỉ công cụ miễn phí chạy trên máy; công cụ trả phí bị cấm
+
+cham_diem:
+  nguong: 75                    # KE-HOACH.md câu 12
+  so_vong_sua: 2                # trượt sau 2 vòng thì vẫn vào hàng chờ kèm cảnh báo "Dưới ngưỡng"
+
+canh:
+  khong_lap_trong_video: true   # một cảnh không dùng quá một lần trong cùng video...
+  lap_duoc_neu_the: [noi-truoc-may]   # ...trừ cảnh có thẻ này (cảnh nói trước máy)
+  uu_tien_it_dung: true         # chọn cảnh ít được dùng ở các video trước
+  tu_cat_khung: true            # được cắt khung theo can_xu_ly (KE-HOACH.md câu 15)
+  tu_lam_mo: false              # không tự làm mờ mặt/biển số: chỉ dùng đoạn không cần xử lý
+  tranh_them:                   # khoảng cần tránh ngoài doan_dung_duoc (giây trong file gốc)
+    snaptik-vn-7707073360106179892-936e3b: [[16, 18], [29, 30]]   # quyen_hinh.bo_sung: thấy biển số
+
+# Khung nhịp cố định theo trụ cột nội dung (kenh.tru_cot_noi_dung trong brand.json).
+# Mỗi khung: hook 0-3 giây, thân, chốt, CTA. Số đoạn và độ dài tính bằng giây giọng đọc.
+# Âm tiết/giây của giọng Hải Đăng đo ở vx-005: 204 âm tiết trong 45,8 giây giọng (không tính nghỉ) = 4,45.
+am_tiet_moi_giay: 4.45
+khung_nhip:
+  hoi-nhanh-dap-dung:
+    tru_cot: "Hỏi nhanh đáp đúng"
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Đọc nguyên câu hỏi hay nhầm, chữ to trên màn hình"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Đáp án đúng + vì sao, mỗi đoạn một ý, có nguồn nếu là luật"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Một câu dễ nhớ để chốt"}
+      - {vai: cta, giay: [3, 6], mo_ta: "CTA của kênh, xoay vòng theo brand.json cta"}
+  dung-hay-sai:
+    tru_cot: "Đúng hay sai?"
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Nêu quan niệm phổ biến + 'Đúng hay sai?'"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Thầy chốt đúng/sai, giải thích, có nguồn"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Kết luận một câu"}
+      - {vai: cta, giay: [3, 6], mo_ta: "CTA của kênh"}
+  loi-sa-hinh:
+    tru_cot: "Lỗi khi thi sa hình"
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Gọi tên lỗi hay bị trừ điểm"}
+      - {vai: than, so_doan: [2, 5], giay_moi_doan: [3, 7], mo_ta: "Từng lỗi: làm sai thế nào, cách tránh"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Mẹo nhớ"}
+      - {vai: cta, giay: [3, 6], mo_ta: "CTA của kênh"}
+  mot-phut-luat-moi:
+    tru_cot: "1 phút luật mới"
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Câu hỏi luật cụ thể"}
+      - {vai: than, so_doan: [3, 5], giay_moi_doan: [3, 9], mo_ta: "Mốc hiệu lực, quy định, áp dụng; MỌI đoạn luật có source_ref (văn bản, Điều, khoản, link đã mở)"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Việc người xem cần làm"}
+      - {vai: cta, giay: [3, 6], mo_ta: "CTA của kênh"}
+  hau-truong:
+    tru_cot: "Hậu trường"
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Khoảnh khắc thật ở sân tập/ngày thi"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Chuỗi cảnh thật, ít chữ"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Một câu cảm nhận"}
+      - {vai: cta, giay: [3, 6], mo_ta: "CTA của kênh"}

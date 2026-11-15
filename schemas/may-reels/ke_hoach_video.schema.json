@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "may-reels/ke_hoach_video.schema.json",
+  "title": "KeHoachVideo",
+  "description": "Phần SÁNG TẠO của một video Máy Reels, do agent viết theo skills/may-reels/san-xuat-khong-hoi.md. Mọi bước dựng sau đó là Python tất định (may_reels/dung/). Kiểm tra nội dung (cụm từ cấm, nguồn luật, cảnh, nhịp) nằm ở may_reels/dung/ke_hoach.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["phien_ban", "ma_video", "kenh", "ma_chu_de", "tieu_de", "khung_nhip", "nguon_luat", "doan", "caption", "thieu_canh", "quyet_dinh"],
+  "properties": {
+    "phien_ban": {"const": 1},
+    "ma_video": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "kenh": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "ma_chu_de": {"type": "string", "minLength": 1},
+    "tieu_de": {"type": "string", "minLength": 1, "maxLength": 100, "description": "Dòng đầu caption và tiêu đề YouTube"},
+    "khung_nhip": {"type": "string", "description": "Khóa trong san-xuat.yaml khung_nhip"},
+    "nguon_luat": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "van_ban", "ten_ngan", "dieu_khoan", "link", "ngay_mo", "trich_nguyen_van"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^n[0-9]+$"},
+          "van_ban": {"type": "string", "minLength": 1},
+          "ten_ngan": {"type": "string", "minLength": 1, "description": "Dòng nguồn trên màn hình, ví dụ 'Luật 36/2024/QH15'"},
+          "dieu_khoan": {"type": "string", "minLength": 1},
+          "link": {"type": "string", "pattern": "^https?://"},
+          "ngay_mo": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+          "trich_nguyen_van": {"type": "string", "minLength": 10}
+        }
+      }
+    },
+    "doan": {
+      "type": "array", "minItems": 4, "maxItems": 10,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "vai", "loi", "nguon_ids", "the", "canh"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^s[0-9]+$"},
+          "vai": {"enum": ["hook", "than", "chot", "cta"]},
+          "loi": {"type": "string", "minLength": 2, "description": "Lời đọc = phụ đề, đúng chính tả, số viết bằng chữ số"},
+          "doc_rieng": {"type": "string", "description": "Cách đọc riêng cho TTS nếu khác lời (hiếm khi cần)"},
+          "nguon_ids": {"type": "array", "items": {"type": "string"}},
+          "the": {
+            "oneOf": [
+              {"type": "null"},
+              {"type": "object", "additionalProperties": false, "required": ["dong1", "dong2", "mau", "kieu"],
+               "properties": {"dong1": {"type": "string", "minLength": 1, "maxLength": 22},
+                              "dong2": {"type": "string", "minLength": 1, "maxLength": 34},
+                              "mau": {"enum": ["cam", "xanh"]},
+                              "kieu": {"enum": ["hook", "wipe", "word", "scale"]}}}
+            ]
+          },
+          "canh": {
+            "oneOf": [
+              {"type": "null"},
+              {"type": "object", "additionalProperties": false, "required": ["ma", "mo_ta"],
+               "properties": {"ma": {"type": "string"}, "vao": {"type": ["number", "null"], "minimum": 0},
+                              "mo_ta": {"type": "string"}, "ly_do_chon": {"type": "string"}}}
+            ]
+          }
+        }
+      }
+    },
+    "caption": {
+      "type": "object", "additionalProperties": false, "required": ["fb_reels", "yt_shorts", "tiktok"],
+      "properties": {"fb_reels": {"type": "string", "minLength": 10}, "yt_shorts": {"type": "string", "minLength": 10},
+                     "tiktok": {"type": "string", "minLength": 10}}
+    },
+    "thieu_canh": {
+      "type": "array",
+      "items": {"type": "object", "additionalProperties": false, "required": ["doan", "y_can_canh", "mo_ta_canh", "goi_y_quay", "ly_do"],
+                "properties": {"doan": {"type": "string"}, "y_can_canh": {"type": "string"}, "mo_ta_canh": {"type": "string"},
+                               "goi_y_quay": {"type": "string"}, "ly_do": {"type": "string"}}}
+    },
+    "quyet_dinh": {
+      "type": "array",
+      "description": "Các quyết định agent tự đưa ra (không hỏi người), ghi vào decision_log",
+      "items": {"type": "object", "required": ["category", "subject", "selected", "reason"],
+                "properties": {"category": {"type": "string"}, "subject": {"type": "string"}, "selected": {"type": "string"},
+                               "reason": {"type": "string"}, "options_considered": {"type": "array"}}}
+    }
+  }
+}

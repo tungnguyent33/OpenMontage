@@ -241,7 +241,7 @@ Muốn chắc chắn 0 đồng: thêm câu **"chỉ dùng công cụ miễn phí
 
 ---
 
-## 10. Máy Reels (đang xây: đã có lớp nối Sheet và khâu đăng bài, chưa đăng thật)
+## 10. Máy Reels (đang xây: sản xuất vào Hàng chờ chạy được; đăng bài tạm hoãn)
 
 Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xuất và đăng video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh. Bạn chỉ duyệt trên Google Sheet ở hai chỗ: duyệt chủ đề và duyệt video trước khi đăng. Hiện đã có lớp nối Google Sheet (`may_reels/`). Phần sản xuất và đăng video chưa có. Tài liệu:
 
@@ -267,7 +267,38 @@ tools_local\py.cmd -m may_reels sheet nap-chu-de --kenh vanxuan           # đ�
 - Cột nền vàng là cột của bạn, máy không ghi vào đó.
 - Trên tab Ý tưởng, chọn **Làm** để duyệt một chủ đề. Trên tab Hàng chờ, chọn **Duyệt** để cho đăng.
 
-**Đăng bài** (làm theo `CAI-DAT-DANG-BAI.md` trước):
+**Sản xuất video vào Hàng chờ**
+
+Cấu hình một lần:
+- Trong `.env`, đặt `MAY_REELS_XEM_THU_DIR` là thư mục đồng bộ của Google Drive for desktop. Máy chép bản xem thử vào đây.
+- Có thể đặt thêm `MAY_REELS_XEM_THU_LINK` là link của thư mục đó trên Drive.
+- Các quyết định sản xuất của kênh nằm trong `brand/<kênh>/san-xuat.yaml`:
+  - runtime HyperFrames, giọng VieNeu "Hải Đăng", không nhạc;
+  - 1080×1920, 30 fps, 30–50 giây;
+  - phụ đề, màn kết có logo và hotline;
+  - trần chi phí 0 USD;
+  - khung nhịp cho từng trụ cột nội dung.
+
+```powershell
+tools_local\py.cmd -m may_reels san-xuat --kenh vanxuan --so-luong 3   # các chủ đề đã chọn "Làm" -> Hàng chờ
+tools_local\py.cmd -m may_reels sua                                     # dựng lại các dòng chọn "Sửa" theo ghi_chu_sua
+tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng lại một dự án có sẵn ke_hoach.json
+```
+
+- **`san-xuat`** xử lý từng chủ đề như sau:
+  1. Gọi Claude Code không tương tác (`claude -p`) với skill `skills/may-reels/san-xuat-khong-hoi.md`. Agent chỉ viết `projects/<mã video>/ke_hoach.json` (lời đọc, thẻ chữ, nguồn luật, cảnh từ kho, caption).
+  2. Máy tự dựng: sinh giọng có nghe lại, cắt cảnh, HyperFrames, tự kiểm, chấm điểm QA.
+  3. Video đạt thì vào **Hàng chờ** với `duyet` = "Chờ duyệt". Thiếu cảnh thật thì vào **Cần quay**.
+
+  Điểm dưới 75 sau 2 vòng sửa thì video vẫn vào Hàng chờ, kèm cảnh báo "Dưới ngưỡng". Job hỏng không làm dừng job khác. Mỗi job ghi một dòng vào Nhật ký, gồm thời gian chạy và số lượt chạy trợ lý.
+- **Thời gian:** mỗi video mất khoảng 20–40 phút trên máy này. Phần lâu nhất là sinh và nghe lại giọng trên CPU. Giới hạn thời gian của agent và của bước dựng đặt bằng `MAY_REELS_GIAY_AGENT` và `MAY_REELS_GIAY_DUNG`.
+- **Duyệt trên tab Hàng chờ:**
+  - Chọn **Duyệt** để cho đăng.
+  - Chọn **Sửa** và ghi lý do vào `ghi_chu_sua`, rồi chạy lệnh `sua`. Máy sửa kế hoạch, dựng lại (đoạn giọng không đổi thì dùng lại), cập nhật bản xem thử (tên file có hậu tố `-v2`, `-v3`…) và đưa ô về "Chờ duyệt".
+  - Muốn sửa một nền tảng thì các nền tảng khác của cùng video cũng phải chưa chọn "Duyệt"/"Bỏ", vì máy không thay video đã có lời duyệt.
+- **Thư mục đăng tay** của từng nền tảng (video + `description.txt`) được ghi ở cột `ghi_chu_may`.
+
+**Đăng bài** (tạm hoãn; làm theo `CAI-DAT-DANG-BAI.md` trước):
 
 ```powershell
 tools_local\py.cmd -m may_reels dang-nhap drive                     # một lần, mở trình duyệt

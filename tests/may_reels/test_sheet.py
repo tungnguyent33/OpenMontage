@@ -37,7 +37,7 @@ def test_khai_bao_cot_dung_yeu_cau():
     assert Y_TUONG.lay("duyet_chu_de").lua_chon == ("Chờ", "Làm", "Bỏ")
     assert HANG_CHO.ten_cot == ["ma_video", "kenh", "nen_tang", "link_xem_thu", "caption", "hashtag", "diem_qa",
                                 "canh_bao", "duyet", "ghi_chu_sua", "gio_dang", "trang_thai_dang", "link_bai",
-                                "id_bai", "loi", "cap_nhat_luc"]
+                                "id_bai", "loi", "cap_nhat_luc", "ghi_chu_may"]
     assert HANG_CHO.cot_nguoi == ["duyet", "ghi_chu_sua", "gio_dang"]
     assert HANG_CHO.lay("duyet").lua_chon == ("Chờ duyệt", "Duyệt", "Sửa", "Bỏ")
     assert HANG_CHO.khoa == ("ma_video", "nen_tang")
@@ -336,3 +336,38 @@ def test_adapter_gspread_ghi_raw_va_append_cuoi_bang():
     assert kw2 == {"value_input_option": ValueInputOption.raw, "insert_data_option": InsertDataOption.insert_rows,
                    "table_range": "A1"}
     assert (t.title, t.sheet_id, t.so_cot) == ("Hàng chờ", 7, 16)
+
+
+# ---------------------------------------------------------------- ngoại lệ cột duyet
+def test_ngoai_le_khoi_tao_chi_ghi_dong_moi_va_chi_cho_duyet(bang):
+    hc = bang.tab("Hàng chờ")
+    S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "x-1", "nen_tang": "tiktok", "duyet": "Chờ duyệt"}],
+                    ngoai_le_duyet="khoi_tao", bay_gio=GIO)
+    assert hc.lay(2, cot(hc, "duyet")) == "Chờ duyệt"
+    hc.dat(2, cot(hc, "duyet"), "Duyệt")  # người duyệt
+    S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "x-1", "nen_tang": "tiktok", "duyet": "Chờ duyệt"}],
+                    ngoai_le_duyet="khoi_tao", bay_gio=GIO)
+    assert hc.lay(2, cot(hc, "duyet")) == "Duyệt"
+    with pytest.raises(S.LoiGhiCotNguoi):
+        S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "x-2", "nen_tang": "tiktok", "duyet": "Duyệt"}],
+                        ngoai_le_duyet="khoi_tao")
+    with pytest.raises(S.LoiGhiCotNguoi):  # không có ngoại lệ thì vẫn cấm
+        S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "x-2", "nen_tang": "tiktok", "duyet": "Chờ duyệt"}])
+    with pytest.raises(S.LoiGhiCotNguoi):  # ngoại lệ chỉ áp cho cột duyet
+        S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "x-2", "nen_tang": "tiktok", "ghi_chu_sua": "x"}],
+                        ngoai_le_duyet="khoi_tao")
+
+
+def test_ngoai_le_sua_chi_doi_o_dang_la_sua(bang):
+    hc = bang.tab("Hàng chờ")
+    S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "x-1", "nen_tang": n, "duyet": "Chờ duyệt"} for n in ("tiktok", "fb_reels")],
+                    ngoai_le_duyet="khoi_tao", bay_gio=GIO)
+    hc.dat(2, cot(hc, "duyet"), "Sửa")
+    hc.dat(3, cot(hc, "duyet"), "Bỏ")
+    S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "x-1", "nen_tang": n, "duyet": "Chờ duyệt"} for n in ("tiktok", "fb_reels")],
+                    ngoai_le_duyet="sua", bay_gio=GIO)
+    assert hc.lay(2, cot(hc, "duyet")) == "Chờ duyệt" and hc.lay(3, cot(hc, "duyet")) == "Bỏ"
+    # sua không tạo dòng mới có duyet
+    S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "x-9", "nen_tang": "tiktok", "duyet": "Chờ duyệt"}],
+                    ngoai_le_duyet="sua", bay_gio=GIO)
+    assert next(h for h in hc.doc_tat_ca() if h[0] == "x-9")[cot(hc, "duyet") - 1] == ""

@@ -47,7 +47,12 @@ Nếu buộc phải sửa (hoặc thêm file vào thư mục lõi mà code lõi 
 - Mỗi tab có hai nhóm cột tách bạch: **cột của người** (Duyệt, Ghi chú người duyệt...) và **cột của máy** (Mã video, Trạng thái, Điểm, Link xem trước, Lỗi...). Máy **không bao giờ ghi** vào cột của người, kể cả để "dọn" hay "sửa định dạng".
   - Tab và cột chỉ khai báo ở một chỗ: `may_reels/cot_sheet.py`. Mỗi cột có cờ `may` hoặc `nguoi`.
   - `may_reels/sheet.py` từ chối ghi cột của người (lỗi `LoiGhiCotNguoi`), và kiểm tra việc này trước khi gọi mạng.
-  - Khi thêm dòng mới, cột của người để trống. Máy không tự điền giá trị mặc định như "Chờ": ô trống được hiểu là giá trị đầu tiên của dropdown.
+  - Khi thêm dòng mới, cột của người để trống, trừ ngoại lệ bên dưới. Ô trống được hiểu là giá trị đầu tiên của dropdown.
+  - **Hai ngoại lệ duy nhất** (người dùng chốt ngày 2026-11-15). Cả hai chỉ áp dụng cho cột `duyet` của tab Hàng chờ, và chỉ được ghi đúng giá trị `Chờ duyệt`. Code nằm ở `may_reels/sheet.py` (`NGOAI_LE_DUYET`) và có test riêng.
+    1. `khoi_tao`: máy tạo dòng **mới** trong Hàng chờ với `duyet = "Chờ duyệt"`. Dòng đã có thì không đụng, kể cả khi người dùng đã xóa trống ô đó.
+    2. `sua`: lệnh `python -m may_reels sua` dựng lại video theo ghi chú, rồi đưa `duyet` từ `Sửa` về `Chờ duyệt`. Chỉ đổi ô **đang là `Sửa`**. Nếu cùng mã video còn nền tảng đang `Duyệt` hoặc `Bỏ`, máy không thay video và ghi lỗi; nếu không, lời duyệt dành cho bản cũ sẽ bị gán cho bản mới.
+
+    Mọi lần ghi khác vào cột của người vẫn bị chặn trước khi gọi mạng.
 - Máy tìm dòng theo khóa của tab và tìm cột theo tên ở dòng 1. Máy không xóa dòng, không sắp xếp lại, không ghi lại cả bảng: chỉ ghi đúng những ô đổi giá trị, và thêm dòng mới bằng append.
   - Ngay trước khi ghi, máy đọc lại để kiểm tra dòng đích vẫn mang đúng khóa. Nếu lệch thì tính lại, tối đa 3 lần.
   - Còn một khe hở rất nhỏ giữa lần kiểm tra cuối và lúc ghi: Sheets API không có thao tác "so rồi mới ghi" nguyên tử. Hai lượt chạy của máy cùng lúc cũng có thể cùng thêm một dòng, nên máy chỉ được chạy một lượt mỗi lúc.
@@ -172,6 +177,15 @@ Máy ghi yêu cầu vào tab "Cần quay": kênh, mã video, ý cần minh họa
 
 ---
 
+## 10. Tách phần sáng tạo khỏi phần dựng
+
+- Agent (`claude -p`, skill `skills/may-reels/san-xuat-khong-hoi.md`) chỉ viết `projects/<ma_video>/ke_hoach.json`, theo schema `schemas/may-reels/ke_hoach_video.schema.json`. File này gồm lời đọc, thẻ chữ, nguồn luật (trích nguyên văn, link, ngày mở), cảnh chọn từ kho, caption từng nền tảng và các quyết định đã tự đưa ra.
+- Mọi bước còn lại là Python tất định trong `may_reels/dung/`: kiểm tra kế hoạch, sinh giọng có nghe lại, cắt cảnh, dựng HyperFrames, tự kiểm, chấm điểm QA, đóng gói. Agent không được ghi file nào khác. Quyền này được giới hạn bằng `--allowed-tools` khi gọi agent.
+- Quyết định thường phải hỏi người đã chốt một lần trong `brand/<kenh>/san-xuat.yaml`. Máy ghi lại các quyết định đó vào `decision_log`, kèm lý do "đã chốt theo cấu hình kênh".
+- **Giọng đọc phải qua tai máy.** Mỗi đoạn được sinh tối đa 10 lần, và lần nào cũng cho PhoWhisper nghe lại. Bản được chọn phải đủ số chữ, độ khớp ký tự từ 0,95, và phần chữ thừa ở đuôi không dài quá 0,4 giây (dài hơn tức là TTS đọc lặp thật). Không bản nào đạt thì dừng, không dùng bản sai.
+
+---
+
 ## Điểm chạm upstream
 
 Mọi file của OpenMontage gốc mà Máy Reels sửa, hoặc thư mục lõi mà Máy Reels buộc phải thêm file vào. Cập nhật bảng này mỗi khi có thay đổi.
@@ -182,7 +196,7 @@ Mọi file của OpenMontage gốc mà Máy Reels sửa, hoặc thư mục lõi 
 | `.env.example` | Sửa (đã làm 2026-11-15) | Thêm khối `# --- Máy Reels ---` ở cuối file: `MAY_REELS_SA_JSON`, `MAY_REELS_SHEET_ID`, `KENH_GOC_DIR`, `MAY_REELS_GOOGLE_CLIENT_SECRET`, `MAY_REELS_DRIVE_TOKEN`, và ví dụ `VANXUAN_FB_PAGE_TOKEN`, `VANXUAN_YT_TOKEN_FILE` | Người cài mới biết cần đặt biến nào | Thêm ở cuối file nên ít xung đột. Nếu upstream sửa đoạn cuối file thì giữ cả hai. |
 | `schemas/may-reels/reel_job.schema.json` | Thêm file vào thư mục lõi `schemas/` (đã làm 2026-11-15) | Schema job của Máy Reels | Theo yêu cầu đặt schema ở đây. Thư mục con riêng `may-reels/` không phải package Python và không bị `schemas.artifacts.list_schemas()` quét | Không xung đột trừ khi upstream tạo thư mục cùng tên. |
 | `tools/publishers/facebook_reels.py`, `youtube_shorts.py`, `tiktok_handoff.py`, `_dang_chung.py` | Thêm file mới vào thư mục lõi (2026-11-15) | Publisher của Máy Reels | Registry chỉ tìm tool trong `tools/`. Không sửa file có sẵn nào | Không xung đột trừ khi upstream thêm file cùng tên. `export_bundle.py` giữ nguyên. |
-| `pipeline_defs/may-reels.yaml` | Thêm file (đã duyệt phương án 2, chưa viết) | Manifest riêng cho chế độ chạy không dừng | `lib/pipeline_loader.py` chỉ đọc manifest trong `pipeline_defs/`, và `lib/checkpoint.py` tìm cổng duyệt qua tên pipeline | Không xung đột trừ khi upstream đổi schema manifest. `tests/contracts/test_pipeline_catalog.py` sẽ tự kiểm tra file này. |
+| `pipeline_defs/may-reels.yaml` | Thêm file (đã làm 2026-11-15) | Manifest riêng cho chế độ chạy không dừng | `lib/pipeline_loader.py` chỉ đọc manifest trong `pipeline_defs/`, và `lib/checkpoint.py` tìm cổng duyệt qua tên pipeline | Không xung đột trừ khi upstream đổi schema manifest. `tests/contracts/test_pipeline_catalog.py` sẽ tự kiểm tra file này. |
 | `HUONG-DAN-SU-DUNG.md` | File của nhánh, không phải upstream | — | — | — |
 
 File upstream đã sửa: `.gitignore` và `.env.example`. Thư mục lõi đã thêm file: `schemas/`. `pipeline_defs/may-reels.yaml` sẽ thêm khi bắt đầu code luồng sản xuất.

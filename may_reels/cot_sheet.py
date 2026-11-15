@@ -116,6 +116,7 @@ HANG_CHO = Tab(
         _m("id_bai"),
         _m("loi"),
         _m("cap_nhat_luc"),
+        _m("ghi_chu_may", "thư mục đăng tay (export_bundle), ghi chú của máy"),
     ),
     khoa=("ma_video", "nen_tang"),
     tu_dong_cap_nhat="cap_nhat_luc",
