@@ -216,7 +216,23 @@ Muốn chắc chắn 0 đồng: thêm câu **"chỉ dùng công cụ miễn phí
 
 ---
 
-## 10. Tài liệu tham khảo trong repo
+## 10. Máy Reels (đang lên kế hoạch)
+
+Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xuất và đăng video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh. Bạn chỉ duyệt trên Google Sheet ở hai chỗ: duyệt chủ đề và duyệt video trước khi đăng. Dự án **chưa có code**, mới có tài liệu:
+
+- `docs/may-reels/NGUYEN-TAC.md`: nguyên tắc phát triển (code đặt ở đâu, Sheet là nguồn sự thật về duyệt, đăng bài mặc định chạy thử, quy tắc cấm của kênh, bí mật, chi phí).
+- `docs/may-reels/KE-HOACH.md`: sơ đồ luồng, cách chạy không dừng, lý do chọn pipeline `hybrid`, các rủi ro, và **danh sách câu hỏi bạn cần trả lời trước khi bắt đầu code**.
+
+**Chạy kiểm thử** (cần làm sau mỗi lần sửa code):
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt   # một lần, để có pytest
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+---
+
+## 11. Tài liệu tham khảo trong repo
 
 - `README.md` — giới thiệu đầy đủ (tiếng Anh)
 - `AGENT_GUIDE.md` — luật làm việc của trợ lý AI
