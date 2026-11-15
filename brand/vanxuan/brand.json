@@ -1,0 +1,1516 @@
+{
+  "id": "vanxuan",
+  "nguon_kenh": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan",
+  "kenh": {
+    "ten_kenh": "Đào tạo lái xe Vạn Xuân",
+    "ten_day_du": "Trung tâm đào tạo lái xe Phú Thọ - chi nhánh Vạn Xuân",
+    "khan_gia": "Người 18-45 tuổi sắp học hoặc đang ôn thi bằng A1/A ở Phú Thọ; nhóm 25+ cần cấp đổi, cấp lại bằng",
+    "tru_cot_noi_dung": [
+      "Hỏi nhanh đáp đúng (câu lý thuyết hay nhầm)",
+      "Đúng hay sai? (quan niệm phổ biến, thầy chốt)",
+      "Lỗi hay bị trừ điểm khi thi sa hình A1/A",
+      "1 phút luật mới (có nguồn)",
+      "Hậu trường sân tập, ngày thi, nhận bằng"
+    ]
+  },
+  "lien_he": {
+    "hotline": "0823 279 999",
+    "zalo": "0823 279 999",
+    "zalo_oa": "https://zalo.me/0823279999",
+    "fanpage": "facebook.com/hoclaixephutho",
+    "dia_chi": "Thôn 18, xã Vạn Xuân, tỉnh Phú Thọ"
+  },
+  "cta": [
+    "Nhắn Zalo 0823 279 999 để nhận bộ câu ôn thi A1.",
+    "Bạn chọn A hay B? Bình luận để thầy chấm.",
+    "Tag đứa bạn sắp thi bằng xe máy vào đây.",
+    "Lưu video lại, trước hôm thi xem lại một lần.",
+    "Theo dõi kênh để mỗi ngày ôn một câu."
+  ],
+  "hashtags": {
+    "facebook": [
+      "#DaoTaoLaiXeVanXuan",
+      "#HocLaiXePhuTho",
+      "#OnThiA1",
+      "#LuatGiaoThong",
+      "#BangLaiXeMay"
+    ],
+    "tiktok": [
+      "#hoclaixe",
+      "#thibanglaixe",
+      "#onthia1",
+      "#luatgiaothong",
+      "#phutho"
+    ],
+    "youtube": [
+      "#Shorts",
+      "#HocLaiXe",
+      "#OnThiA1",
+      "#LuatGiaoThong",
+      "#BangLaiXe"
+    ]
+  },
+  "mau": {
+    "navy": "#0E3970",
+    "xanh_chinh": "#048DD1",
+    "cam_nhan": "#E4661F",
+    "trang": "#FFFFFF"
+  },
+  "font": {
+    "tieu_de": "Be Vietnam Pro ExtraBold",
+    "files": {
+      "BeVietnamPro-ExtraBold.ttf": {
+        "duong_dan": "brand/vanxuan/assets/fonts/BeVietnamPro-ExtraBold.ttf",
+        "nguon": "font đã cài trên máy",
+        "sha1": "6ccb604f2be1"
+      },
+      "BeVietnamPro-Bold.ttf": {
+        "duong_dan": "brand/vanxuan/assets/fonts/BeVietnamPro-Bold.ttf",
+        "nguon": "font đã cài trên máy",
+        "sha1": "83892f18eae7"
+      }
+    }
+  },
+  "giong_doc": "Hải Đăng",
+  "quyen_hinh": {
+    "da_dong_y": true,
+    "ngay": "2026-11-10",
+    "pham_vi": "Mọi file trong canh-quay/ và image/ đã nạp vào kho tới 2026-11-10",
+    "ngoai_tru": [
+      "xep-ho-so-thi-b8392e"
+    ],
+    "bo_sung": [
+      {
+        "ma": "snaptik-vn-7707073360106179892-936e3b",
+        "ngay": "2026-11-12",
+        "ghi_chu": "Người dùng xác nhận: video của trung tâm (tải lại từ TikTok của kênh), người lái làm mẫu đã đồng ý lên hình, quay ở sân Vạn Xuân. Vẫn tránh đoạn thấy biển số (16-18 s, 29-30 s)."
+      }
+    ]
+  },
+  "assets": {
+    "logo": {
+      "duong_dan": "brand/vanxuan/assets/logo.png",
+      "sha1": "1e342bce0f9c"
+    },
+    "logo_nho": {
+      "duong_dan": "brand/vanxuan/assets/logo-emblem.png",
+      "sha1": "7b0406c7c73b"
+    },
+    "fonts": {
+      "BeVietnamPro-ExtraBold.ttf": {
+        "duong_dan": "brand/vanxuan/assets/fonts/BeVietnamPro-ExtraBold.ttf",
+        "nguon": "font đã cài trên máy",
+        "sha1": "6ccb604f2be1"
+      },
+      "BeVietnamPro-Bold.ttf": {
+        "duong_dan": "brand/vanxuan/assets/fonts/BeVietnamPro-Bold.ttf",
+        "nguon": "font đã cài trên máy",
+        "sha1": "83892f18eae7"
+      }
+    }
+  },
+  "context": {
+    "business": {
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\context\\business.md",
+      "noi_dung": "# Business\n\n> Nguồn: website chính thức (https://van-xuan-driving-school.vercel.app/) qua `/init-context`\n> ngày 2026-09-13. Các mục còn \"(chưa có)\" là do website/fanpage cũng chưa công bố — hỏi lại\n> người dùng thay vì tự bịa.\n\n## Trung tâm\n- Tên đầy đủ: Đào tạo lái xe Vạn Xuân\n- Địa chỉ: Thôn 18, xã Vạn Xuân, tỉnh Phú Thọ (nhà văn hóa Thôn 18)\n- Hotline: 0823279999\n- Zalo OA: https://zalo.me/0823279999\n- Website: https://van-xuan-driving-school.vercel.app/\n- Fanpage: https://www.facebook.com/hoclaixephutho/\n- Giấy phép đào tạo: (chưa có)\n- Giờ làm việc: (chưa có)\n\n## Khóa học\n| Hạng bằng | Thời gian đào tạo | Học phí | Ghi chú |\n|---|---|---|---|\n| A1 (xe máy dưới 125cc) | (chưa có) | (chưa có) | Đang mở lớp — website ghi \"còn 3 chỗ\" (số liệu minh họa, không dùng làm số liệu thật) |\n| A (xe máy phân khối lớn) | (chưa có) | (chưa có) | |\n| Cấp đổi / cấp lại bằng | (chưa có) | (chưa có) | Gồm dịch vụ đổi bằng giấy (mẫu cũ) sang thẻ PET |\n| B1, B2, C... | (chưa mở, hoặc chưa công bố) | | Sitemap website có chừa chỗ mở rộng nhưng chưa có trang riêng |\n\n## Lịch khai giảng\n- (chưa có — xem `/lich-khai-giang` trên website khi có lịch thật)\n\n## Lịch thi sát hạch (thông tin thật, người dùng cung cấp 2026-09-26)\n- Lịch thi GPLX mô tô tháng 11/2026: Đang xếp lịch\n- Số điện thoại đăng ký/tư vấn dùng trong các bài thông báo lịch thi: 0823.279.999 –\n  0978.639.199 (số thứ 2 mới xuất hiện từ bài 34, chưa có trong `data/contact.ts` — xác nhận\n  với người dùng nếu muốn thêm vào danh sách hotline chính thức).\n\n## Sân tập thực hành (thông tin thật, người dùng cung cấp 2026-09-26)\n- Đã hoàn thành 2 sân tập thực hành hạng A và A1.\n- Địa chỉ: Thôn 18, xã Vạn Xuân, Phú Thọ.\nSân 2: Trường cấp 2 Thanh Uyên, xã Hiền Quan, tỉnh Phú Thọ\nSân số 3: Sân UBND xã Xuân Quang cũ Thôn 2, xã Hiền Quan, tỉnh Phú Thọ\n\n\n## Điểm khác biệt so với trung tâm khác trong khu vực\n- Minh bạch học phí — công khai rõ ràng từ đầu, không phát sinh chi phí ẩn.\n- Hỗ trợ ôn thi sát hạch sát với bài thi thực tế.\n- Đồng hành cùng học viên từ ngày đăng ký tới khi nhận bằng.\n- Đội ngũ giáo viên (tự nhận là) giàu kinh nghiệm — thông tin cụ thể từng giáo viên chưa có.\n\n## Số liệu thật (dùng cho StatBlock/so sánh, xác nhận lại định kỳ)\n- Hoạt động từ: 2023\n- Học viên đã đào tạo: hơn 500+\n- Tỉ lệ đỗ: trên 90%\n\n## Câu hỏi thường gặp (FAQ)\n*(copy từ trang `/faq` của website — có thể tái sử dụng nguyên văn hoặc viết lại cho phù hợp bài đăng)*\n\n**Hồ sơ & điều kiện**\n- Cần chuẩn bị giấy tờ gì để đăng ký học? → CMND/CCCD còn hiệu lực, ảnh thẻ 3x4 nền trắng, giấy khám sức khỏe theo mẫu quy định, đơn đăng ký học lái xe.\n- Độ tuổi tối thiểu? → Hạng A1 và hạng A: từ đủ 18 tuổi trở lên (theo quy định hiện hành).\n- Người ở tỉnh/thành khác học được không? → Tùy khu vực/chi nhánh tiếp nhận, cần liên hệ tư vấn cụ thể.\n\n**Học phí & thanh toán**\n- Học phí từng hạng, đóng theo đợt, có gồm lệ phí thi không? → Đang cập nhật, cần liên hệ trung tâm để có báo giá chính xác (KHÔNG bịa số liệu học phí khi viết bài).\n\n**Lịch học & thi**\n- Lịch học có linh hoạt cho người đi làm? → Trung tâm cố gắng sắp xếp phù hợp, xem lịch khai giảng gần nhất.\n- Bao lâu thì được thi sát hạch? → Phụ thuộc tiến độ học và lịch tổ chức thi.\n- Thi không đạt thì sao? → Được hỗ trợ ôn tập và đăng ký thi lại theo quy định.\n\n**Cấp đổi / cấp lại bằng**\n- Bằng hết hạn có cần thi lại lý thuyết không? → Tùy thời gian hết hạn theo quy định hiện hành.\n- Mất bằng lái cần làm gì? → Xem checklist hồ sơ tại trang Cấp đổi/cấp lại hoặc liên hệ tư vấn.\n- Đổi từ bằng giấy sang thẻ PET có mất phí không? → Chi phí dịch vụ đang cập nhật.\n"
+    },
+    "brand-style": {
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\context\\brand-style.md",
+      "noi_dung": "# Brand Style — Bộ nhận diện hình ảnh Vạn Xuân\n\n> Rút ra từ banner treo biển thật (`Đào_tạo_lái_xe_Vạn_xuân_khổ_3_2.png`) — đây là tài sản\n> thương hiệu cụ thể nhất hiện có, nên dùng làm gốc cho mọi định dạng khác (carousel,\n> infographic). Mã màu bên dưới lấy mẫu trực tiếp từ file ảnh (ước lượng theo pixel) — nếu có\n> file gốc logo (AI/SVG/PNG nền trong suốt) thì nên đối chiếu lại cho chính xác 100%.\n>\n> Dùng file này khi viết **prompt tạo ảnh** cho Gemini (theo đúng quy tắc trong `CLAUDE.md`:\n> Gemini không tự đọc được ảnh mẫu, phải mô tả bằng lời) — copy các mục 1–4 vào phần mô tả\n> phong cách của prompt.\n\n## 1. Bảng màu\n| Vai trò | Mã hex | Dùng khi nào |\n|---|---|---|\n| Xanh navy đậm | `#0E3970` | Nền góc tối, vùng gradient sẫm, logo phần chữ V |\n| Xanh dương chính | `#048DD1` | Nền chủ đạo (gradient sáng hơn), màu nhận diện chính |\n| Cam nhấn | `#E4661F` | Logo phần chữ X, nút/nhãn CTA, thanh liên hệ, chi tiết cần nổi bật |\n| Trắng | `#FFFFFF` | Nền panel logo, viền ảnh, chữ trên nền xanh |\n| Đen/xám đậm | dùng làm bóng đổ nhẹ cho chữ, không phải màu nền |\n\n## 2. Logo\n- Biểu tượng \"VX\" cách điệu: chữ **V** màu xanh navy lồng hình vô-lăng bên trong, chữ **X** tạo bằng dải ruy-băng gradient xanh → cam vắt chéo qua.\n- Luôn đặt trên nền đủ tương phản (nền trắng hoặc nền xanh navy đặc) — không đặt trực tiếp lên ảnh thật (ảnh học viên/xe) vì dễ bị chìm.\n- Vị trí chuẩn: góc trên-trái, trong khối nền trắng riêng biệt với phần còn lại.\n\n## 3. Kiểu chữ (typography)\n- **Tiêu đề chính**: chữ hoa toàn bộ, font sans-serif cực đậm (extra-bold/black), có hiệu ứng bóng đổ/nổi khối nhẹ (bevel) để nổi bật trên nền xanh — không dùng font mảnh hay chữ thường cho tiêu đề.\n- **Nhãn phụ nhấn mạnh** (kiểu \"HẠNG A, A1\"): chữ hoa đậm, trắng trên nền cam bo góc — dùng cho 1 cụm từ khoá quan trọng nhất của bài/slide.\n- **Chữ thông tin** (liên hệ, địa chỉ): đậm vừa phải, rõ ràng, không dùng font trang trí/viết tay.\n\n## 4. Bố cục / mô-típ hình ảnh\n- **Chia chéo (diagonal split)**: mảng trắng chứa logo ở góc trên-trái, cắt chéo sang mảng xanh navy/gradient chiếm phần lớn khung hình.\n- **Hoạ tiết vòng lặp con đường**: đường cong mờ dạng vòng lặp, viền trắng mảnh, độ trong suốt thấp ở nền — chi tiết ngầm gợi \"đường/lái xe\", không lấn át nội dung chính. Có thể bỏ ở các định dạng đơn giản (slide nội dung, infographic) để đỡ rối.\n- **Ảnh thật** (học viên/xe/cơ sở vật chất): đặt trong khung viền trắng mỏng, hơi nghiêng — tạo cảm giác ảnh dán trên bảng, tăng độ chân thực, tránh nhìn như ảnh stock.\n- **Thanh liên hệ**: khối màu cam, góc dưới-trái, có icon điện thoại/Zalo đi kèm số.\n- **Địa chỉ**: đặt trên nền trắng, thường ở cuối bố cục.\n- **QR code** (nếu có): góc dưới-phải.\n\n## 5. Áp dụng cho từng loại nội dung\n\n### Carousel (Facebook, nhiều slide)\n- **Slide bìa**: giữ nguyên tinh thần banner — nền xanh navy/gradient, logo góc trên-trái, tiêu đề chữ hoa đậm trắng, 1 nhãn cam nhấn từ khoá chính của bài (thay vì \"HẠNG A, A1\" thì đổi thành tên chủ đề, VD \"MẸO THI SA HÌNH\").\n- **Slide nội dung** (giữa): đơn giản hoá để dễ đọc — nền trắng hoặc nền xanh navy đặc (bỏ hoạ tiết vòng lặp), giữ logo nhỏ góc để nhận diện xuyên suốt, dùng khối cam cho số thứ tự/icon nhấn ý, chữ tối màu trên nền sáng.\n- **Slide cuối (CTA)**: quay lại tông banner — nền cam hoặc xanh đậm, nhắc lại số điện thoại/Zalo đúng kiểu thanh liên hệ trên banner.\n\n### Infographic (1 ảnh, nhiều thông tin)\n- Tiêu đề trên cùng theo đúng kiểu chữ hoa đậm/bóng đổ như banner.\n- Nội dung chia khối rõ ràng (số liệu, các bước, lỗi hay gặp...), dùng cam đánh dấu số/icon quan trọng, xen kẽ nền trắng/xanh navy để phân tách khối.\n- Chân trang lặp lại thanh liên hệ cam giống banner — tạo cảm giác mọi nội dung đều từ cùng một nguồn nhất quán.\n\n### Copywriting\n- Đồng bộ với giọng \"thẳng thắn, minh bạch, gần gũi\" đã định nghĩa ở `voice-analysis.md`. Logic màu cam = \"trọng tâm cần chú ý\" trong hình ảnh nên khớp với cách dùng emoji nhấn ý (📌 ⚠️ ✅) trong bài viết — visual và câu chữ cùng một logic nhấn mạnh.\n\n## 6. Khung prompt tạo ảnh gợi ý (Gemini, viết bằng tiếng Anh khi dùng thật)\n\n```\nStyle: modern Vietnamese driving-school ad graphic, bold and trustworthy, not playful.\nPalette: deep navy blue (#0E3970) to vivid blue (#048DD1) gradient background, orange accent\n(#E4661F) for callout badges/CTA blocks, white for text and photo frames.\nTypography: extra-bold condensed sans-serif, all caps, white with subtle bevel/drop-shadow for\nheadline; bold white-on-orange rounded badge for one key phrase.\nLayout: diagonal split with a white panel (top-left) transitioning into the navy/blue panel;\nfaint looping road-line motif in the background at low opacity; real photo inset with a thin\nwhite border, slightly tilted; orange contact bar (bottom-left) with phone/Zalo icon; address on\nwhite strip; QR code bottom-right if needed.\nLogo placement: reserve top-left white area for the \"VX\" logo (steering-wheel V + blue-to-orange\nribbon X) — do not redraw the logo itself, leave clean space to overlay it afterward.\n```\n*(Không tự tạo file ảnh — theo đúng quy tắc trong `CLAUDE.md`, viết prompt để người dùng tự dán vào Gemini.)*\n\n## 7. Việc cần làm tiếp\n- Lưu banner gốc vào `reference/carousel-samples/` hoặc tạo thư mục mới `reference/brand-assets/` để mở lại xem khi viết prompt.\n- Nếu có file gốc logo (vector/PNG nền trong suốt) hoặc bảng màu chính thức từ nhà thiết kế, nên thêm vào cùng thư mục và cập nhật lại mã hex ở mục 1 cho chính xác tuyệt đối.\n"
+    },
+    "icp": {
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\context\\icp.md",
+      "noi_dung": "# ICP — Chân dung học viên mục tiêu\n\n> Phác thảo ban đầu dựa trên khóa học đang mở (A1, A, cấp đổi/cấp lại) — CHƯA có khảo sát học\n> viên thật, cần người dùng xác nhận lại trước khi dùng để định hướng content.\n\n- Độ tuổi: 2 nhóm chính — (1) 18-22 tuổi mới đủ tuổi thi A1/A lần đầu; (2) người đã có bằng cần\n  cấp đổi/cấp lại (độ tuổi rộng hơn, thường 25+).\n- Nghề nghiệp phổ biến: (chưa có — hỏi người dùng)\n- Nhu cầu chính: nhóm (1) cần bằng A1/A để tự đi lại/đi làm; nhóm (2) cần hợp thức hóa giấy tờ\n  (bằng hết hạn, mất bằng, đổi giấy sang thẻ PET) để tiếp tục lưu thông hợp pháp.\n- Nỗi lo thường gặp khi chọn trung tâm học lái xe: sợ phát sinh chi phí ẩn, sợ cam kết \"bao đậu\"\n  không thật, không rõ lịch học/thi có linh hoạt cho người đi làm không.\n- Kênh họ hay dùng để tìm thông tin: Fanpage Facebook, Zalo (theo nền tảng ưu tiên hiện có ở\n  `strategy.md`) — cần xác nhận thêm qua dữ liệu thật.\n"
+    },
+    "voice-analysis": {
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\context\\voice-analysis.md",
+      "noi_dung": "# Voice Analysis — Giọng văn cho Bài viết Facebook\n\n> **Trạng thái: nháp ban đầu.** File này được xây dựng từ mục \"Giọng điệu bắt buộc\" và\n> \"Điểm khác biệt\" trong `CLAUDE.md` / `context/business.md`, VÌ CHƯA có dữ liệu bài đăng thật\n> (chưa chạy Apify scrape Fanpage, chưa có bài mẫu dán tay). Khi có bài đăng thật, chạy lại\n> `/init-context` để Claude phân tích và **thay thế** các con số/quy tắc bên dưới bằng số liệu đo\n> được thật (độ dài câu trung bình thật, tần suất emoji thật...) thay vì giữ nguyên bản nháp này.\n\n## 1. Mức độ trang trọng\nThân thiện – trung lập, giống người quen làm ở trung tâm tư vấn trực tiếp, không phải fanpage doanh nghiệp nói giọng hành chính. Không dùng \"kính gửi\", \"quý khách hàng thân mến\". Không suồng sã kiểu ngôn ngữ giới trẻ/teencode, vì đối tượng có cả nhóm 25+ đi đổi bằng.\n\n## 2. Xưng hô\n- Xưng \"mình\" (đại diện trung tâm), gọi người đọc là \"bạn\".\n- Khi kể chuyện học viên có thể chuyển sang xưng tên/vai trò cụ thể (\"anh Long — học viên hạng B2\").\n\n## 3. Độ dài câu & đoạn (áp dụng cho Facebook, đọc trên di động)\n- Câu ngắn, mỗi câu 1 ý. Tránh câu ghép nhiều mệnh đề.\n- Đoạn tối đa 2–3 dòng rồi xuống dòng — không viết thành khối chữ dài.\n- Bài viết Facebook thường: 80–150 chữ cho bài ngắn (mẹo nhanh, FAQ), 150–250 chữ cho bài có câu chuyện/giải thích luật.\n\n## 4. Emoji\n- Dùng tiết chế: 1 emoji mở đầu hook (tuỳ chọn) + 2–4 emoji đánh dấu ý trong bài (không trang trí cuối mỗi câu).\n- Emoji nên mang nghĩa chức năng, không phải trang trí: ✅ (mẹo/đúng), ⚠️ (cảnh báo/lỗi hay gặp), 📌 (lưu ý quan trọng), 📅 (lịch/thời gian).\n- Tránh: emoji cảm xúc quá đà (😍🥰), icon tiền/chiến thắng kiểu quảng cáo (💰🔥🎉) — không hợp giọng \"minh bạch, không sáo rỗng\".\n\n## 5. Cụm từ đặc trưng nên lặp lại (xây bản sắc thương hiệu)\n- \"đồng hành cùng bạn từ ngày đăng ký tới khi nhận bằng\"\n- \"minh bạch học phí — không phát sinh chi phí ẩn\"\n- \"cập nhật đúng quy định hiện hành\" (khi nói về luật/lệ phí)\n- Ký tên cuối bài dạng nhất quán, ví dụ: \"— Vạn Xuân\" hoặc \"Trung tâm đào tạo lái xe Phú Thọ, chi nhánh Vạn Xuân\"\n\n## 6. Cụm từ / giọng điệu PHẢI tránh (đồng bộ với `CLAUDE.md`)\n- \"bao đậu\", \"chắc chắn đậu 100%\", \"học nhanh không cần thi lý thuyết\"\n- So sánh hạ thấp trung tâm khác\n- Ngôn ngữ quảng cáo sáo rỗng kiểu \"ưu đãi khủng\", \"duy nhất hôm nay\", \"số lượng có hạn\" (trừ khi là thông tin lịch khai giảng có thật)\n- Số liệu/quy định chưa xác minh — nếu không chắc, viết \"cần xác nhận lại quy định mới nhất\" thay vì bịa\n\n## 7. Hook (câu mở đầu) ưu tiên\nChọn 1 trong 3 kiểu tùy chủ đề:\n1. **Tình huống thật**: \"Chuẩn bị thi mà tay cứ run, sợ quên bài — bạn có giống vậy không?\"\n2. **Cảnh báo định tính** (không bịa số liệu %): \"Phần lớn học viên hay mất điểm ở đúng bài này...\"\n3. **Câu hỏi trực tiếp**: \"Biết đổi bằng giấy sang thẻ PET cần giấy tờ gì chưa?\"\n\n## 8. Cấu trúc thân bài theo từng dạng nội dung\n\n**Kinh nghiệm thi hạng bằng**\nHook (tình huống lo lắng) → 2–3 mẹo cụ thể, thực hành được ngay → nhắc nhẹ \"kết quả còn tùy luyện tập, trung tâm chỉ đồng hành hỗ trợ\" (không cam kết đậu) → CTA nhẹ.\n\n**Lỗi hay bị trừ điểm khi thi sát hạch**\nHook cảnh báo → liệt kê lỗi (2–4 gạch đầu dòng) → cách khắc phục từng lỗi → CTA.\n\n**Thay đổi quy định/luật giao thông**\nHook thời sự ngắn → nội dung thay đổi, viết đúng những gì đã xác minh → ảnh hưởng thực tế đến người học/người lái → câu chốt \"cần xác nhận lại quy định mới nhất\" nếu có phần chưa chắc chắn.\n\n**Câu chuyện học viên**\nTrước (khó khăn ban đầu) → Trong (quá trình học, có thể trích lời học viên) → Sau (kết quả) → 1 câu bài học/thông điệp chung.\n\n**Giới thiệu giáo viên / cơ sở vật chất**\nMô tả ngắn, cụ thể, dùng ảnh thật trong `context/image/` — nêu điểm khác biệt thật, không thổi phồng (\"giàu kinh nghiệm\" cần đi kèm chi tiết cụ thể nếu có, không thì bỏ qua thay vì nói chung chung).\n\n**Giải đáp câu hỏi thường gặp (FAQ)**\nCâu hỏi học viên hay hỏi thật (lấy từ `business.md` mục FAQ) → trả lời ngắn gọn, đúng trọng tâm → nếu chưa có số liệu chính xác (VD học phí), ghi rõ \"liên hệ trung tâm để có báo giá chính xác\", không bịa số.\n\n## 9. Kết bài / CTA\nNhẹ nhàng, không thúc ép kiểu \"chốt đơn ngay\". Ưu tiên dẫn về kênh đã có trong `strategy.md`:\n- \"Cần tư vấn thêm, nhắn Zalo OA hoặc để lại bình luận nhé.\"\n- \"Theo dõi Fanpage để cập nhật lịch khai giảng mới nhất.\"\n\n## 10. Ví dụ minh họa (bài mẫu theo giọng này)\n\n> ⚠️ Lỗi này rất nhiều học viên hay mắc khi thi sa hình: quên bật xi-nhan trước khi chuyển làn, dù xe đã đi đúng hướng.\n>\n> Theo quy định, chỉ cần thiếu xi-nhan là bị trừ điểm ngay, dù kỹ năng lái không sai.\n>\n> Mẹo nhỏ: tập thành phản xạ \"nhìn gương → bật xi-nhan → rồi mới đánh lái\", làm đi làm lại vài lần trong buổi thực hành là quen tay.\n>\n> Kết quả thi còn tùy vào luyện tập của mỗi người, nhưng đây là lỗi hoàn toàn có thể tránh được nếu để ý sớm.\n>\n> 📌 Cần tư vấn thêm, nhắn Zalo OA hoặc để lại bình luận nhé.\n> — Vạn Xuân\n"
+    }
+  },
+  "cam": {
+    "cum_tu_cam": [
+      "bao đậu",
+      "bao đỗ",
+      "chắc chắn đậu 100%",
+      "cam kết đỗ 100%",
+      "đảm bảo đỗ",
+      "học nhanh không cần thi lý thuyết",
+      "ưu đãi khủng",
+      "duy nhất hôm nay",
+      "số lượng có hạn",
+      "rẻ nhất Phú Thọ"
+    ],
+    "noi_dung_cam": [
+      "So sánh hạ thấp trung tâm khác",
+      "Thông tin luật, quy định chưa xác minh (nếu không chắc: \"cần xác nhận lại quy định mới nhất\")",
+      "Số liệu không có trong `context/business.md` hoặc nguồn đã mở",
+      "Châm chọc CSGT, cơ quan nhà nước; hướng dẫn lách luật",
+      "Ảnh, tên, giấy tờ của học viên khi chưa xin phép (ví dụ ảnh văn phòng có biên bản kết quả sát hạch)",
+      "Emoji kiểu quảng cáo 💰🔥🎉 trong chữ trên màn hình và caption"
+    ],
+    "cau_sao_da_chot": [
+      "bạn có biết",
+      "hãy cùng tìm hiểu",
+      "cực kỳ quan trọng",
+      "đừng quên",
+      "trong thế giới ngày nay"
+    ],
+    "cau_sao_cho_duyet": [
+      "câu trả lời sẽ khiến bạn bất ngờ",
+      "điều mà ít ai biết",
+      "bí quyết vàng",
+      "vô cùng cần thiết",
+      "không thể bỏ qua",
+      "chìa khóa thành công",
+      "hành trang vững chắc",
+      "an toàn là trên hết",
+      "hãy cùng khám phá",
+      "cùng mình điểm qua",
+      "bạn đã bao giờ tự hỏi",
+      "không chỉ … mà còn",
+      "nhanh chóng",
+      "dễ dàng",
+      "hiệu quả",
+      "một cách hiệu quả nhất",
+      "đừng bỏ lỡ"
+    ],
+    "cum_tu_cam_du_an": [
+      "tỉ lệ đỗ",
+      "tỷ lệ đỗ"
+    ],
+    "cam_du_an": [
+      "Không bịa số liệu, không dùng con số không có nguồn",
+      "Không hứa kết quả thi",
+      "Không dùng cảnh stock nước ngoài, không tạo hình/video bằng AI",
+      "Nội dung luật phải ghi nguồn (tên văn bản + link đã mở)"
+    ]
+  },
+  "chu_de": [
+    {
+      "ma": "den-vang",
+      "tru_cot": "Hỏi nhanh đáp đúng",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Đèn vàng nhấp nháy: được đi hay cấm đi?",
+      "y_chinh": "Được đi, quan sát, giảm tốc hoặc dừng nhường đường",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 Điều 11; QCVN 41:2024",
+      "trend": "",
+      "da_lam": true,
+      "thu_muc_da_lam": [
+        "vx-001-den-vang",
+        "vx-001b-den-vang-thu"
+      ]
+    },
+    {
+      "ma": "re-phai-den-do",
+      "tru_cot": "Đúng hay sai?",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Đèn đỏ có được rẽ phải không?",
+      "y_chinh": "Chỉ được rẽ khi có biển hoặc đèn phụ cho phép",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 Điều 11; QCVN 41:2024",
+      "trend": "",
+      "da_lam": true,
+      "thu_muc_da_lam": [
+        "vx-004-re-phai-den-do"
+      ]
+    },
+    {
+      "ma": "giao-nhau-khong-bao-hieu",
+      "tru_cot": "Hỏi nhanh đáp đúng",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Ngã tư không có đèn, không có biển: ai được đi trước?",
+      "y_chinh": "Nhường xe đi từ bên phải tới",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 (điều về đi qua nơi giao nhau)",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "vong-xuyen",
+      "tru_cot": "Hỏi nhanh đáp đúng",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Vào vòng xuyến thì nhường xe bên trái hay bên phải?",
+      "y_chinh": "Nhường xe đi từ bên trái (xe đã ở trong vòng xuyến)",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 (điều về đi qua nơi giao nhau)",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "cho-may-nguoi",
+      "tru_cot": "Đúng hay sai?",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Xe máy được chở mấy người?",
+      "y_chinh": "Chở tối đa 1 người; vài trường hợp được chở 2 (trẻ em nhỏ, người bệnh…)",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 (điều về người lái xe mô tô, xe gắn máy)",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "bia-mot-lon",
+      "tru_cot": "Đúng hay sai?",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Uống một lon bia rồi lái xe máy có sao không?",
+      "y_chinh": "Cấm lái xe khi trong máu hoặc hơi thở có nồng độ cồn",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 Điều 9",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "dien-thoai-khi-lai",
+      "tru_cot": "Đúng hay sai?",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Đi xe máy cầm điện thoại xem bản đồ có bị cấm không?",
+      "y_chinh": "Cấm dùng điện thoại cầm tay khi lái xe máy",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 (điều về người lái xe mô tô, xe gắn máy)",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "vach-lien-vach-dut",
+      "tru_cot": "Hỏi nhanh đáp đúng",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Vạch liền giữa đường: có được đè lên để vượt không?",
+      "y_chinh": "Vạch liền không được lấn, đè; vạch đứt thì được",
+      "nguon_doi_chieu": "QCVN 41:2024 (phần vạch kẻ đường)",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "bien-cam-nguoc-chieu",
+      "tru_cot": "Hỏi nhanh đáp đúng",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Biển \"Cấm đi ngược chiều\" và biển \"Đường cấm\" khác nhau thế nào?",
+      "y_chinh": "Biển P.102 cấm đi vào theo chiều đặt biển; biển P.101 cấm mọi xe cả hai chiều",
+      "nguon_doi_chieu": "QCVN 41:2024 (phụ lục biển báo cấm)",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "coi-ban-dem",
+      "tru_cot": "Đúng hay sai?",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Có được bấm còi trong khu dân cư lúc nửa đêm không?",
+      "y_chinh": "Có khung giờ cấm còi trong khu đông dân cư (thường là 22h–5h)",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 (điều về sử dụng còi)",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "a1-xe-150cc",
+      "tru_cot": "1 phút luật mới",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Có bằng A1 thì lái xe 150cc được không?",
+      "y_chinh": "Tùy ngày cấp bằng. A1 cấp từ 01/01/2025 chỉ đến 125cc (xe điện đến 11 kW). A1 cấp trước 2025 vẫn lái xe dưới 175cc trong thời hạn ghi trên bằng (đã đối chiếu bên FB)",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 Điều 57 khoản 1 điểm a và Điều 89",
+      "trend": "1",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "bang-a1-cu",
+      "tru_cot": "1 phút luật mới",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Bằng A1 cấp trước năm 2025 có bắt buộc phải đổi không?",
+      "y_chinh": "Bằng cấp trước 01/01/2025 dùng tiếp theo thời hạn ghi trên bằng; khi đổi, A1 cũ sang hạng A kèm hạn chế dưới 175cc (đã đối chiếu bên FB)",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 Điều 89",
+      "trend": "1",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "tuoi-thi-a1",
+      "tru_cot": "Hỏi nhanh đáp đúng",
+      "dinh_dang": "hoi-dap",
+      "chu_de": "Bao nhiêu tuổi thì được thi bằng A1?",
+      "y_chinh": "Đủ 18 tuổi (business.md cũng ghi như vậy)",
+      "nguon_doi_chieu": "Luật 36/2024/QH15 (điều về tuổi người lái xe); context/business.md",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    },
+    {
+      "ma": "cau-diem-liet",
+      "tru_cot": "1 phút luật mới",
+      "dinh_dang": "giai-thich",
+      "chu_de": "Sai một câu điểm liệt thì có trượt luôn không?",
+      "y_chinh": "Đề lý thuyết A1, A có 01 câu điểm liệt; bị điểm liệt thì không đạt lý thuyết dù đủ điểm; không đạt lý thuyết thì không được thi bài thực hành số 1; đạt lý thuyết được bảo lưu 1 năm. Chỉ đúng tới hết 28/02/2027 (đề mới theo TT 108 áp dụng từ 01/3/2027, chưa xác minh còn điểm liệt) (đã đối chiếu, vx-002)",
+      "nguon_doi_chieu": "TT 12/2025/TT-BCA Phụ lục II mục A (giữ hiệu lực tới hết 28/02/2027 theo TT 108/2026 Điều 41); TT 108/2026/TT-BCA Điều 4 khoản 2, 5 và Điều 12 khoản 1 điểm b, c",
+      "trend": "6",
+      "da_lam": true,
+      "thu_muc_da_lam": [
+        "vx-002-cau-diem-liet",
+        "vx-002b-cau-diem-liet-thu"
+      ]
+    },
+    {
+      "ma": "loi-sa-hinh-a1",
+      "tru_cot": "Lỗi khi thi sa hình",
+      "dinh_dang": "can-template",
+      "chu_de": "Những lỗi hay bị trừ điểm khi thi sa hình A1",
+      "y_chinh": "Cần nguồn chính thức về các bài thi và cách trừ điểm",
+      "nguon_doi_chieu": "Thông tư về sát hạch GPLX hiện hành",
+      "trend": "",
+      "da_lam": true,
+      "thu_muc_da_lam": [
+        "vx-003-loi-sa-hinh-a1"
+      ]
+    },
+    {
+      "ma": "hau-truong-san-tap",
+      "tru_cot": "Hậu trường",
+      "dinh_dang": "can-template",
+      "chu_de": "Một buổi tập ở sân tập Vạn Xuân",
+      "y_chinh": "Cần quay cảnh thật; không quay mặt học viên hoặc biển số khi chưa xin phép",
+      "nguon_doi_chieu": "Không cần nguồn luật",
+      "trend": "",
+      "da_lam": false,
+      "thu_muc_da_lam": []
+    }
+  ],
+  "anh_that": [
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\HocLyThuyet.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Hướng dẫn học viên học lưu động.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Hướng dẫn học viên lưu động.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên chờ vào thi.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên học lý thuyết 2.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên học lý thuyết.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên xếp hàng chờ thi.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Phòng máy.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\SanThucHanh.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Sân tập với moto hạng A.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Thầy giáo hướng dẫn học viên tại Trung tâm.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Vị trí cơ sở.jpg",
+    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Xếp hồ sơ thi.jpg"
+  ],
+  "kho_canh": [
+    {
+      "ma": "hoc-vien-cho-vao-thi-36fdeb",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên chờ vào thi.jpg",
+      "file_tuong_doi": "image/Học viên chờ vào thi.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 1920,
+      "cao": 2560,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-08-22",
+      "loai": "ANH",
+      "mo_ta": "Đông học viên xếp hàng trong sảnh trước phòng thi, tay cầm túi hồ sơ giấy nâu, đeo thẻ dây xanh; trên bàn dài có nhiều điện thoại để sẵn, có biển 'CẤM' ở tường.",
+      "dia_diem": "khac",
+      "co_canh": "trung",
+      "the": [
+        "cho-thi",
+        "xep-hang",
+        "phong-thi",
+        "ho-so",
+        "dien-thoai",
+        "the-deo",
+        "nhieu-hoc-vien"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "ten-nguoi"
+      ],
+      "can_xu_ly": "Khoảng 10 học viên thấy mặt rõ, thẻ đeo cổ có thể có tên (chữ nhỏ ở mức này, không đọc được). Cách xử lý: cắt khung vào bàn điện thoại (nửa dưới trái, 0-50% bề ngang, 55-85% chiều cao) không có mặt; hoặc làm mờ toàn bộ mặt và thẻ; hoặc cần xác nhận đã xin phép.",
+      "ghi_chu": "Ảnh 1920x2560, nét, sáng. Thích hợp cho 'chờ thi' và 'gửi điện thoại trước khi vào thi' (vùng bàn điện thoại ở góc dưới trái).",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoc-vien-hoc-ly-thuyet-2-2f24bd",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên học lý thuyết 2.jpg",
+      "file_tuong_doi": "image/Học viên học lý thuyết 2.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 960,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-10-13",
+      "loai": "ANH",
+      "mo_ta": "Một phụ nữ đeo khẩu trang ngồi trên sofa đỏ cúi nhìn laptop đặt trên bàn kính, phía ngoài cửa kính là xe máy đỗ.",
+      "dia_diem": "van-phong",
+      "co_canh": "trung",
+      "the": [
+        "hoc-ly-thuyet",
+        "laptop",
+        "sofa-do",
+        "van-phong",
+        "hoc-vien-nu",
+        "cua-kinh",
+        "xe-may-do"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Đeo khẩu trang nên mặt khó nhận ra, nhưng mắt và tóc thấy. Ngoài cửa kính có người và xe máy, biển số nhỏ, không đọc được. Nên cắt khung phần laptop và tay, hoặc xác nhận đã xin phép.",
+      "ghi_chu": "960x1280, nét. Màn hình laptop quay nghiêng, không thấy nội dung. Có ấm trà trên bàn kính.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoc-vien-hoc-ly-thuyet-5e7dfe",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên học lý thuyết.jpg",
+      "file_tuong_doi": "image/Học viên học lý thuyết.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 960,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-10-13",
+      "loai": "ANH",
+      "mo_ta": "Một phụ nữ đeo khẩu trang ngồi ghế sofa nhìn laptop, người khác đeo khẩu trang ngồi bên phải; sau lưng là tấm phông 'TƯ VẤN - ĐĂNG KÝ ĐÀO TẠO - HỖ TRỢ SÁT HẠCH'.",
+      "dia_diem": "van-phong",
+      "co_canh": "trung",
+      "the": [
+        "hoc-ly-thuyet",
+        "laptop",
+        "van-phong",
+        "tu-van",
+        "hoc-vien-nu",
+        "bang-quang-cao"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Hai người đều đeo khẩu trang nhưng mắt, tóc thấy rõ; người nền ở sau cũng thấy. Làm mờ mặt hoặc cắt khung chỉ giữ laptop, phông và tay; cần xác nhận đã xin phép.",
+      "ghi_chu": "960x1280, nét. Chữ 'THỦ TỤC NHANH GỌN', 'UY TÍN CHẤT LƯỢNG' trên phông có thể trùng nhận diện trung tâm; phần chữ bị che bởi người nên dễ thành chữ cắt dở khi cắt khung. Màn hình laptop tối.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoc-vien-nam-hang-a-trung-canh-78c68e",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Học Viên Nam_Hạng A_ trung cảnh.mp4",
+      "file_tuong_doi": "canh-quay/Học Viên Nam_Hạng A_ trung cảnh.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 480,
+      "cao": 854,
+      "huong": "doc",
+      "fps": 30.0,
+      "thoi_luong": 31.37,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-09-29",
+      "loai": "BROLL",
+      "mo_ta": "Người đội mũ bảo hiểm lái mô tô cruiser đen quanh các vòng tròn, đường cong sơn trắng trên sân trước dãy nhà vàng; cuối clip máy lia sang bảng hiệu Vạn Xuân và sân vạch kẻ ô.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "hang-a",
+        "moto",
+        "vong-so-8",
+        "duong-cong",
+        "bien-hieu-van-xuan",
+        "san-vach-o",
+        "tap-xe"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          11.0
+        ],
+        [
+          16.5,
+          31.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Cận cảnh ở 11-16 s người lái thấy một phần mặt dưới mũ: bỏ đoạn này hoặc làm mờ. Biển số ô tô trắng nhỏ, làm mờ nếu phóng. Cần xác nhận đã xin phép nếu dùng đoạn cận.",
+      "ghi_chu": "480x854, thấp hơn khung xuất, phóng lên sẽ mềm. Phông sau có băng rôn 'Vui Tết Trung Thu' (khoảng 11-15 s): cảnh gắn với dịp Trung thu, nên tránh dùng ngoài mùa. Từ 22 s thấy bảng hiệu 'VX ĐÀO TẠO LÁI XE VẠN XUÂN' trên nhà, có ích để nhận diện sân. Xe ô tô trắng nhỏ ở nền (22-27 s).",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoc-vien-nam-trung-canh-5aa9c3",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Học Vien Nam_Trung Cảnh.mp4",
+      "file_tuong_doi": "canh-quay/Học Vien Nam_Trung Cảnh.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 720,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 29.38,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-10",
+      "loai": "BROLL",
+      "mo_ta": "Một người đội mũ bảo hiểm, áo xanh lái xe cub xanh trắng chạy vòng số 8 trên sân ướt mưa; cuối clip máy lia sang giàn tập thể dục xanh trắng, xe chạy sau giàn này.",
+      "dia_diem": "san-tap",
+      "co_canh": "rong",
+      "the": [
+        "san-tap",
+        "vong-so-8",
+        "san-uot",
+        "troi-mua",
+        "xe-cub",
+        "hoc-vien-nam",
+        "tap-xe"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          19.0
+        ],
+        [
+          20.5,
+          29.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien"
+      ],
+      "can_xu_ly": "Người lái đội mũ bảo hiểm kín mặt, rủi ro thấp; cận ở 11.0 s và 28.2 s vẫn thấy mũ, không thấy mặt rõ. Nên xác nhận người này đã đồng ý.",
+      "ghi_chu": "720x1280, thấp hơn khung xuất. Trời mưa, sân ướt, màu xám ảm đạm; xe nhỏ trong khung ở đoạn đầu. Khoảng 19-20.5 s máy lia đột ngột sang giàn tập, nên cắt bỏ phần chuyển. Cảnh hợp chủ đề thi lý thuyết ít, hợp 'tập xe trời mưa'.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoc-vien-nu-santap-cancanh-9e426a",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Hoc_vien_nu_SanTap_Cancanh.mp4",
+      "file_tuong_doi": "canh-quay/Hoc_vien_nu_SanTap_Cancanh.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 480,
+      "cao": 854,
+      "huong": "doc",
+      "fps": 30.0,
+      "thoi_luong": 18.13,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-10-23",
+      "loai": "BROLL",
+      "mo_ta": "Một phụ nữ lái xe số đỏ đen chạy vòng quanh các vòng tròn, mũi tên sơn trắng trên sân bê tông; máy lia theo từ gần ra xa.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "vong-so-8",
+        "vach-son-trang",
+        "mui-ten",
+        "hoc-vien-nu",
+        "xe-so",
+        "tap-xe"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          9.5
+        ],
+        [
+          13.0,
+          18.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Ở khoảng 9.5-13 s người lái ở sát máy, thấy mặt rõ: bỏ đoạn này hoặc làm mờ mặt. Các đoạn 0-9.5 s và 13-18 s người lái xa/nhỏ, mặt khó nhận ra. Biển số xe sau ở 13-16 s nhỏ, nên làm mờ nếu phóng to. Cần xác nhận đã xin phép nếu dùng đoạn gần.",
+      "ghi_chu": "Độ phân giải 480x854, thấp hơn khung xuất 1080x1920: phóng lên sẽ mềm, tránh phóng thêm. Có cột điện và dây điện ở nền. Gió/tiếng nền nhỏ (-22.7 LUFS).",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoc-vien-tap-xe-a-ga-e53d1f",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Học viên tập xe A ga.mp4",
+      "file_tuong_doi": "canh-quay/Học viên tập xe A ga.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 720,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": 30.0,
+      "thoi_luong": 25.63,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-08-22",
+      "loai": "BROLL",
+      "mo_ta": "Một người đội mũ bảo hiểm trắng, áo xám lái xe tay ga trắng quanh các vòng tròn sơn trắng và vết lốp đen trên sân; nền là cây xanh và đồi.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "xe-tay-ga",
+        "vong-so-8",
+        "vach-son-trang",
+        "vet-lop",
+        "tap-xe",
+        "hoc-vien-nam"
+      ],
+      "doan_dung_duoc": [
+        [
+          6.0,
+          17.0
+        ],
+        [
+          19.5,
+          25.5
+        ]
+      ],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Ở 1-5 s và 18 s người lái gần máy, thấy mặt bên dưới mũ mở: chỉ dùng đoạn xa 6-17 s và 19.5-25.5 s, hoặc làm mờ mặt. Biển số xe sau khi quay mặt lại ở 5-12 s nhỏ, làm mờ nếu phóng. Cần xác nhận đã xin phép.",
+      "ghi_chu": "720x1280, hình ổn, ánh sáng đều, nét. Đây là sân khác với các clip có nhà vàng và bảng hiệu Vạn Xuân; không có dấu hiệu nhận diện trung tâm trong khung.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoc-vien-tap-xe-hang-a-f6364b",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Học viên tập xe hạng A.mp4",
+      "file_tuong_doi": "canh-quay/Học viên tập xe hạng A.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 720,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": 30.0,
+      "thoi_luong": 28.93,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-08-22",
+      "loai": "BROLL",
+      "mo_ta": "Nhiều học viên lần lượt chạy xe tay ga trắng và mô tô cruiser quanh các vòng tròn sơn trắng trong sân có mái giàn xanh và xe ô tô đỗ phía sau.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "xe-tay-ga",
+        "hang-a",
+        "moto",
+        "vong-so-8",
+        "nhieu-hoc-vien",
+        "tap-xe",
+        "xe-oto-do"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.5,
+          28.5
+        ]
+      ],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Thấy mặt rõ của ít nhất 2 người (người nữ áo đen ở 1-6 s, 15-26 s; người nam áo xanh trên mô tô ở 8-13 s) và người đứng xem ở 18 s: hầu như không có đoạn nào hoàn toàn không thấy mặt. Cần xác nhận đã xin phép từng người, hoặc làm mờ mặt, hoặc chỉ dùng cắt khung chân/xe. Biển số xe tay ga ở 27.7 s thấy được: làm mờ.",
+      "ghi_chu": "720x1280, nét, sáng. Máy cầm tay lắc nhẹ, góc quay thay đổi liên tục (có đoạn xoay máy nhanh quanh 18 s). Âm thanh to (-13.6 LUFS), có tiếng nói/động cơ, cần hạ khi ghép. Có người đứng xem ở mép phải (khoảng 18 s).",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoc-vien-xep-hang-cho-thi-322aad",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên xếp hàng chờ thi.jpg",
+      "file_tuong_doi": "image/Học viên xếp hàng chờ thi.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 1920,
+      "cao": 2560,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-08-22",
+      "loai": "ANH",
+      "mo_ta": "Nhóm học viên nam đeo thẻ dây xanh xếp hàng ở hành lang sáng, tay cầm túi hồ sơ nâu, một người đàn ông áo xanh quay lưng một phần đứng đối diện.",
+      "dia_diem": "khac",
+      "co_canh": "trung",
+      "the": [
+        "cho-thi",
+        "xep-hang",
+        "hanh-lang",
+        "ho-so",
+        "the-deo",
+        "nhieu-hoc-vien"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "ten-nguoi",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Khoảng 6 học viên thấy mặt rõ, thẻ đeo cổ có thể có tên. Cắt khung vào túi hồ sơ và đôi chân (nửa dưới) không thấy mặt, hoặc làm mờ mặt và thẻ, hoặc cần xác nhận đã xin phép.",
+      "ghi_chu": "Ảnh 1920x2560, nền xa và phía sau bị nhòe nhẹ (lấy nét ở nhóm giữa). Phù hợp cho 'chờ thi' nhưng cùng bối cảnh với ảnh 'Học viên chờ vào thi'.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "hoclythuyet-1324bf",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\HocLyThuyet.jpg",
+      "file_tuong_doi": "image/HocLyThuyet.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 1920,
+      "cao": 2560,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-11-10",
+      "loai": "ANH",
+      "mo_ta": "Phòng máy tính: vài học viên ngồi trước máy bàn, một phụ nữ áo xanh đứng quan sát, nhóm học viên khác ngồi ghế chờ phía sau cầm điện thoại.",
+      "dia_diem": "phong-hoc",
+      "co_canh": "trung",
+      "the": [
+        "phong-may",
+        "hoc-ly-thuyet",
+        "may-tinh",
+        "on-thi",
+        "hoc-vien-ngoi-may",
+        "nhieu-hoc-vien"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien"
+      ],
+      "can_xu_ly": "Thấy mặt nghiêng của học viên ngồi trước máy và mặt người đứng; nhóm ngồi sau có người đeo khẩu trang. Làm mờ mặt, hoặc cắt khung phần bàn phím và màn hình bên phải (không thấy mặt), hoặc cần xác nhận đã xin phép.",
+      "ghi_chu": "Ảnh 1920x2560, nét. Cùng nội dung với ảnh 'Phòng máy.jpg' (mã phong-may-aacee1): trùng lặp, chỉ cần dùng một. Tường vàng, quạt, đèn sáng; không thấy chữ nhận diện trung tâm.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "huong-dan-hoc-vien-hoc-luu-don-c36bfc",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Hướng dẫn học viên học lưu động.jpg",
+      "file_tuong_doi": "image/Hướng dẫn học viên học lưu động.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 960,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-09-29",
+      "loai": "ANH",
+      "mo_ta": "Trong lớp học bàn gỗ, ba phụ nữ ngồi xem một màn hình laptop, một người đứng phía sau cúi xem cùng.",
+      "dia_diem": "phong-hoc",
+      "co_canh": "trung-can",
+      "the": [
+        "phong-hoc",
+        "hoc-ly-thuyet",
+        "laptop",
+        "on-thi",
+        "hoc-nhom",
+        "hoc-vien-nu"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien"
+      ],
+      "can_xu_ly": "Thấy mặt rõ của 3 người (một người đeo khẩu trang). Làm mờ mặt, hoặc cần xác nhận đã xin phép. Nên dùng ảnh góc từ phía sau (huong-dan-hoc-vien-luu-dong-08dbbb) thay cho ảnh này.",
+      "ghi_chu": "960x1280, nét, ánh sáng đều. Màn hình laptop quay nghiêng, chữ không đọc được. Khá gần với ảnh 'Hướng dẫn học viên lưu động' (cùng buổi, góc từ phía sau).",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "huong-dan-hoc-vien-luu-dong-08dbbb",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Hướng dẫn học viên lưu động.jpg",
+      "file_tuong_doi": "image/Hướng dẫn học viên lưu động.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 960,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-09-29",
+      "loai": "ANH",
+      "mo_ta": "Ba người ngồi sát nhau xem một màn hình laptop (nhìn từ phía sau vai), bảng đen xanh có công thức phía trước.",
+      "dia_diem": "phong-hoc",
+      "co_canh": "trung-can",
+      "the": [
+        "phong-hoc",
+        "hoc-ly-thuyet",
+        "laptop",
+        "man-hinh-thi",
+        "on-thi",
+        "hoc-nhom",
+        "nhin-tu-sau"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Chỉ thấy gáy và một bên má nhỏ của người ở giữa, mặt không nhận ra. Nên xác nhận đã xin phép nếu có thể.",
+      "ghi_chu": "960x1280, nét. Góc quay từ phía sau người học nên không thấy mặt: hợp nhất trong kho cho cảnh ôn lý thuyết. Màn hình laptop chữ nhỏ không đọc được (cần che nếu sau này nét hơn). Bảng đen có bài toán, không liên quan lái xe; có thể cắt khung lên trên bỏ bảng.",
+      "nguon": "trung-tam",
+      "mat_nguoi": false,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "nguoi-buc-boi-truoc-may-tinh-98561a",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\stock\\mixkit\\nguoi-buc-boi-truoc-may-tinh.mp4",
+      "file_tuong_doi": "canh-quay/stock/mixkit/nguoi-buc-boi-truoc-may-tinh.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 1920,
+      "cao": 1080,
+      "huong": "ngang",
+      "fps": 24.0,
+      "thoi_luong": 15.04,
+      "co_am_thanh": false,
+      "ngay_nap": "2026-11-10",
+      "loai": "BROLL",
+      "mo_ta": "Cận mặt một phụ nữ tóc đen áo đen ngồi trước laptop, nhìn màn hình với vẻ căng thẳng, lo lắng, đưa tay ôm trán, thở dài; nền bếp tối mờ.",
+      "dia_diem": "khac",
+      "co_canh": "trung-can",
+      "the": [
+        "may-tinh",
+        "laptop",
+        "cang-thang",
+        "lo-lang",
+        "thi-truot",
+        "on-thi",
+        "hoc-vien-nu",
+        "stock"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          15.0
+        ]
+      ],
+      "chat_luong": "tot",
+      "rui_ro": [],
+      "can_xu_ly": "stock nước ngoài lộ mặt: luật nhà cấm",
+      "ghi_chu": "Ngang: 1920x1080, dựng dọc sẽ cắt hai bên. Khi cắt dọc 9:16 (lấy ~31% chiều ngang) giữ tieu_diem x = 0.42 (khuôn mặt và bàn tay ôm trán nằm khoảng 0.30-0.60 bề ngang; mặt hơi dịch phải về cuối clip, có thể dùng x = 0.45 cho nửa sau). Laptop chiếm nửa phải khung, nên cắt dọc sẽ chỉ còn mép laptop, không thấy màn hình. Không có tiếng, 24 fps, nét, hơi tối, bokeh đẹp. Người trong clip là người nước ngoài (stock, ngoại hình Mỹ Latinh), bối cảnh bếp/nhà phương Tây: có thể lạc với kênh Việt Nam, nhưng cảm xúc căng thẳng, lo lắng hợp 'hồi hộp khi thi lý thuyết, sai câu điểm liệt'. Nên đặt chữ và nền navy phủ lên, tránh để mặt là trọng tâm lâu.",
+      "nguon": "stock-nuoc-ngoai",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": false,
+      "ly_do_loai": [
+        "nhan.json: duoc_dung=false (stock nước ngoài lộ mặt: luật nhà cấm)",
+        "stock nước ngoài: yêu cầu dự án không dùng"
+      ]
+    },
+    {
+      "ma": "nhieu-hoc-vien-nu-cancanh-e2ece6",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Nhieu_hoc_vien_nu_Cancanh.mp4",
+      "file_tuong_doi": "canh-quay/Nhieu_hoc_vien_nu_Cancanh.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 720,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 38.29,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-10",
+      "loai": "BROLL",
+      "mo_ta": "Hai học viên nữ lần lượt chạy xe số trên sân rộng, vạch sơn trắng đã mờ, nhà hai tầng và tường rào ở xa; một người mặc áo vàng chạy vòng lặp lại.",
+      "dia_diem": "san-tap",
+      "co_canh": "rong",
+      "the": [
+        "san-tap",
+        "san-rong",
+        "hoc-vien-nu",
+        "xe-so",
+        "vach-mo",
+        "tap-xe",
+        "nhieu-hoc-vien"
+      ],
+      "doan_dung_duoc": [
+        [
+          9.5,
+          19.0
+        ],
+        [
+          25.5,
+          38.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien"
+      ],
+      "can_xu_ly": "Ở 0-9 s và 20-25 s người lái ở sát máy, thấy mặt rõ: bỏ đoạn này hoặc làm mờ. Các đoạn 9.5-19 s và 25.5-38 s người lái ở xa, mặt nhỏ, khó nhận ra. Cần xác nhận đã xin phép nếu dùng đoạn gần.",
+      "ghi_chu": "720x1280, 24 fps. Vạch kẻ sân mờ, khó thấy hình vòng số 8; xe nhỏ trong khung ở nhiều đoạn. Nền trời xanh sáng. Phiên âm lời nói chỉ có 26 từ nhiễu (đoạn 31.8-38 s), không phải lời thoại đáng tin.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "phong-may-aacee1",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Phòng máy.jpg",
+      "file_tuong_doi": "image/Phòng máy.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 1920,
+      "cao": 2560,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-08-22",
+      "loai": "ANH",
+      "mo_ta": "Phòng máy tính: vài học viên ngồi trước máy bàn, một phụ nữ áo xanh đứng quan sát, nhóm học viên khác ngồi ghế chờ phía sau cầm điện thoại.",
+      "dia_diem": "phong-hoc",
+      "co_canh": "trung",
+      "the": [
+        "phong-may",
+        "hoc-ly-thuyet",
+        "may-tinh",
+        "on-thi",
+        "hoc-vien-ngoi-may",
+        "nhieu-hoc-vien"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien"
+      ],
+      "can_xu_ly": "Thấy mặt nghiêng của học viên ngồi trước máy và mặt người đứng; nhóm ngồi sau có người đeo khẩu trang. Làm mờ mặt, hoặc cắt khung phần bàn phím và màn hình bên phải (không thấy mặt), hoặc cần xác nhận đã xin phép.",
+      "ghi_chu": "Ảnh 1920x2560, nét. TRÙNG với 'HocLyThuyet.jpg' (mã hoclythuyet-1324bf): cùng khung hình, chỉ dùng một trong hai.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "phong-may-trung-canh-e9d674",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Phòng Máy _Trung Cảnh.mp4",
+      "file_tuong_doi": "canh-quay/Phòng Máy _Trung Cảnh.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 480,
+      "cao": 854,
+      "huong": "doc",
+      "fps": 30.0,
+      "thoi_luong": 6.9,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-10-13",
+      "loai": "BROLL",
+      "mo_ta": "Trong văn phòng, một phụ nữ ngồi gõ laptop ở bàn gỗ, phía sau vài người ngồi chờ trên sofa đỏ cạnh cửa kính; máy lia từ tranh tường sang cửa sổ.",
+      "dia_diem": "van-phong",
+      "co_canh": "trung",
+      "the": [
+        "van-phong",
+        "laptop",
+        "lam-ho-so",
+        "cho-tu-van",
+        "sofa-do",
+        "cua-kinh",
+        "hoc-vien-cho"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          6.9
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "giay-to",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Có người ngồi ghế chờ và nhân viên bên trái đeo khẩu trang (che mặt một phần), người ngồi sofa mặt nhỏ. Màn hình laptop và giấy tờ trên bàn (góc dưới phải khung, có vẻ có giấy tờ cá nhân) cần làm mờ hoặc cắt bỏ. Cần xác nhận người trong khung đã đồng ý.",
+      "ghi_chu": "480x854, thấp hơn khung xuất. Tên file ghi 'Phòng máy' nhưng hình thấy là khu văn phòng/tiếp nhận, không phải phòng máy học lý thuyết: không nên dùng cho 'phòng máy'. Âm thanh rất nhỏ (-36.1 LUFS). Clip ngắn 6.9 s.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "san-tap-voi-moto-hang-a-d5f7b7",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Sân tập với moto hạng A.jpg",
+      "file_tuong_doi": "image/Sân tập với moto hạng A.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 960,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-10-13",
+      "loai": "ANH",
+      "mo_ta": "Mô tô cruiser đen hiệu LIFAN đỗ ở tiền cảnh, phía sau là sân tập vạch trắng và dãy nhà vàng có bảng hiệu 'VX ĐÀO TẠO LÁI XE VẠN XUÂN'.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung-can",
+      "the": [
+        "san-tap",
+        "moto",
+        "hang-a",
+        "bien-hieu-van-xuan",
+        "xe-do",
+        "troi-nang",
+        "nha-vang"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [],
+      "can_xu_ly": "Không có rủi ro riêng tư. Xe đỗ không thấy biển số.",
+      "ghi_chu": "960x1280, nét, trời nắng đẹp, bố cục tốt cho hook 'sân tập Vạn Xuân'. Không có người. Cắt dọc giữ nguyên được.",
+      "nguon": "trung-tam",
+      "mat_nguoi": false,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "santhuchanh-37a130",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\SanThucHanh.jpg",
+      "file_tuong_doi": "image/SanThucHanh.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 1920,
+      "cao": 2560,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-11-10",
+      "loai": "ANH",
+      "mo_ta": "Một người đội mũ bảo hiểm đen, áo đen ngồi trên xe tay ga trắng đang chạy trên sân có vạch kẻ trắng; xe khác và ô tô đỗ ở phía sau.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "xe-tay-ga",
+        "hoc-vien-nam",
+        "vach-son-trang",
+        "san-thuc-hanh",
+        "tap-xe"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Mặt người lái bị mũ che nhiều nhưng một phần má thấy. Cắt khung từ ngực xuống hoặc làm mờ vùng mặt; cắt bỏ biển hiệu phía trên; người thứ hai ở nền nhỏ. Cần xác nhận đã xin phép.",
+      "ghi_chu": "Ảnh 1920x2560, nét. Phía sau thấy tòa nhà có biển chữ 'PHƯƠNG CƯỜNG' (tên doanh nghiệp/đơn vị khác, không phải Vạn Xuân): cắt khung hoặc che để không nhầm nhận diện. Đây là sân có mái giàn khác với sân nhà vàng có bảng hiệu Vạn Xuân.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "snaptik-vn-7707073360106179892-936e3b",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Video quay demo\\snaptik.vn_7707073360106179892.mp4",
+      "file_tuong_doi": "canh-quay/Video quay demo/snaptik.vn_7707073360106179892.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 576,
+      "cao": 1024,
+      "huong": "doc",
+      "fps": 30.0,
+      "thoi_luong": 77.74,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-12",
+      "loai": "THAO",
+      "mo_ta": "Một người áo đen, đội mũ bảo hiểm nửa đầu, đeo khẩu trang, chạy mô tô côn tay LIFAN (kiểu cruiser) qua bài vòng tròn số 8 cạnh dãy nhà vàng mái vòm có bảng hiệu VX, rồi chạy ra khu vạch kẻ phía xa sân và quay lại; máy cầm tay đứng một chỗ lia theo.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "sa-hinh",
+        "bai-thi-thuc-hanh",
+        "vong-so-8",
+        "moto",
+        "con-tay",
+        "hang-a",
+        "nha-vang",
+        "bien-hieu-van-xuan",
+        "san-uot",
+        "vach-son-trang",
+        "san-vach-o",
+        "san-rong",
+        "mui-ten",
+        "nhin-tu-sau",
+        "chu-in-san",
+        "tai-tiktok"
+      ],
+      "doan_dung_duoc": [
+        [
+          5.0,
+          19.0
+        ],
+        [
+          19.0,
+          24.0
+        ],
+        [
+          27.0,
+          32.0
+        ],
+        [
+          32.0,
+          37.0
+        ],
+        [
+          58.0,
+          66.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "bien-so",
+        "chu-in-san",
+        "nguon-tiktok"
+      ],
+      "can_xu_ly": "Không dùng 0-5 s (chữ in sẵn). Che/làm mờ biển số sau ở 16-18 s và 29-30 s (hoặc tránh hai đoạn này). File tải lại từ TikTok: cần người dùng xác nhận đây là video của trung tâm (kênh TikTok của Vạn Xuân) và người lái đã đồng ý; nếu video là của tài khoản khác thì không dùng. Không dùng âm thanh gốc. Không trình bày là 'học viên thi thật' khi chưa rõ người lái là ai (có thể là người làm mẫu).",
+      "ghi_chu": "576x1024 (tải lại từ TikTok qua snaptik, nén nặng; rong_hieu_dung 576 -> chỉ khung ảnh dán). Trời âm u, sân ướt, nét vừa. Máy cầm tay đứng gần tâm vòng số 8, lia theo người lái, rung nhẹ. 0-3 s có chữ in sẵn 'Sau khi đi thử / Thì đi cả bài / Để xem ntn nhé' (chữ trắng viền đen giữa khung, KHÔNG xóa được) -> không dùng 0-5 s. chuyen_canh máy dò ở 5.0 s. MỐC GIÂY: 0-3 chữ in sẵn, xe đứng đầu bài, nghiêng nhìn từ bên (thấy chữ LIFAN trên bình xăng ở 0-2 s); 3-5 xe xuất phát, đi vào vòng tròn (nhìn từ sau); 5-8 trong vòng số 8 gần nhà vàng, quay lưng; 8-12 trung cảnh ngang, thấy vòng tròn có chữ A sơn trên mặt sân, nền sân rộng + bảng hiệu VX + khu vạch kẻ xa; 12-16 trung cảnh ngang sát dãy nhà vàng mái vòm (đẹp nhất, có biển VX góc phải 11-13 s); 16-19 cận từ phía sau, xe ôm vòng tròn trong, vũng nước tiền cảnh; biển số sau thấy (16-18 s); 19-24 xe ra khỏi vòng, đi về phía khu vạch kẻ thẳng, cảnh rộng có nhà vàng + bảng VX + nhà mái đỏ; 24-27 máy lia nhanh, xe chạy ra mép trái/khuất một phần -> bỏ; 27-32 xe vào lại vòng ở góc nhà cũ tường mốc, cận từ sau, bậc gạch đỏ tiền cảnh, có một mũ fullface họa tiết Red Bull để trên bậc (28-30 s); biển số sau thấy (29-30 s); 32-37 xe ra khỏi vòng chạy ngang sang trái khung, nền sân rộng + bảng VX + khu vạch kẻ; 37-40 xe ra khỏi mép trái, khung chỉ còn sân trống (dùng làm cảnh sân trống được); 40-57 cảnh rộng tĩnh-lia chậm: người lái rất nhỏ (< 1/20 khung) chạy ở khu vạch kẻ phía xa sân -> không nhận ra bài thi nào (KHÔNG ghi là đường thẳng/quanh co/gồ ghề); dùng như cảnh toàn sân; 57-62 người lái chạy từ khu vạch kẻ xa về phía máy, đi giữa các vạch song song (nhỏ, chưa đủ để khẳng định là bài đường thẳng); 62-66 xe tới gần, cắt ngang vạch tròn ngay trước máy, trung cảnh ngang (63-65 đẹp); 66-77.7 xe quay lại khu vạch kẻ phía xa, người rất nhỏ, có cột cờ đỏ, dãy nhà vàng mái xanh bên phải; khung cuối 77.7 s. KHÔNG thấy rõ bài đường thẳng hẹp, đường gồ ghề hay đường quanh co ở cỡ nhìn được. Không thấy rõ chống chân hay đè vạch ở khung nào (16-18 s bánh sau đi sát vạch tròn trong nhưng ảnh 576 px không đủ để khẳng định). Người lái đội mũ bảo hiểm suốt clip (0-3 s mũ bị chữ in đè một phần nhưng vẫn thấy); đi dép lê, mặc quần dài. Âm thanh: tiếng người quay nói (7-14 s, 60-77 s) + tiếng gió/máy; -12 LUFS; phiên âm máy nhiễu, không dùng làm lời trong video.",
+      "nguon": "trung-tam",
+      "mat_nguoi": false,
+      "quyen_bo_sung": "Người dùng xác nhận: video của trung tâm (tải lại từ TikTok của kênh), người lái làm mẫu đã đồng ý lên hình, quay ở sân Vạn Xuân. Vẫn tránh đoạn thấy biển số (16-18 s, 29-30 s).",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "tay-dung-chuot-e5db7e",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\stock\\mixkit\\tay-dung-chuot.mp4",
+      "file_tuong_doi": "canh-quay/stock/mixkit/tay-dung-chuot.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 1920,
+      "cao": 1080,
+      "huong": "ngang",
+      "fps": 23.98,
+      "thoi_luong": 20.19,
+      "co_am_thanh": false,
+      "ngay_nap": "2026-11-10",
+      "loai": "BROLL",
+      "mo_ta": "Cận bàn tay đặt trên chuột máy tính, ngón tay thỉnh thoảng nhấn chuột; bên phải là bàn phím phát đèn RGB đổi màu, ánh sáng xanh tím tối.",
+      "dia_diem": "khac",
+      "co_canh": "chi-tiet",
+      "the": [
+        "may-tinh",
+        "chuot",
+        "ban-phim",
+        "tay-bam-chuot",
+        "chon-dap-an",
+        "stock"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          20.0
+        ]
+      ],
+      "chat_luong": "tot",
+      "rui_ro": [],
+      "can_xu_ly": "Không có rủi ro riêng tư (stock, không lộ mặt). Nên làm tối nhẹ và ép tông về navy để bớt màu gaming.",
+      "ghi_chu": "Ngang: 1920x1080, dựng dọc sẽ cắt hai bên. Khi cắt dọc 9:16 giữ tieu_diem x = 0.22 (bàn tay và con chuột nằm khoảng 0.05-0.40 bề ngang; bàn phím RGB ở 0.55-1.0 sẽ bị cắt bỏ). Cảnh lặp vòng đèn bàn phím mỗi khoảng 8.5 s, nên dùng đoạn dài bao nhiêu cũng được. Không có tiếng, 24 fps. Phong cách gaming (đèn RGB, tông xanh tím tối) lạc tông với kênh lái xe Vạn Xuân (navy/cam, sân tập, phòng học); bàn tay người nước ngoài/không rõ, không lộ mặt. Hợp nhất để minh họa 'bấm chuột chọn đáp án' khi phủ lớp tối navy; nếu cắt dọc bỏ bàn phím thì bớt cảm giác game.",
+      "nguon": "stock-nuoc-ngoai",
+      "mat_nguoi": false,
+      "quyen_bo_sung": null,
+      "dung_duoc": false,
+      "ly_do_loai": [
+        "stock nước ngoài: yêu cầu dự án không dùng"
+      ]
+    },
+    {
+      "ma": "tay-go-laptop-fb3adb",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\stock\\mixkit\\tay-go-laptop.mp4",
+      "file_tuong_doi": "canh-quay/stock/mixkit/tay-go-laptop.mp4",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 1920,
+      "cao": 1080,
+      "huong": "ngang",
+      "fps": 23.98,
+      "thoi_luong": 10.22,
+      "co_am_thanh": false,
+      "ngay_nap": "2026-11-10",
+      "loai": "BROLL",
+      "mo_ta": "Nhìn từ trên xuống: hai tay một phụ nữ gõ phím laptop bạc đặt trên bàn gỗ, cổ tay đeo vòng, có hình xăm nhỏ ở cẳng tay; trên bàn có điện thoại và sổ tay.",
+      "dia_diem": "khac",
+      "co_canh": "can",
+      "the": [
+        "may-tinh",
+        "laptop",
+        "ban-phim",
+        "go-phim",
+        "lam-viec",
+        "on-thi",
+        "stock"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          10.0
+        ]
+      ],
+      "chat_luong": "tot",
+      "rui_ro": [],
+      "can_xu_ly": "Không có rủi ro riêng tư (stock, không lộ mặt). Chữ trên màn hình/sổ tay không đọc được.",
+      "ghi_chu": "Ngang: 1920x1080, dựng dọc sẽ cắt hai bên. Khi cắt dọc 9:16 giữ tieu_diem x = 0.35 (bàn phím và hai bàn tay khoảng 0.20-0.50; cánh tay phải kéo dài sang phải sẽ bị cắt một phần, vẫn đủ thấy tay gõ). Không có tiếng, 24 fps, màu ấm, nét. Không thấy mặt. Người trong clip là người nước ngoài (stock): thấy hình xăm ở cẳng tay và vòng tay kiểu phương Tây, bàn gỗ và laptop Mac, hơi lạc với kênh nhưng ít lộ liễu vì chỉ có bàn tay; khi cắt dọc ở x = 0.35 hình xăm có thể nằm ngoài khung. Hợp 'ôn lý thuyết trên laptop' và 'làm hồ sơ online'.",
+      "nguon": "stock-nuoc-ngoai",
+      "mat_nguoi": false,
+      "quyen_bo_sung": null,
+      "dung_duoc": false,
+      "ly_do_loai": [
+        "stock nước ngoài: yêu cầu dự án không dùng"
+      ]
+    },
+    {
+      "ma": "thay-giao-huong-dan-hoc-vien-t-fb3573",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Thầy giáo hướng dẫn học viên tại Trung tâm.jpg",
+      "file_tuong_doi": "image/Thầy giáo hướng dẫn học viên tại Trung tâm.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 960,
+      "cao": 1280,
+      "huong": "doc",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-09-29",
+      "loai": "ANH",
+      "mo_ta": "Trong phòng có bàn gỗ đen, một người đàn ông áo xám đứng cầm tờ giấy hướng dẫn một nam học viên cầm giấy; hai người nữ ngồi phía sau.",
+      "dia_diem": "phong-hoc",
+      "co_canh": "trung",
+      "the": [
+        "phong-hoc",
+        "huong-dan",
+        "ho-so",
+        "hoc-vien-nam",
+        "ban-go-den",
+        "tai-trung-tam"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "tot",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "giay-to",
+        "ten-nguoi"
+      ],
+      "can_xu_ly": "Thấy mặt rõ nam học viên, người đàn ông đứng (một phần) và người nữ ngồi sau. Làm mờ mặt hoặc cần xác nhận đã xin phép cả người hướng dẫn (cần đồng ý lên hình). Che tờ giấy trên tay.",
+      "ghi_chu": "960x1280, nét. Trên tường có băng rôn đỏ về 'Bầu cử đại biểu Quốc hội khóa XVI và Đại biểu Hội đồng nhân dân': nội dung chính trị, nên cắt khung hoặc che khi dùng cho video của kênh. Tờ giấy trên tay chữ không đọc được.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "vi-tri-co-so-efb606",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Vị trí cơ sở.jpg",
+      "file_tuong_doi": "image/Vị trí cơ sở.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 1280,
+      "cao": 960,
+      "huong": "ngang",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-10-13",
+      "loai": "ANH",
+      "mo_ta": "Bảng hiệu 'ĐÀO TẠO LÁI XE VẠN XUÂN' trên cột bên đường, cạnh cổng 'Nhà văn hóa', xe và người bán hàng ở lề đường bên phải.",
+      "dia_diem": "duong-thuc",
+      "co_canh": "rong",
+      "the": [
+        "bien-hieu-van-xuan",
+        "vi-tri",
+        "co-so",
+        "cong",
+        "duong",
+        "nha-van-hoa"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "nguoi-ngoai",
+        "bien-so"
+      ],
+      "can_xu_ly": "Người bán hàng bên phải đội nón, mặt khó nhận ra: cắt bỏ phía phải nếu cần. Xe máy gần đó nhỏ, biển số không đọc được. Cắt bỏ ngón tay ở góc dưới trái.",
+      "ghi_chu": "1280x960, ngang: dựng dọc sẽ cắt hai bên (giữ bảng hiệu ở giữa, cắt khung 9:16 còn khoảng 540 px ngang ở ảnh gốc 960 px cao, phóng lên 2 lần nên hơi mềm). Có ngón tay che góc dưới trái khung, cần cắt bỏ. Trời nắng gắt, bầu trời xanh.",
+      "nguon": "trung-tam",
+      "mat_nguoi": false,
+      "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "xep-ho-so-thi-b8392e",
+      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Xếp hồ sơ thi.jpg",
+      "file_tuong_doi": "image/Xếp hồ sơ thi.jpg",
+      "ton_tai": true,
+      "loai_file": "anh",
+      "rong": 2568,
+      "cao": 1926,
+      "huong": "ngang",
+      "fps": null,
+      "thoi_luong": null,
+      "co_am_thanh": null,
+      "ngay_nap": "2026-08-22",
+      "loai": "ANH",
+      "mo_ta": "Phòng lớn đông học viên ngồi quanh bàn gỗ, nhiều giấy tờ và túi hồ sơ trên bàn; một người trước ống kính mặc áo xanh có in tên đơn vị và số điện thoại ở phía lưng.",
+      "dia_diem": "khac",
+      "co_canh": "rong",
+      "the": [
+        "ho-so",
+        "phong-thi",
+        "cho-thi",
+        "giay-to",
+        "nhieu-hoc-vien"
+      ],
+      "doan_dung_duoc": [],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "giay-to",
+        "ten-nguoi",
+        "so-dien-thoai"
+      ],
+      "can_xu_ly": "Không dùng. Cả khung đều là mặt học viên và hồ sơ giấy tờ trên bàn (có thể chứa tên, số), cộng với số điện thoại/tên công ty khác in trên áo. Chỉ dùng được sau khi xin phép bằng văn bản từng người và làm mờ toàn bộ giấy tờ; việc này làm mất ý nghĩa cảnh nên không đáng. Nên quay lại cảnh xếp hồ sơ bằng hồ sơ trống hoặc cắt tay cầm túi hồ sơ.",
+      "ghi_chu": "2568x1926, ngang: dựng dọc sẽ cắt hai bên. Áo người trước máy in 'CÔNG TY TNHH ĐÀO TẠO LÁI XE MÔ TÔ PHÚ THỌ' kèm số điện thoại, đây không phải thông tin trong channel.yaml của kênh, tuyệt đối không dùng. Phòng thấy khoảng 15 học viên, nhiều người nhìn thẳng ống kính.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": null,
+      "dung_duoc": false,
+      "ly_do_loai": [
+        "nhan.json: duoc_dung=false (Không dùng. Cả khung đều là mặt học viên và hồ sơ giấy tờ trên bàn (có thể chứa tên, số), cộng với số điện thoại/tên công ty khác in trên áo. Chỉ dùng được sau khi xin phép bằng văn bản từng người và làm mờ toàn bộ giấy tờ; việc này làm mất ý nghĩa cảnh nên không đáng. Nên quay lại cảnh xếp hồ sơ bằng hồ sơ trống hoặc cắt tay cầm túi hồ sơ.)",
+        "quyen_hinh.ngoai_tru"
+      ]
+    }
+  ],
+  "kho_md": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\_kho\\KHO.md",
+  "mau_tong_hop": "# Tổng hợp video mẫu: kênh Vạn Xuân\n\n## Danh sách mẫu\n\n| Mã | Người đăng | Chủ đề | Thời lượng | Điểm đáng học nhất |\n|---|---|---|---|---|\n| facebook-2410452966429345 | Tran Hoai | Ủ cà phê lạnh bằng Arabica (khác ngành) | 220,3 s | Hook khẳng định, chữ chạy từng từ cùng tiếng; chữ nhấn hai tầng trắng và cam |\n\n## Mẫu lặp lại\n\nChưa đủ mẫu (mới có 1 mẫu; cần từ 2 mẫu trở lên mới ghi kỹ thuật lặp lại).\n\n## Đề xuất cho kênh\n\nMới có một mẫu, nên các đề xuất dưới đây còn tạm, chỉ để thử.\n\n1. Chữ nhấn hai tầng (dòng trên trắng, dòng dưới cam) cho cảnh 4 của `hoi-dap`. Công sức nhỏ, chỉ đổi kiểu chữ tu_khoa. Căn cứ: facebook-2410452966429345.\n2. Chữ hook hiện cộng dồn từng từ theo `captions_file`, bắt đầu từ 0 s (mẫu hiện chậm 2 s, nên sửa chỗ đó). Căn cứ: facebook-2410452966429345.\n3. Viết kịch bản: mỗi ý một cảnh, hai cảnh liền kề không cùng nền; chữ chỉ giữ ý chính, không chạy toàn bộ lời. Căn cứ: facebook-2410452966429345.\n4. Cảnh liệt kê 2–3 bước bằng các ô ảnh hiện lần lượt trên nền tối, dùng cho `loi_giai`. Công sức vừa. Căn cứ: facebook-2410452966429345.\n5. Thử hook cận cảnh tay/vật thật ở 0–2 s khi có ảnh thật được phép dùng (trong `image/` hoặc quay mới). Cần thêm điều kiện về nguồn ảnh. Căn cứ: facebook-2410452966429345.\n\nKhông mượn: độ dài 220 s, CTA bán hàng, lời hứa lợi ích, số liệu chuyên môn của mẫu.\n",
+  "mau_thuan_business_vs_channel": [
+    {
+      "truong": "hotline",
+      "channel_yaml": "0823 279 999",
+      "business_md": "0823279999",
+      "kieu": "khac_cach_viet",
+      "ghi_chu": "Cùng số, khác cách viết; dùng bản channel.yaml"
+    },
+    {
+      "truong": "fanpage",
+      "channel_yaml": "facebook.com/hoclaixephutho",
+      "business_md": "https://www.facebook.com/hoclaixephutho/",
+      "kieu": "khac_cach_viet",
+      "ghi_chu": "Cùng trang, khác cách viết (https/www)"
+    },
+    {
+      "truong": "dia_chi",
+      "channel_yaml": "Thôn 18, xã Vạn Xuân, tỉnh Phú Thọ",
+      "business_md": "Thôn 18, xã Vạn Xuân, tỉnh Phú Thọ (nhà văn hóa Thôn 18)",
+      "kieu": "khac_cach_viet",
+      "ghi_chu": "business.md thêm phần chú thích"
+    },
+    {
+      "truong": "ten_day_du",
+      "channel_yaml": "Trung tâm đào tạo lái xe Phú Thọ - chi nhánh Vạn Xuân",
+      "business_md": "Đào tạo lái xe Vạn Xuân",
+      "kieu": "khac_noi_dung",
+      "ghi_chu": "business.md ghi 'Tên đầy đủ' bằng tên kênh (ten_kenh), không phải ten_day_du"
+    },
+    {
+      "truong": "so_dien_thoai_phu",
+      "channel_yaml": null,
+      "business_md": "0978.639.199",
+      "kieu": "chi_co_trong_business",
+      "ghi_chu": "Số chưa có trong channel.yaml: không dùng tới khi người dùng xác nhận"
+    },
+    {
+      "truong": "website",
+      "channel_yaml": null,
+      "business_md": "https://van-xuan-driving-school.vercel.app/",
+      "kieu": "chi_co_trong_business",
+      "ghi_chu": "channel.yaml không có website: không chèn vào video"
+    },
+    {
+      "truong": "so_lieu",
+      "channel_yaml": null,
+      "business_md": "Hoạt động từ: 2023",
+      "kieu": "chua_co_nguon",
+      "ghi_chu": "Số liệu chỉ có trong business.md, chưa có nguồn mở được: không dùng trong demo"
+    },
+    {
+      "truong": "so_lieu",
+      "channel_yaml": null,
+      "business_md": "Học viên đã đào tạo: hơn 500+",
+      "kieu": "chua_co_nguon",
+      "ghi_chu": "Số liệu chỉ có trong business.md, chưa có nguồn mở được: không dùng trong demo"
+    },
+    {
+      "truong": "so_lieu",
+      "channel_yaml": null,
+      "business_md": "Tỉ lệ đỗ: trên 90%",
+      "kieu": "bi_cam",
+      "ghi_chu": "Quy tắc dự án cấm 'tỉ lệ đỗ': không dùng"
+    }
+  ],
+  "file_thieu": [],
+  "nhan_khong_co_trong_index": []
+}

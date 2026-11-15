@@ -1,0 +1,19 @@
+# Quy tắc riêng của kênh Đào tạo lái xe Vạn Xuân.
+# File này SỬA TAY. tools_local/nap_kenh.py chỉ đọc, không ghi đè.
+# Sau khi sửa, chạy lại nap_kenh.py để cập nhật brand.json.
+
+# Cụm từ không bao giờ được xuất hiện trong lời đọc / chữ trên màn hình
+cum_tu_cam:
+  - tỉ lệ đỗ
+  - tỷ lệ đỗ
+
+# Quy tắc nội dung bắt buộc
+quy_tac:
+  - Không bịa số liệu, không dùng con số không có nguồn
+  - Không hứa kết quả thi
+  - Không dùng cảnh stock nước ngoài, không tạo hình/video bằng AI
+  - Nội dung luật phải ghi nguồn (tên văn bản + link đã mở)
+
+# Cảnh trong kho có trường "nguon" thuộc danh sách này sẽ bị loại (mã nguồn: tên hiển thị)
+nguon_canh_khong_dung:
+  stock-nuoc-ngoai: stock nước ngoài
