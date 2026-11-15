@@ -241,7 +241,7 @@ Muốn chắc chắn 0 đồng: thêm câu **"chỉ dùng công cụ miễn phí
 
 ---
 
-## 10. Máy Reels (đang xây: đã có lớp nối Google Sheet)
+## 10. Máy Reels (đang xây: đã có lớp nối Sheet và khâu đăng bài, chưa đăng thật)
 
 Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xuất và đăng video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh. Bạn chỉ duyệt trên Google Sheet ở hai chỗ: duyệt chủ đề và duyệt video trước khi đăng. Hiện đã có lớp nối Google Sheet (`may_reels/`). Phần sản xuất và đăng video chưa có. Tài liệu:
 
@@ -249,6 +249,8 @@ Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xu�
 - `docs/may-reels/KE-HOACH.md`: sơ đồ luồng, cách chạy không dừng, lý do chọn pipeline `hybrid`, các rủi ro, và mục 6 **"Quyết định đã chốt"**. Cuối mục 6 có danh sách việc còn chờ bạn: câu 5, 6, 17 còn để trống.
 
 - `docs/may-reels/CAI-DAT-GOOGLE.md`: tạo service account, chia sẻ Sheet, cách dùng các cột trên Sheet.
+- `docs/may-reels/CAI-DAT-DANG-BAI.md`: app Meta và Page token, OAuth client cho YouTube và Drive, ý nghĩa các trạng thái đăng.
+- `docs/may-reels/API-DANG-BAI.md`: tóm tắt API đăng bài từ tài liệu chính thức, kèm ngày đọc.
 
 Khóa và file service account (ví dụ khóa Google Sheet) để trong thư mục `secrets/`, thư mục này đã được gitignore.
 
@@ -264,6 +266,20 @@ tools_local\py.cmd -m may_reels sheet nap-chu-de --kenh vanxuan           # đ�
 - Chạy lại bao nhiêu lần cũng không tạo tab trùng hay dòng trùng.
 - Cột nền vàng là cột của bạn, máy không ghi vào đó.
 - Trên tab Ý tưởng, chọn **Làm** để duyệt một chủ đề. Trên tab Hàng chờ, chọn **Duyệt** để cho đăng.
+
+**Đăng bài** (làm theo `CAI-DAT-DANG-BAI.md` trước):
+
+```powershell
+tools_local\py.cmd -m may_reels dang-nhap drive                     # một lần, mở trình duyệt
+tools_local\py.cmd -m may_reels dang-nhap youtube --kenh vanxuan    # một lần, chọn đúng kênh
+tools_local\py.cmd -m may_reels hang-cho them --video "<mp4>" --kenh vanxuan --caption-file "<txt>"
+tools_local\py.cmd -m may_reels dang                                # CHẠY THỬ: in ra sẽ đăng gì
+tools_local\py.cmd -m may_reels dang --that                         # ĐĂNG THẬT các dòng đã chọn Duyệt
+```
+
+- `dang` không có `--that` thì không gọi API nền tảng và không ghi tab Hàng chờ.
+- TikTok chưa đăng qua API: máy chép video và caption vào thư mục Drive "Chờ đăng TikTok" để bạn đăng tay.
+- Mỗi lần chạy, máy ghi một dòng vào tab Nhật ký.
 
 **Chạy kiểm thử** (cần làm sau mỗi lần sửa code):
 

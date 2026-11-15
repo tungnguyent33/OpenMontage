@@ -77,8 +77,10 @@ Tài liệu nền cho mọi stage: `skills/creative/short-form.md` (1080×1920, 
 | | |
 |---|---|
 | Tái dùng | Mẫu khai báo `BaseTool` của `export_bundle.py`. Schema `publish_log`. `.gitignore` đã có `.youtube-token.json`, cho thấy upstream đã tính đến OAuth YouTube nhưng **chưa có code**. |
-| Viết mới | `tools/publishers/youtube_shorts.py`, `tools/publishers/facebook_reels.py`, `tools/publishers/tiktok.py`. Mỗi file kế thừa `BaseTool`, `capability = "publish"`, mặc định chạy thử, import thư viện mạng bên trong hàm. `may_reels/dang.py`: đọc lại ô Duyệt ngay trước khi đăng, chống trùng theo cặp (mã video, nền tảng), ghi sổ đăng local và tab đăng trên Sheet. |
-| Chưa xác minh | Điều kiện API của từng nền tảng: quyền của Meta Graph API cho Reels trên Fanpage, quota của YouTube Data API, và việc TikTok Content Posting API có cần duyệt app trước khi đăng công khai hay không. Chưa đọc tài liệu nền tảng trong phiên này. |
+| Đã làm (2026-11-15) | `tools/publishers/facebook_reels.py`, `youtube_shorts.py`, `tiktok_handoff.py` (TikTok đăng tay qua Drive). `may_reels/dang_bai.py` (lệnh `dang [--that]`), `may_reels/hang_cho.py` (lệnh `hang-cho them`). Cài đặt: `CAI-DAT-DANG-BAI.md`. **Chưa đăng thật lần nào.** |
+| Kế hoạch ban đầu | `tools/publishers/youtube_shorts.py`, `tools/publishers/facebook_reels.py`, `tools/publishers/tiktok.py`. Mỗi file kế thừa `BaseTool`, `capability = "publish"`, mặc định chạy thử, import thư viện mạng bên trong hàm. `may_reels/dang.py`: đọc lại ô Duyệt ngay trước khi đăng, chống trùng theo cặp (mã video, nền tảng), ghi sổ đăng local và tab đăng trên Sheet. |
+| Tài liệu API | Đã đọc ngày 2026-11-15, tóm tắt trong `docs/may-reels/API-DANG-BAI.md`. Còn chưa xác minh: Meta có cần App Review không; scope tối thiểu để đọc lại `privacyStatus`. |
+| Drive | Service account không có dung lượng Drive (tài liệu Google), nên bản xem thử và thư mục TikTok dùng OAuth của người dùng (`drive.file`). |
 
 ### Bước 6: Số liệu
 

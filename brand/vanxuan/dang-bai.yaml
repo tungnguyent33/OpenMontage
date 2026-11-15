@@ -1,0 +1,27 @@
+# Cấu hình đăng bài của kênh. File này được COMMIT lên repo public:
+# CHỈ chứa TÊN biến môi trường và ID công khai, KHÔNG BAO GIỜ chứa token hay khóa.
+# Giá trị thật của các biến đặt trong .env (không commit). Xem docs/may-reels/CAI-DAT-DANG-BAI.md
+
+# Nền tảng mặc định khi đưa video vào Hàng chờ
+nen_tang: [fb_reels, yt_shorts, tiktok]
+
+fb_reels:
+  page_id: ""                     # CHƯA CHỐT: ID số của Page facebook.com/hoclaixephutho (KE-HOACH.md câu 5)
+  bien_token: VANXUAN_FB_PAGE_TOKEN
+  is_ai_generated:                # CHƯA CHỐT: để trống = không gửi tham số này
+
+yt_shorts:
+  kenh_id: ""                     # CHƯA CHỐT: ID kênh YouTube dạng UC... (câu 5). Máy từ chối đăng nếu token không thuộc kênh này
+  bien_token_file: VANXUAN_YT_TOKEN_FILE   # biến chứa đường dẫn file token, ví dụ secrets/youtube-<kênh>.json
+  category_id: ""                 # tùy chọn; để trống = không gửi
+  made_for_kids:                  # CHƯA CHỐT: khai báo "dành cho trẻ em" (status.selfDeclaredMadeForKids)
+  contains_synthetic_media:       # CHƯA CHỐT: video dùng giọng đọc tổng hợp (TTS) có cần khai báo không
+
+tiktok:
+  che_do: tay                     # chỉ 'tay': chép sang Drive "Chờ đăng TikTok", người đăng tay
+
+# Số bài tối đa trong 24 giờ (mặc định theo docs/may-reels/API-DANG-BAI.md mục 5)
+gioi_han_24h:
+  fb_reels: 30
+  yt_shorts: 100
+  tiktok: 15

@@ -64,13 +64,24 @@ Nếu buộc phải sửa (hoặc thêm file vào thư mục lõi mà code lõi 
 ## 3. Đăng bài: Python tất định, mặc định chạy thử, chống đăng trùng
 
 - **Không gọi LLM** trong đường đăng bài. Tiêu đề, mô tả và hashtag được chốt *trước* khi dòng vào hàng chờ duyệt, nằm trong cột máy của Sheet để người đọc được khi duyệt. Publisher chỉ đọc lại và gửi đi.
-- **Mặc định chạy thử (dry-run).** Muốn đăng thật phải bật bằng một cờ rõ ràng mỗi lần chạy (ví dụ `--that`). Ở chế độ chạy thử, máy kiểm tra đủ mọi điều kiện, in ra sẽ đăng gì lên đâu, và không gọi API ghi nào. Nếu ghi `publish_log`, trạng thái lúc này là `draft`, không phải `published` (schema cho phép `published`, `exported`, `failed`, `draft`, `pending_review`, xem `schemas/artifacts/publish_log.schema.json`).
+- **Mặc định chạy thử (dry-run).** Muốn đăng thật phải bật bằng một cờ rõ ràng mỗi lần chạy (ví dụ `--that`). Ở chế độ chạy thử, máy kiểm tra đủ mọi điều kiện, in ra sẽ đăng gì lên đâu, và không gọi API ghi nào. Nếu ghi `publish_log`, trạng thái lúc này là `pending_review` (không dùng `draft`, vì `draft` trùng với trạng thái nháp của Facebook), không phải `published` (schema cho phép `published`, `exported`, `failed`, `draft`, `pending_review`, xem `schemas/artifacts/publish_log.schema.json`).
 - **Chống đăng trùng theo cặp (mã video, nền tảng).** Trước khi tải lên:
   1. Tra sổ đăng local và tab đăng trên Sheet. Nếu cặp này đã có trạng thái `published` thì dừng.
   2. Ghi trạng thái "đang đăng" cho cặp đó *trước* khi gọi API. Nếu máy chết giữa chừng, lần chạy sau thấy "đang đăng" thì không tự đăng lại mà báo người kiểm tra.
   3. Đăng xong thì ghi `video_id` và `url` trả về.
 - Mỗi lần đăng tạo một mục `publish_log` hợp lệ theo schema (`platform`, `status` và `timestamp` là bắt buộc; `url`, `video_id`, `metadata_used`, `error` thêm vào nếu có).
 - Có thể dùng `export_bundle` (`tools/publishers/export_bundle.py`) để đóng gói bản dựng cùng metadata trước khi đăng. Tool này không tải lên đâu cả.
+- **Đã làm (2026-11-15):** `may_reels/dang_bai.py` (lệnh `python -m may_reels dang [--that]`), cùng các publisher `tools/publishers/facebook_reels.py`, `youtube_shorts.py` và `tiktok_handoff.py`.
+  - Thứ tự ghi khi đăng một dòng:
+    1. Đọc lại dòng.
+    2. Ghi `dang_tai_len`.
+    3. Gọi API.
+    4. Ghi **sổ đăng local** (`projects/_may_reels/so_dang.jsonl`).
+    5. Ghi Sheet.
+  - Nếu bước 5 lỗi, lần chạy sau đọc sổ đăng, chỉ sửa lại Sheet và không đăng lại.
+  - Lỗi ở bước cuối, khi bài **có thể** đã lên, được xếp loại `khong_ro`, chuyển sang `can_kiem_tra` và không bao giờ tự thử lại.
+- Mọi API đăng bài phải có tóm tắt từ tài liệu chính thức, ghi kèm ngày đọc, trong `docs/may-reels/API-DANG-BAI.md`. Trước khi sửa publisher thì đọc lại tài liệu đó. Không viết theo trí nhớ.
+- Token đăng bài theo từng kênh. `brand/<id>/dang-bai.yaml` chỉ chứa tên biến môi trường và ID công khai. `may_reels/cau_hinh_dang.py` từ chối giá trị trông giống token.
 
 ---
 
@@ -168,8 +179,9 @@ Mọi file của OpenMontage gốc mà Máy Reels sửa, hoặc thư mục lõi 
 | File | Loại | Thay đổi | Lý do | Khi merge upstream |
 |---|---|---|---|---|
 | `.gitignore` | Sửa (đã làm 2026-11-15) | Thêm 2 dòng ở cuối file: `secrets/` và `brand/*/_local/` | Giữ file service account, token và nội dung riêng của kênh ngoài repo public | Giữ 2 dòng này nếu upstream sửa `.gitignore` (thêm ở cuối file nên ít xung đột) |
-| `.env.example` | Sửa (đã làm 2026-11-15) | Thêm khối `# --- Máy Reels ---` ở cuối file: `MAY_REELS_SA_JSON`, `MAY_REELS_SHEET_ID`, `KENH_GOC_DIR` | Người cài mới biết cần đặt biến nào | Thêm ở cuối file nên ít xung đột. Nếu upstream sửa đoạn cuối file thì giữ cả hai. |
+| `.env.example` | Sửa (đã làm 2026-11-15) | Thêm khối `# --- Máy Reels ---` ở cuối file: `MAY_REELS_SA_JSON`, `MAY_REELS_SHEET_ID`, `KENH_GOC_DIR`, `MAY_REELS_GOOGLE_CLIENT_SECRET`, `MAY_REELS_DRIVE_TOKEN`, và ví dụ `VANXUAN_FB_PAGE_TOKEN`, `VANXUAN_YT_TOKEN_FILE` | Người cài mới biết cần đặt biến nào | Thêm ở cuối file nên ít xung đột. Nếu upstream sửa đoạn cuối file thì giữ cả hai. |
 | `schemas/may-reels/reel_job.schema.json` | Thêm file vào thư mục lõi `schemas/` (đã làm 2026-11-15) | Schema job của Máy Reels | Theo yêu cầu đặt schema ở đây. Thư mục con riêng `may-reels/` không phải package Python và không bị `schemas.artifacts.list_schemas()` quét | Không xung đột trừ khi upstream tạo thư mục cùng tên. |
+| `tools/publishers/facebook_reels.py`, `youtube_shorts.py`, `tiktok_handoff.py`, `_dang_chung.py` | Thêm file mới vào thư mục lõi (2026-11-15) | Publisher của Máy Reels | Registry chỉ tìm tool trong `tools/`. Không sửa file có sẵn nào | Không xung đột trừ khi upstream thêm file cùng tên. `export_bundle.py` giữ nguyên. |
 | `pipeline_defs/may-reels.yaml` | Thêm file (đã duyệt phương án 2, chưa viết) | Manifest riêng cho chế độ chạy không dừng | `lib/pipeline_loader.py` chỉ đọc manifest trong `pipeline_defs/`, và `lib/checkpoint.py` tìm cổng duyệt qua tên pipeline | Không xung đột trừ khi upstream đổi schema manifest. `tests/contracts/test_pipeline_catalog.py` sẽ tự kiểm tra file này. |
 | `HUONG-DAN-SU-DUNG.md` | File của nhánh, không phải upstream | — | — | — |
 
