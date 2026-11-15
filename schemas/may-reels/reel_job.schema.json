@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "may-reels/reel_job.schema.json",
+  "title": "ReelJob",
+  "description": "Một video của Máy Reels, từ ý tưởng tới khi đăng. Bảng chuyển trạng thái nằm ở may_reels/job.py (CHUYEN_HOP_LE); schema chỉ kiểm tra hình dạng.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["phien_ban", "ma_video", "kenh", "ma_chu_de", "chu_de", "dinh_dang", "nen_tang_dich", "project_dir", "trang_thai", "lich_su", "tao_luc", "cap_nhat_luc"],
+  "properties": {
+    "phien_ban": {"const": 1},
+    "ma_video": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$", "description": "Mã video, duy nhất trên mọi kênh (ví dụ <tiền tố kênh>-005)."},
+    "kenh": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$", "description": "Mã kênh, trùng tên thư mục brand/<kenh>/."},
+    "ma_chu_de": {"type": "string", "minLength": 1, "description": "Mã chủ đề trong brand/<kenh>/brand.json (chu_de[].ma)."},
+    "chu_de": {"type": "string", "minLength": 1},
+    "dinh_dang": {"type": "string", "minLength": 1, "description": "chu_de[].dinh_dang, ví dụ hoi-dap, giai-thich."},
+    "nen_tang_dich": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"enum": ["fb_reels", "yt_shorts", "tiktok"]}
+    },
+    "project_dir": {
+      "type": "string",
+      "pattern": "^projects/[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "description": "Thư mục dự án OpenMontage, TƯƠNG ĐỐI từ gốc repo (repo public: không ghi đường dẫn tuyệt đối)."
+    },
+    "trang_thai": {"enum": ["y_tuong", "dang_san_xuat", "cho_quay", "cho_duyet", "da_duyet", "da_dang", "loi", "bo"]},
+    "lich_su": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tu", "den", "luc"],
+        "properties": {
+          "tu": {"type": ["string", "null"]},
+          "den": {"type": "string"},
+          "luc": {"type": "string"},
+          "ly_do": {"type": "string"}
+        }
+      }
+    },
+    "loi": {"type": ["string", "null"], "description": "Thông báo lỗi khi trang_thai = loi."},
+    "tao_luc": {"type": "string"},
+    "cap_nhat_luc": {"type": "string"},
+    "metadata": {"type": "object"}
+  }
+}

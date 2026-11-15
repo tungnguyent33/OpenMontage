@@ -1,0 +1,190 @@
+"""Cấu trúc Google Sheet "Máy Reels": NƠI DUY NHẤT khai báo tab và cột.
+
+Mỗi cột thuộc về MÁY hoặc NGƯỜI. Máy không bao giờ ghi vào cột của người
+(may_reels/sheet.py từ chối trước khi gọi mạng). Cột của người được tô nền
+vàng nhạt; cột có `lua_chon` là dropdown.
+
+Ô trống trong cột duyệt của người được hiểu là giá trị đầu tiên của `lua_chon`
+("Chờ" / "Chờ duyệt"): máy không tự ghi giá trị mặc định vào cột của người.
+
+Thứ tự cột ở đây chỉ dùng khi tạo tab mới. Sau đó máy tìm cột theo TÊN ở dòng 1,
+nên người dùng chèn hay đổi chỗ cột cũng không làm máy ghi nhầm ô.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+MAY = "may"
+NGUOI = "nguoi"
+
+# Nền tảng đích. Dùng chung cho Sheet và schemas/may-reels/reel_job.schema.json.
+NEN_TANG = ("fb_reels", "yt_shorts", "tiktok")
+
+
+@dataclass(frozen=True)
+class Cot:
+    ten: str
+    cua: str = MAY
+    lua_chon: tuple[str, ...] = ()
+    mo_ta: str = ""
+
+    @property
+    def cua_nguoi(self) -> bool:
+        return self.cua == NGUOI
+
+
+@dataclass(frozen=True)
+class Tab:
+    ten: str
+    cot: tuple[Cot, ...]
+    khoa: tuple[str, ...] = ()          # cột tạo nên khóa của dòng; rỗng = chỉ thêm dòng (nhật ký)
+    tu_dong_cap_nhat: str | None = None  # cột máy tự ghi thời điểm mỗi khi dòng đổi
+    mo_ta: str = ""
+
+    def __post_init__(self) -> None:
+        ten = [c.ten for c in self.cot]
+        if len(ten) != len(set(ten)):
+            raise ValueError(f"Tab {self.ten!r} có cột trùng tên")
+        for k in self.khoa + ((self.tu_dong_cap_nhat,) if self.tu_dong_cap_nhat else ()):
+            if k not in ten:
+                raise ValueError(f"Tab {self.ten!r}: cột {k!r} không có trong danh sách cột")
+            if self.lay(k).cua_nguoi:
+                raise ValueError(f"Tab {self.ten!r}: cột khóa/tự động {k!r} phải là cột của máy")
+
+    def lay(self, ten: str) -> Cot:
+        for c in self.cot:
+            if c.ten == ten:
+                return c
+        raise KeyError(f"Tab {self.ten!r} không có cột {ten!r}")
+
+    @property
+    def ten_cot(self) -> list[str]:
+        return [c.ten for c in self.cot]
+
+    @property
+    def cot_nguoi(self) -> list[str]:
+        return [c.ten for c in self.cot if c.cua_nguoi]
+
+    @property
+    def chi_them(self) -> bool:
+        return not self.khoa
+
+
+def _m(ten: str, mo_ta: str = "") -> Cot:
+    return Cot(ten, MAY, (), mo_ta)
+
+
+def _n(ten: str, lua_chon: tuple[str, ...] = (), mo_ta: str = "") -> Cot:
+    return Cot(ten, NGUOI, lua_chon, mo_ta)
+
+
+Y_TUONG = Tab(
+    "Ý tưởng",
+    (
+        _m("ma", "mã chủ đề trong brand/<kênh>/brand.json"),
+        _m("kenh", "mã kênh (brand/<kenh>/)"),
+        _m("tru_cot"),
+        _m("dinh_dang"),
+        _m("chu_de"),
+        _m("hook_de_xuat"),
+        _m("nguon_doi_chieu"),
+        _m("diem"),
+        _n("duyet_chu_de", ("Chờ", "Làm", "Bỏ"), "cổng A: chỉ 'Làm' mới được sản xuất; ô trống = Chờ"),
+        _m("trang_thai_san_xuat"),
+    ),
+    # Một Sheet cho mọi kênh: mã chủ đề chỉ duy nhất trong một kênh, nên khóa gồm cả kênh.
+    khoa=("kenh", "ma"),
+    mo_ta="Chủ đề chờ người duyệt (cổng A).",
+)
+
+HANG_CHO = Tab(
+    "Hàng chờ",
+    (
+        _m("ma_video"),
+        _m("kenh"),
+        _m("nen_tang", "fb_reels / yt_shorts / tiktok"),
+        _m("link_xem_thu", "link Google Drive"),
+        _m("caption"),
+        _m("hashtag"),
+        _m("diem_qa"),
+        _m("canh_bao", "ví dụ 'Dưới ngưỡng'"),
+        _n("duyet", ("Chờ duyệt", "Duyệt", "Sửa", "Bỏ"), "cổng B: chỉ 'Duyệt' mới được đăng; ô trống = Chờ duyệt"),
+        _n("ghi_chu_sua", mo_ta="bắt buộc khi chọn Sửa"),
+        _n("gio_dang", mo_ta="để trống thì dùng lịch mặc định của kênh"),
+        _m("trang_thai_dang"),
+        _m("link_bai"),
+        _m("id_bai"),
+        _m("loi"),
+        _m("cap_nhat_luc"),
+    ),
+    khoa=("ma_video", "nen_tang"),
+    tu_dong_cap_nhat="cap_nhat_luc",
+    mo_ta="Một dòng = một video trên một nền tảng, chờ người duyệt (cổng B).",
+)
+
+CAN_QUAY = Tab(
+    "Cần quay",
+    (
+        _m("ma_yeu_cau", "<kenh>:<ma_chu_de>:<stt>"),
+        _m("kenh"),
+        _m("ma_chu_de"),
+        _m("ma_video"),
+        _m("y_can_canh", "ý trong kịch bản chưa có cảnh"),
+        _m("mo_ta_canh", "cảnh cần quay"),
+        _m("goi_y_quay", "khung dọc/ngang, thời lượng, tránh mặt/biển số"),
+        _m("ly_do", "không có cảnh / cảnh bị loại vì ..."),
+        _m("tao_luc"),
+        _n("trang_thai_quay", ("Chưa quay", "Đã quay", "Không quay"), "ô trống = Chưa quay"),
+        _n("ghi_chu_nguoi"),
+        _m("trang_thai_nap", "máy ghi khi cảnh mới đã vào kho (nap_kenh.py)"),
+    ),
+    khoa=("ma_yeu_cau",),
+    mo_ta="Ý thiếu cảnh thật. Máy không lấp bằng cảnh khác.",
+)
+
+SO_LIEU = Tab(
+    "Số liệu",
+    (
+        _m("ma_video"),
+        _m("kenh"),
+        _m("nen_tang"),
+        _m("id_bai"),
+        _m("moc_ngay", "1 / 3 / 7 ngày sau khi đăng"),
+        _m("do_luc"),
+        _m("luot_xem"),
+        _m("thoi_gian_xem_tb_giay"),
+        _m("chia_se"),
+        _m("binh_luan"),
+        _n("tin_nhan", mo_ta="người dùng nhập tay"),
+        _m("loi"),
+    ),
+    khoa=("ma_video", "nen_tang", "moc_ngay"),
+    mo_ta="Số liệu ở mốc 1, 3, 7 ngày sau khi đăng.",
+)
+
+NHAT_KY = Tab(
+    "Nhật ký",
+    (
+        _m("thoi_gian"),
+        _m("kenh"),
+        _m("ma", "mã chủ đề hoặc mã video"),
+        _m("buoc", "ví dụ sheet.init, nap_chu_de, san_xuat, dang"),
+        _m("che_do", "thu / that"),
+        _m("ket_qua", "ok / loi"),
+        _m("chi_tiet"),
+        _m("chi_phi_vnd"),
+        _m("thoi_gian_chay_giay"),
+        _m("so_luot_tro_ly", "số lượt chạy trợ lý (claude -p)"),
+    ),
+    khoa=(),
+    mo_ta="Sổ chạy và chi phí. Chỉ thêm dòng.",
+)
+
+TAT_CA: tuple[Tab, ...] = (Y_TUONG, HANG_CHO, CAN_QUAY, SO_LIEU, NHAT_KY)
+
+
+def tab_theo_ten(ten: str) -> Tab:
+    for t in TAT_CA:
+        if t.ten == ten:
+            return t
+    raise KeyError(ten)

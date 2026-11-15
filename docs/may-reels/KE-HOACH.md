@@ -37,7 +37,8 @@ Cổng của người: **(A)** duyệt chủ đề, trước bước Sản xuấ
 | Đầu vào | `brand/<id>/brand.json`: `chu_de[]` (`ma`, `tru_cot`, `dinh_dang`, `chu_de`, `y_chinh`, `nguon_doi_chieu`, `trend`, `da_lam`), `kenh.tru_cot_noi_dung`, `kenh.khan_gia` |
 | Tái dùng | Director skill `skills/pipelines/hybrid/idea-director.md`. Schema `schemas/artifacts/brief.schema.json` và `decision_log.schema.json`. `lib/checkpoint.py` (`init_project` có tham số `series`, đặt bằng mã kênh như vx-demo-01 đã làm). |
 | Viết mới | `may_reels/sheet.py`: đọc và ghi Google Sheet, khóa không cho ghi vào cột của người. `may_reels/y_tuong.py`: lấy các chủ đề chưa làm, đẩy lên tab "Chủ đề" ở trạng thái "chờ duyệt". `skills/may-reels/y-tuong.md`. |
-| Cổng (A) | Chỉ những dòng có Duyệt = `Duyệt` mới sang bước Sản xuất. |
+| Cổng (A) | Chỉ những dòng có `duyet_chu_de` = `Làm` mới sang bước Sản xuất. |
+| Đã làm (2026-11-15) | `may_reels/cot_sheet.py`, `may_reels/sheet.py`, `may_reels/chu_de.py`. Các lệnh `python -m may_reels sheet init` và `sheet nap-chu-de --kenh <mã>`. Hướng dẫn cài đặt: `docs/may-reels/CAI-DAT-GOOGLE.md`. |
 | Lưu ý schema | `brief.target_platform` chỉ nhận `youtube`, `instagram`, `tiktok`, `linkedin`, `generic`. **Không có `facebook`.** Một video cho cả 3 nền tảng thì dùng `generic` và ghi danh sách nền tảng vào `brief.metadata` (`metadata` là object tự do, còn mức gốc của brief có `additionalProperties: false`). |
 | Chưa xác minh | Cột `trend` trong brand.json đang trống ở cả 16 chủ đề. Máy chưa có nguồn nào để tự tìm chủ đề mới. |
 
@@ -69,7 +70,7 @@ Tài liệu nền cho mọi stage: `skills/creative/short-form.md` (1080×1920, 
 |---|---|
 | Tái dùng | `tools/publishers/export_bundle.py`: đóng gói video, phụ đề, `metadata.json`, `description.txt` vào `projects/<id>/exports/` và trả về `publish_log` có `status: "exported"`. Schema `publish_log` có trạng thái `pending_review`. |
 | Viết mới | `may_reels/hang_cho.py`: đưa video đã qua chấm điểm lên tab "Hàng chờ duyệt" kèm link xem, tiêu đề, mô tả, hashtag (lấy từ `brand.json` `hashtags.facebook/tiktok/youtube`), CTA, điểm, nguồn luật. Nội dung này được chốt ở đây và không đổi lúc đăng. |
-| Cổng (B) | Người xem video rồi điền Duyệt = `Duyệt`. Người xem video qua link Google Drive (mục 6, câu 3). |
+| Cổng (B) | Người xem video rồi chọn `duyet` = `Duyệt`. Người xem video qua link Google Drive (mục 6, câu 3). |
 
 ### Bước 5: Đăng
 
@@ -187,6 +188,11 @@ Người dùng trả lời ngày 2026-11-15. Số câu giữ đúng thứ tự c
 **Google Sheet và cách duyệt**
 1. Tạo Sheet mới tên "Máy Reels" trong tài khoản Google của người dùng. Máy truy cập bằng **service account**: người dùng chia sẻ Sheet cho email của service account. File khóa để trong `secrets/` (đã gitignore), đường dẫn đọc từ `.env`.
 2. Ô Duyệt là dropdown có ba giá trị: `Duyệt` / `Sửa` / `Bỏ`. Chọn `Sửa` thì đi kèm cột ghi chú của người. Mọi giá trị khác, kể cả ô trống, đều tính là **chưa duyệt**.
+   **Cập nhật 2026-11-15** theo yêu cầu xây lớp nối Sheet:
+   - Tab Hàng chờ: cột `duyet`, dropdown `Chờ duyệt` / `Duyệt` / `Sửa` / `Bỏ`.
+   - Tab Ý tưởng: cột `duyet_chu_de`, dropdown `Chờ` / `Làm` / `Bỏ`. Cổng A mở khi chọn `Làm`.
+   - Ô trống được hiểu là giá trị chờ, vì máy không ghi vào cột của người, kể cả giá trị mặc định.
+   - Khóa của tab Ý tưởng là `kenh` + `ma`, không chỉ `ma`. Lý do: một Sheet dùng cho mọi kênh (câu 4), mà mã chủ đề trong `brand.json` chỉ duy nhất trong một kênh.
 3. Người duyệt xem video qua **link Google Drive**. Máy tải video lên Drive rồi ghi link vào hàng chờ.
 4. **Một Sheet cho mọi kênh**, có cột Kênh (mã kênh trong `brand/<id>/`).
 

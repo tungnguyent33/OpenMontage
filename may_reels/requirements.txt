@@ -1,0 +1,7 @@
+# Thư viện riêng của Máy Reels (không sửa requirements.txt của upstream).
+# Cài: .\.venv\Scripts\python.exe -m pip install -r may_reels/requirements.txt
+gspread>=6.1,<7
+google-auth>=2.0
+python-dotenv>=1.0
+jsonschema>=4.20
+PyYAML>=6.0

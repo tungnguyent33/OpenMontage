@@ -45,8 +45,16 @@ Nếu buộc phải sửa (hoặc thêm file vào thư mục lõi mà code lõi 
 ## 2. Google Sheet là nguồn sự thật duy nhất về việc duyệt
 
 - Mỗi tab có hai nhóm cột tách bạch: **cột của người** (Duyệt, Ghi chú người duyệt...) và **cột của máy** (Mã video, Trạng thái, Điểm, Link xem trước, Lỗi...). Máy **không bao giờ ghi** vào cột của người, kể cả để "dọn" hay "sửa định dạng".
+  - Tab và cột chỉ khai báo ở một chỗ: `may_reels/cot_sheet.py`. Mỗi cột có cờ `may` hoặc `nguoi`.
+  - `may_reels/sheet.py` từ chối ghi cột của người (lỗi `LoiGhiCotNguoi`), và kiểm tra việc này trước khi gọi mạng.
+  - Khi thêm dòng mới, cột của người để trống. Máy không tự điền giá trị mặc định như "Chờ": ô trống được hiểu là giá trị đầu tiên của dropdown.
+- Máy tìm dòng theo khóa của tab và tìm cột theo tên ở dòng 1. Máy không xóa dòng, không sắp xếp lại, không ghi lại cả bảng: chỉ ghi đúng những ô đổi giá trị, và thêm dòng mới bằng append.
+  - Ngay trước khi ghi, máy đọc lại để kiểm tra dòng đích vẫn mang đúng khóa. Nếu lệch thì tính lại, tối đa 3 lần.
+  - Còn một khe hở rất nhỏ giữa lần kiểm tra cuối và lúc ghi: Sheets API không có thao tác "so rồi mới ghi" nguyên tử. Hai lượt chạy của máy cùng lúc cũng có thể cùng thêm một dòng, nên máy chỉ được chạy một lượt mỗi lúc.
+- Giá trị ghi bằng chế độ RAW, để Sheet không tự đổi chuỗi thành ngày hay số.
 - Danh sách cột của người được khai báo ở một chỗ duy nhất trong code. Hàm ghi Sheet từ chối ghi vào cột có tên trong danh sách đó và có test chứng minh việc từ chối này.
-- Máy chỉ đăng một dòng khi ô Duyệt có đúng giá trị `Duyệt`. Ô trống, `duyệt`, `OK`, `Sửa` hay bất kỳ giá trị nào khác đều là **không đăng**. Ô Duyệt là dropdown ba giá trị `Duyệt` / `Sửa` / `Bỏ` (`KE-HOACH.md` mục 6, câu 2). Máy so khớp đúng chuỗi `Duyệt`, có phân biệt hoa thường, sau khi chuẩn hóa Unicode NFC và cắt khoảng trắng hai đầu. `Sửa` thì máy đọc cột ghi chú của người rồi làm lại; `Bỏ` thì máy dừng dòng đó. Máy không bao giờ tự đổi giá trị ô này.
+- **Cổng A (tab Ý tưởng, cột `duyet_chu_de`, dropdown `Chờ` / `Làm` / `Bỏ`):** chỉ chủ đề có đúng giá trị `Làm` mới được sản xuất.
+- **Cổng B (tab Hàng chờ, cột `duyet`, dropdown `Chờ duyệt` / `Duyệt` / `Sửa` / `Bỏ`):** máy chỉ đăng một dòng khi ô có đúng giá trị `Duyệt`. Ô trống, `duyệt`, `OK`, `Sửa` hay bất kỳ giá trị nào khác đều là **không đăng**. Giá trị của hai dropdown theo yêu cầu ngày 2026-11-15; yêu cầu này thay cho câu 2 trong `KE-HOACH.md` mục 6. Máy so khớp đúng chuỗi `Duyệt`, có phân biệt hoa thường, sau khi chuẩn hóa Unicode NFC và cắt khoảng trắng hai đầu. `Sửa` thì máy đọc cột ghi chú của người rồi làm lại; `Bỏ` thì máy dừng dòng đó. Máy không bao giờ tự đổi giá trị ô này.
 - Đọc lại ô Duyệt **ngay trước khi đăng**, không dùng giá trị đọc từ đầu lượt chạy. Người có thể rút lại duyệt trong lúc máy đang dựng.
 - Trạng thái duyệt không lưu ở chỗ nào khác (không lưu trong checkpoint, không lưu trong file local) như một nguồn thay thế. File local chỉ được ghi lại *bản sao* để kiểm tra về sau.
 - Checkpoint của OpenMontage (`lib/checkpoint.py`) vẫn ghi `human_approved=True` ở các cổng duyệt. Lần ghi đó chỉ được phép khi Sheet đang có `Duyệt` cho đúng dòng ấy, và `metadata` của checkpoint phải ghi mã dòng Sheet cùng giá trị đã đọc.
@@ -160,7 +168,9 @@ Mọi file của OpenMontage gốc mà Máy Reels sửa, hoặc thư mục lõi 
 | File | Loại | Thay đổi | Lý do | Khi merge upstream |
 |---|---|---|---|---|
 | `.gitignore` | Sửa (đã làm 2026-11-15) | Thêm 2 dòng ở cuối file: `secrets/` và `brand/*/_local/` | Giữ file service account, token và nội dung riêng của kênh ngoài repo public | Giữ 2 dòng này nếu upstream sửa `.gitignore` (thêm ở cuối file nên ít xung đột) |
+| `.env.example` | Sửa (đã làm 2026-11-15) | Thêm khối `# --- Máy Reels ---` ở cuối file: `MAY_REELS_SA_JSON`, `MAY_REELS_SHEET_ID`, `KENH_GOC_DIR` | Người cài mới biết cần đặt biến nào | Thêm ở cuối file nên ít xung đột. Nếu upstream sửa đoạn cuối file thì giữ cả hai. |
+| `schemas/may-reels/reel_job.schema.json` | Thêm file vào thư mục lõi `schemas/` (đã làm 2026-11-15) | Schema job của Máy Reels | Theo yêu cầu đặt schema ở đây. Thư mục con riêng `may-reels/` không phải package Python và không bị `schemas.artifacts.list_schemas()` quét | Không xung đột trừ khi upstream tạo thư mục cùng tên. |
 | `pipeline_defs/may-reels.yaml` | Thêm file (đã duyệt phương án 2, chưa viết) | Manifest riêng cho chế độ chạy không dừng | `lib/pipeline_loader.py` chỉ đọc manifest trong `pipeline_defs/`, và `lib/checkpoint.py` tìm cổng duyệt qua tên pipeline | Không xung đột trừ khi upstream đổi schema manifest. `tests/contracts/test_pipeline_catalog.py` sẽ tự kiểm tra file này. |
 | `HUONG-DAN-SU-DUNG.md` | File của nhánh, không phải upstream | — | — | — |
 
-File upstream duy nhất đã sửa là `.gitignore`. `pipeline_defs/may-reels.yaml` sẽ thêm khi bắt đầu code luồng sản xuất.
+File upstream đã sửa: `.gitignore` và `.env.example`. Thư mục lõi đã thêm file: `schemas/`. `pipeline_defs/may-reels.yaml` sẽ thêm khi bắt đầu code luồng sản xuất.

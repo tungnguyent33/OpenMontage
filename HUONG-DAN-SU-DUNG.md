@@ -241,14 +241,29 @@ Muốn chắc chắn 0 đồng: thêm câu **"chỉ dùng công cụ miễn phí
 
 ---
 
-## 10. Máy Reels (đã chốt quyết định, chưa có code sản xuất)
+## 10. Máy Reels (đang xây: đã có lớp nối Google Sheet)
 
-Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xuất và đăng video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh. Bạn chỉ duyệt trên Google Sheet ở hai chỗ: duyệt chủ đề và duyệt video trước khi đăng. Dự án **chưa có code sản xuất**, mới có tài liệu và phần sửa `nap_kenh.py`:
+Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xuất và đăng video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh. Bạn chỉ duyệt trên Google Sheet ở hai chỗ: duyệt chủ đề và duyệt video trước khi đăng. Hiện đã có lớp nối Google Sheet (`may_reels/`). Phần sản xuất và đăng video chưa có. Tài liệu:
 
 - `docs/may-reels/NGUYEN-TAC.md`: nguyên tắc phát triển (code đặt ở đâu, Sheet là nguồn sự thật về duyệt, đăng bài mặc định chạy thử, quy tắc cấm của kênh, bí mật, chi phí).
 - `docs/may-reels/KE-HOACH.md`: sơ đồ luồng, cách chạy không dừng, lý do chọn pipeline `hybrid`, các rủi ro, và mục 6 **"Quyết định đã chốt"**. Cuối mục 6 có danh sách việc còn chờ bạn: câu 5, 6, 17 còn để trống.
 
+- `docs/may-reels/CAI-DAT-GOOGLE.md`: tạo service account, chia sẻ Sheet, cách dùng các cột trên Sheet.
+
 Khóa và file service account (ví dụ khóa Google Sheet) để trong thư mục `secrets/`, thư mục này đã được gitignore.
+
+**Google Sheet "Máy Reels"** (làm theo `CAI-DAT-GOOGLE.md` trước, điền `MAY_REELS_SA_JSON` và `MAY_REELS_SHEET_ID` trong `.env`):
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r may_reels/requirements.txt   # một lần
+tools_local\py.cmd -m may_reels sheet init --thu                          # xem trước, không ghi
+tools_local\py.cmd -m may_reels sheet init                                # tạo 5 tab: Ý tưởng, Hàng chờ, Cần quay, Số liệu, Nhật ký
+tools_local\py.cmd -m may_reels sheet nap-chu-de --kenh vanxuan           # đẩy chủ đề của kênh lên tab Ý tưởng
+```
+
+- Chạy lại bao nhiêu lần cũng không tạo tab trùng hay dòng trùng.
+- Cột nền vàng là cột của bạn, máy không ghi vào đó.
+- Trên tab Ý tưởng, chọn **Làm** để duyệt một chủ đề. Trên tab Hàng chờ, chọn **Duyệt** để cho đăng.
 
 **Chạy kiểm thử** (cần làm sau mỗi lần sửa code):
 
