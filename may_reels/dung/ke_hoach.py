@@ -97,11 +97,25 @@ def kiem_tra(kh: dict, brand: dict, sx: dict, *, so_lan_dung: dict[str, int] | N
     csx = sx.get("canh") or {}
     lap_duoc = set(csx.get("lap_duoc_neu_the") or [])
     dung = []
+    thieu = {t["doan"] for t in kh["thieu_canh"]}
+    tam = []
     for d in doan[:-1]:
         c = d["canh"]
         if c is None:
-            loi.append(f"{d['id']}: thiếu cảnh (thiếu cảnh thật thì ghi vào thieu_canh, không để trống)")
+            loi.append(f"{d['id']}: thiếu cảnh (thiếu cảnh thật thì ghi vào thieu_canh và dùng cảnh tạm so_do)")
             continue
+        if "so_do" in c:
+            if d["id"] not in thieu:
+                loi.append(f"{d['id']}: cảnh tạm so_do chỉ dùng cho đoạn có trong thieu_canh")
+            sd = c["so_do"]
+            if sd["kieu"] in ("giao_nhau", "vong_xuyen") and not sd.get("xe"):
+                loi.append(f"{d['id']}: sơ đồ {sd['kieu']} cần danh sách xe")
+            if sd["kieu"] == "the_chu" and not sd.get("chu"):
+                loi.append(f"{d['id']}: sơ đồ the_chu cần 'chu'")
+            tam.append(d["id"])
+            continue
+        if d["id"] in thieu:
+            loi.append(f"{d['id']}: đoạn có trong thieu_canh phải dùng cảnh tạm so_do, không lấp bằng cảnh kho không khớp")
         k = kho.get(c["ma"])
         if not k:
             loi.append(f"{d['id']}: cảnh {c['ma']} không có trong kho kênh")
@@ -119,6 +133,11 @@ def kiem_tra(kh: dict, brand: dict, sx: dict, *, so_lan_dung: dict[str, int] | N
             dung.append(c["ma"])
         if so_lan_dung and so_lan_dung.get(c["ma"], 0) >= 3:
             canh_bao.append(f"{d['id']}: cảnh {c['ma']} đã dùng {so_lan_dung[c['ma']]} lần ở video trước")
+    if tam:
+        canh_bao.append(f"Có cảnh tạm (sơ đồ): {', '.join(tam)} — chờ cảnh quay thật")
+    for t in kh["thieu_canh"]:
+        if t["doan"] not in {d["id"] for d in doan}:
+            loi.append(f"thieu_canh: đoạn {t['doan']} không tồn tại")
     lap = sorted({m for m in dung if dung.count(m) > 1})
     if csx.get("khong_lap_trong_video", True) and lap:
         loi.append(f"dùng một cảnh hơn một lần trong video: {lap}")
@@ -143,7 +162,11 @@ def tao_artifact(kh: dict, brand: dict, sx: dict) -> tuple[dict, dict, dict]:
                                           for i in d["nguon_ids"])
         sections.append(sec)
         c = d["canh"]
-        if c:
+        if c and "so_do" in c:
+            ra = {"type": "diagram", "description": f"Cảnh tạm (sơ đồ {c['so_do']['kieu']}): {c['mo_ta']}",
+                  "source": "generate", "so_do": c["so_do"],
+                  "generation_summary": "Vẽ bằng code (SVG + GSAP trong HyperFrames), không dùng AI, không stock"}
+        elif c:
             k = kho[c["ma"]]
             ra = {"type": "video" if k.get("loai_file") == "video" else "image", "ma_kho": c["ma"],
                   "description": c["mo_ta"], "source": "provided", "path": f"kenh:{k['file_tuong_doi']}",
@@ -152,7 +175,7 @@ def tao_artifact(kh: dict, brand: dict, sx: dict) -> tuple[dict, dict, dict]:
             ra = {"type": "image", "description": "Màn kết: logo + CTA + Zalo + địa chỉ", "source": "provided",
                   "path": f"brand/{kh['kenh']}/assets/logo.png"}
         the = d["the"]
-        scenes.append({"id": "c" + d["id"][1:], "type": "broll" if c else "text_card",
+        scenes.append({"id": "c" + d["id"][1:], "type": ("diagram" if "so_do" in c else "broll") if c else "text_card",
                        "description": c["mo_ta"] if c else "Màn kết", "start_seconds": a, "end_seconds": b,
                        "script_section_id": d["id"], "framing": "9:16 1080x1920",
                        "overlay_notes": (f"Thẻ: {the['dong1']} / {the['dong2']}" if the else "Màn kết") +

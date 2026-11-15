@@ -44,6 +44,10 @@ def tinh_cat(ke_hoach: dict, brand: dict, sx: dict, moc: dict) -> list[dict]:
         a = 0.0 if k_idx == 0 else round(moc[d["id"]]["start"] + LEAD, 2)
         b = round(moc[ids[k_idx + 1]]["start"] + LEAD, 2)
         dai = round(b - a, 2)
+        if "so_do" in c:  # cảnh tạm: sơ đồ động vẽ trong HyperFrames, không cắt file
+            ra.append({"id": "c" + d["id"][1:], "doan": d["id"], "ma": None, "start": a, "dai": dai, "in": None,
+                       "anh": False, "so_do": c["so_do"]})
+            continue
         k = kho[c["ma"]]
         vao = None
         if k.get("loai_file") == "video":
@@ -74,6 +78,8 @@ def chuan_bi(cat: list[dict], brand: dict, sx: dict, du_an: Path, goc_kenh: Path
     vdir.mkdir(parents=True, exist_ok=True)
     idir.mkdir(parents=True, exist_ok=True)
     for c in cat:
+        if c.get("so_do"):
+            continue
         src = goc_kenh / kho[c["ma"]]["file_tuong_doi"]
         if not src.is_file():
             raise LoiThieuCanh(c["doan"], c["ma"], f"không thấy file gốc {kho[c['ma']]['file_tuong_doi']}")

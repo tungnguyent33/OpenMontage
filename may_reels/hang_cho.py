@@ -84,15 +84,45 @@ def chep_xem_thu(video: Path, ma_video: str, *, phien_ban: str = "") -> tuple[st
     return (f"{ten} — {link}" if link else ten), []
 
 
+def lien_ket_video(thu_muc_xuat: Path, video: Path) -> None:
+    """export_bundle chép video vào bundle: thay bản chép bằng hard link tới bản gốc (cùng nội dung, không tốn ổ đĩa).
+
+    Mỗi video ~150 MB; không liên kết thì một video tốn 4-5 bản trên ổ. Ổ không hỗ trợ hard link thì giữ bản chép.
+    """
+    for f in thu_muc_xuat.glob("video/*"):
+        if not f.is_file() or f.stat().st_size != video.stat().st_size:
+            continue
+        try:
+            if os.path.samefile(f, video):
+                continue
+            tam = f.with_name(f.name + ".lienket")
+            os.link(video, tam)
+            os.replace(tam, f)
+        except OSError:
+            pass
+
+
+def go_lien_ket_cu(thu_muc_xuat: Path, video: Path) -> None:
+    """Trước khi đóng gói lại: gỡ hard link cũ trỏ tới chính video (export_bundle không chép đè được lên nó)."""
+    for f in thu_muc_xuat.glob("video/*"):
+        try:
+            if f.is_file() and os.path.samefile(f, video):
+                f.unlink()
+        except OSError:
+            pass
+
+
 def dong_goi(video: Path, *, ma_video: str, tieu_de: str, mo_ta: str, hashtags: list[str], nen_tang: str,
              thu_muc: Path) -> Path:
     """export_bundle: thư mục đăng tay cho một nền tảng (video + description.txt)."""
     from tools.publishers.export_bundle import ExportBundle
+    go_lien_ket_cu(Path(thu_muc), Path(video))
     res = ExportBundle().execute({"video_path": str(video), "title": tieu_de, "project_name": ma_video,
                                   "export_dir": str(thu_muc), "description": mo_ta, "hashtags": hashtags,
                                   "platform": nen_tang})
     if not res.success:
         raise LoiHangCho(f"export_bundle lỗi: {res.error}")
+    lien_ket_video(Path(res.data["export_path"]), Path(video))
     return Path(res.data["export_path"])
 
 
@@ -112,7 +142,7 @@ def dua_vao_hang_cho(bang: BangNguon, *, video: Path, kenh: str, ma_video: str, 
                      nen_tang: list[str], brand: dict, diem_qa: str = "", canh_bao: list[str] | None = None,
                      thu_muc_xuat: Path | None = None, thu: bool = False, goc: Path | None = None,
                      do=None, thong_tin_them: dict | None = None, phien_ban: str = "",
-                     cho_phep_cap_nhat_duyet: bool = False) -> KetQuaThem:
+                     cho_phep_cap_nhat_duyet: bool = False, ban_moi: bool = False) -> KetQuaThem:
     """Kiểm tra rồi đưa video vào Hàng chờ. Có lỗi thì không ghi gì (kq.loi khác rỗng)."""
     goc = goc or GOC
     do = do or do_thong_so
@@ -133,7 +163,7 @@ def dua_vao_hang_cho(bang: BangNguon, *, video: Path, kenh: str, ma_video: str, 
             kq.loi.append(f"{x}: caption/hashtag chứa cụm từ cấm {trung}")
     sha = sha1_file(video)
     cu = doc_ban_ghi(ma_video, goc)
-    if cu and cu.get("sha1") != sha and not cho_phep_cap_nhat_duyet:
+    if cu and cu.get("sha1") != sha and not (cho_phep_cap_nhat_duyet or ban_moi):
         kq.loi.append(f"Mã {ma_video} đã dùng cho một file khác (sha1 {cu.get('sha1', '')[:10]}). Dùng --ma khác.")
     # Chế độ sửa: chỉ được thay video khi KHÔNG còn nền tảng nào đang "Duyệt"/"Bỏ" của mã này; nếu không,
     # bản mới sẽ mang theo lời duyệt dành cho bản cũ.

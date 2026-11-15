@@ -6,6 +6,7 @@
     python -m may_reels dung --du-an <ma_video> [--stage ...]
     python -m may_reels san-xuat --kenh <mã> --so-luong 3
     python -m may_reels sua
+    python -m may_reels thay-canh
     python -m may_reels dang [--that]
     python -m may_reels dang-nhap drive
     python -m may_reels dang-nhap youtube --kenh <mã>
@@ -186,11 +187,17 @@ def lenh_dung(a) -> int:
 
 def lenh_san_xuat(a) -> int:
     from may_reels.san_xuat import san_xuat
-    ds = san_xuat(mo_tu_env(), a.kenh, a.so_luong)
+    ds = san_xuat(mo_tu_env(), a.kenh, a.so_luong, ca_cho_quay=a.ca_cho_quay)
     for k in ds:
         print(f"{k.ma_video}: {k.trang_thai} | QA {k.diem_qa} | {k.giay:.0f}s (agent {k.giay_agent:.0f}s, "
               f"{k.so_luot_agent} lượt, vòng sửa {k.vong}) | {'; '.join(k.canh_bao)} {k.loi}")
     return 0 if all(k.trang_thai != "loi" for k in ds) else 1
+
+
+def lenh_thay_canh(a) -> int:
+    from may_reels.sua import thay_canh
+    ds = thay_canh(mo_tu_env())
+    return 0 if all(k["trang_thai"] != "loi" for k in ds) else 1
 
 
 def lenh_sua(a) -> int:
@@ -234,10 +241,15 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("san-xuat", help="sản xuất các chủ đề đã chọn Làm (agent + dựng + hàng chờ)")
     p.add_argument("--kenh", required=True)
     p.add_argument("--so-luong", type=int, default=3)
+    p.add_argument("--ca-cho-quay", action="store_true",
+                   help="dựng lại cả chủ đề đang chờ quay, dùng cảnh tạm (sơ đồ) cho đoạn thiếu cảnh")
     p.set_defaults(ham=lenh_san_xuat)
 
     p = sub.add_parser("sua", help="sửa và dựng lại các video được chọn Sửa trên Hàng chờ")
     p.set_defaults(ham=lenh_sua)
+
+    p = sub.add_parser("thay-canh", help="thay cảnh tạm bằng cảnh thật khi Cần quay ghi 'Đã quay'")
+    p.set_defaults(ham=lenh_thay_canh)
 
     p = sub.add_parser("dang-nhap", help="đăng nhập OAuth Google một lần (mở trình duyệt)")
     p.add_argument("dich_vu", choices=["drive", "youtube"])

@@ -80,7 +80,7 @@ def so_lan_dung_canh(goc: Path, kenh: str, tru: str | None = None) -> dict[str, 
             continue
         if kh.get("kenh") != kenh:
             continue
-        for m in {d["canh"]["ma"] for d in kh.get("doan", []) if d.get("canh")}:
+        for m in {d["canh"].get("ma") for d in kh.get("doan", []) if d.get("canh") and d["canh"].get("ma")}:
             dem[m] = dem.get(m, 0) + 1
     return dem
 
@@ -123,8 +123,7 @@ class Pipeline:
         from lib.checkpoint import init_project
         from may_reels.dung.ke_hoach import tao_artifact
         the_sheet = self.cong(self.kenh, self.kh["ma_chu_de"])
-        if self.kh["thieu_canh"]:
-            raise LoiThieuCanhDung(self.kh["thieu_canh"])
+        # Thiếu cảnh thật: kế hoạch phải dùng cảnh tạm (so_do) cho đúng các đoạn đó; kiem_tra bắt lỗi nếu không.
         self.kq.canh_bao += self._kiem_ke_hoach()
         init_project(self.P.name, title=self.kh["tieu_de"], pipeline_type=PIPELINE, series=self.kenh,
                      pipeline_dir=self.goc / "projects")
@@ -205,12 +204,17 @@ class Pipeline:
         assets.append({"id": "phu-de", "type": "subtitle", "path": "assets/audio/tu_phu_de.json", "source_tool": "faster_whisper",
                        "scene_id": "all", "cost_usd": 0})
         for c in cat:
+            if c.get("so_do"):
+                assets.append({"id": c["id"], "type": "diagram", "path": f"hf/compositions/{c['doan']}.html",
+                               "source_tool": "hyperframes", "scene_id": c["id"], "subtype": "canh-tam", "cost_usd": 0,
+                               "generation_summary": f"Cảnh tạm: sơ đồ {c['so_do']['kieu']} (thay bằng cảnh quay thật sau)"})
+                continue
             p = (f"hf/assets/img/{next((f.name for f in (self.P / 'hf/assets/img').glob(c['id'] + '.*')), c['id'] + '.jpg')}"
                  if c["anh"] else f"hf/assets/video/{c['id']}.mp4")
             assets.append({"id": c["id"], "type": "image" if c["anh"] else "video", "path": p, "source_tool": "ffmpeg",
                            "scene_id": c["id"], "provider": "kho-kenh", "subtype": "kho-kenh", "cost_usd": 0,
                            "generation_summary": f"{c['ma']} vào {c['in']}s dài {c['dai']}s"})
-        thieu = [x["path"] for x in assets if not (self.P / x["path"]).is_file()]
+        thieu = [x["path"] for x in assets if x.get("subtype") != "canh-tam" and not (self.P / x["path"]).is_file()]
         if thieu:
             raise RuntimeError(f"thiếu file asset: {thieu}")
         self._ck("assets", "completed", {"asset_manifest": {"version": "1.0", "assets": assets,
@@ -226,8 +230,8 @@ class Pipeline:
     def edit(self) -> None:
         cat = json.loads((self.P / "cat_canh.json").read_text(encoding="utf-8"))
         moc = json.loads((self.P / "assets/audio/moc_giong.json").read_text(encoding="utf-8"))
-        cuts = [{"id": c["id"], "source": c["id"], "in_seconds": 0 if c["anh"] else c["in"],
-                 "out_seconds": round((0 if c["anh"] else c["in"]) + c["dai"], 2), "layer": "primary",
+        cuts = [{"id": c["id"], "source": c["id"], "in_seconds": 0 if (c["anh"] or c.get("so_do")) else c["in"],
+                 "out_seconds": round((0 if (c["anh"] or c.get("so_do")) else c["in"]) + c["dai"], 2), "layer": "primary",
                  **({"transform": {"animation": "ken-burns-slow-zoom"}} if c["anh"] else {})} for c in cat]
         ed = {"version": "1.0", "render_runtime": self.sx.get("runtime", "hyperframes"),
               "renderer_family": "documentary-montage", "cuts": cuts,
@@ -263,7 +267,9 @@ class Pipeline:
         render_s = round(time.monotonic() - t0, 1)
         dung_nhieu = sum(1 for m, n in so_lan_dung_canh(self.goc, self.kenh, self.P.name).items()
                          if n >= 3 and any((d.get("canh") or {}).get("ma") == m for d in self.kh["doan"]))
-        fr, o = kiem(self.P, out, sx=self.sx, kh=self.kh, so_canh_bao_tuong_phan=tuong_phan, canh_dung_nhieu=dung_nhieu)
+        so_canh_tam = sum(1 for d in self.kh["doan"] if (d.get("canh") or {}).get("so_do"))
+        fr, o = kiem(self.P, out, sx=self.sx, kh=self.kh, so_canh_bao_tuong_phan=tuong_phan, canh_dung_nhieu=dung_nhieu,
+                     so_canh_tam=so_canh_tam)
         rr = {"version": "1.0", "outputs": [o], "render_time_seconds": render_s, "render_grammar": "documentary-montage",
               "verification_notes": [f"diem_qa {fr['metadata']['diem_qa']}", f"trừ {fr['metadata']['tru_diem']}"]}
         self.kq.video, self.kq.diem_qa = out, fr["metadata"]["diem_qa"]
@@ -276,6 +282,8 @@ class Pipeline:
 
     def publish(self) -> None:
         from tools.publishers.export_bundle import ExportBundle
+        from may_reels.hang_cho import go_lien_ket_cu
+        go_lien_ket_cu(self.P / "exports", self.P / "renders/final.mp4")
         tags = self.brand.get("hashtags") or {}
         res = ExportBundle().execute({
             "video_path": str(self.P / "renders/final.mp4"), "title": self.kh["tieu_de"], "project_name": self.P.name,
@@ -283,6 +291,8 @@ class Pipeline:
             "hashtags": sorted(set(sum(tags.values(), []))), "platform": "local"})
         if not res.success:
             raise RuntimeError(f"export_bundle lỗi: {res.error}")
+        from may_reels.hang_cho import lien_ket_video
+        lien_ket_video(self.P / "exports", self.P / "renders/final.mp4")
         self._ck("publish", "awaiting_human", {"publish_log": res.data["publish_log"]},
                  metadata={"cho_duyet": "tab Hàng chờ, cột duyet (cổng B). Chưa đăng nền tảng nào."})
 

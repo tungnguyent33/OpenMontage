@@ -23,6 +23,7 @@ DIEM_TRU = {
     "tuong_phan": 3,       # mỗi cảnh báo tương phản của hyperframes check, tối đa 15
     "giong_khop": 100,     # nhân với (1 - độ khớp thấp nhất của giọng)
     "canh_dung_nhieu": 2,  # mỗi cảnh đã dùng >= 3 lần ở video trước
+    "canh_tam": 3,         # mỗi đoạn dùng cảnh tạm (sơ đồ) thay cảnh quay thật, tối đa 15
 }
 
 
@@ -39,7 +40,7 @@ def _loc(p: Path, loc: str, am: bool) -> str:
 
 
 def kiem(du_an: Path, video: Path, *, sx: dict, kh: dict, so_canh_bao_tuong_phan: int = 0,
-         canh_dung_nhieu: int = 0) -> tuple[dict, dict]:
+         canh_dung_nhieu: int = 0, so_canh_tam: int = 0) -> tuple[dict, dict]:
     """Trả về (final_review, render_report_output). final_review.metadata có diem_qa và chi tiết trừ điểm."""
     kh_cfg = sx.get("khung_hinh") or {}
     w0, h0, fps0 = int(kh_cfg.get("rong", 1080)), int(kh_cfg.get("cao", 1920)), float(kh_cfg.get("fps", 30))
@@ -109,6 +110,8 @@ def kiem(du_an: Path, video: Path, *, sx: dict, kh: dict, so_canh_bao_tuong_phan
         tru["giong_khop"] = round(DIEM_TRU["giong_khop"] * (1 - khop_min), 1)
     if canh_dung_nhieu:
         tru["canh_dung_nhieu"] = DIEM_TRU["canh_dung_nhieu"] * canh_dung_nhieu
+    if so_canh_tam:
+        tru["canh_tam"] = min(15, DIEM_TRU["canh_tam"] * so_canh_tam)
     diem = max(0, round(100 - sum(tru.values())))
 
     van_de = tech + am_van_de + ([f"khung đen tại {den}"] if den else []) + pd_van_de

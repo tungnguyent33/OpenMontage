@@ -55,7 +55,26 @@
               {"type": "null"},
               {"type": "object", "additionalProperties": false, "required": ["ma", "mo_ta"],
                "properties": {"ma": {"type": "string"}, "vao": {"type": ["number", "null"], "minimum": 0},
-                              "mo_ta": {"type": "string"}, "ly_do_chon": {"type": "string"}}}
+                              "mo_ta": {"type": "string"}, "ly_do_chon": {"type": "string"}}},
+              {"type": "object", "additionalProperties": false, "required": ["so_do", "mo_ta"],
+               "description": "CẢNH TẠM (B-roll sơ đồ động) cho đoạn có trong thieu_canh; thay bằng cảnh quay thật sau (lệnh thay-canh).",
+               "properties": {
+                 "mo_ta": {"type": "string"},
+                 "so_do": {
+                   "type": "object", "additionalProperties": false, "required": ["kieu"],
+                   "properties": {
+                     "kieu": {"enum": ["giao_nhau", "vong_xuyen", "the_chu"]},
+                     "xe": {"type": "array", "maxItems": 4, "items": {
+                       "type": "object", "additionalProperties": false, "required": ["tu", "thu_tu"],
+                       "properties": {"tu": {"enum": ["duoi", "tren", "trai", "phai"]},
+                                      "thu_tu": {"type": "integer", "minimum": 1, "maximum": 4},
+                                      "loai": {"enum": ["xe_may", "o_to", "uu_tien"]}}}},
+                     "duong_uu_tien": {"enum": ["ngang", "doc"]},
+                     "nhan": {"type": "string", "maxLength": 40, "description": "Dòng chú thích dưới sơ đồ"},
+                     "chu": {"type": "string", "maxLength": 60, "description": "Chữ lớn cho kiểu the_chu"}
+                   }
+                 }
+               }}
             ]
           }
         }

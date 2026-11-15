@@ -82,13 +82,148 @@ class Dung:
             "scripts": {k: f"npx --yes hyperframes@{v} {k if k != 'dev' else 'preview'}"
                         for k in ("dev", "check", "render")}}, indent=2), encoding="utf-8")
 
+    # ---------- cảnh tạm: sơ đồ động (SVG + GSAP), không AI, không stock ----------
+    # Tâm sơ đồ y=840: nằm giữa thẻ chữ (y 452..~700) và phụ đề (y 1050..1250). Xe đi bên phải đường.
+    CX, CY, NUA = 540, 840, 130
+    LAN = {  # tu: (điểm xuất phát, điểm dừng chờ, điểm ra, góc quay của xe [xe vẽ hướng lên])
+        "duoi": ((605, 1500), (605, 1000), (605, 520), 0),
+        "tren": ((475, 520), (475, 670), (475, 1500), 180),
+        "trai": ((110, 905), (380, 905), (1000, 905), 90),
+        "phai": ((970, 775), (700, 775), (80, 775), -90),
+    }
+    GOC_NHANH = {"phai": 0, "duoi": 90, "trai": 180, "tren": -90}  # góc màn hình của nhánh vòng xuyến
+
+    def _xe_svg(self, xid: str, loai: str, mau: str, so: int | None) -> str:
+        N, T = self.NAVY, self.TRANG
+        if loai == "xe_may":
+            than = (f'<rect x="-17" y="-42" width="34" height="84" rx="15" fill="{mau}" stroke="{T}" stroke-width="3"/>'
+                    f'<circle cx="0" cy="-4" r="14" fill="{N}" stroke="{T}" stroke-width="3"/>')
+        else:
+            nen = T if loai == "uu_tien" else mau
+            than = (f'<rect x="-35" y="-64" width="70" height="128" rx="18" fill="{nen}" stroke="{T}" stroke-width="3"/>'
+                    f'<rect x="-26" y="-40" width="52" height="26" rx="6" fill="{N}" opacity="0.85"/>')
+            if loai == "uu_tien":
+                than += ('<rect x="-35" y="4" width="70" height="14" fill="#D7263D"/>'
+                         '<rect x="-16" y="-58" width="14" height="10" rx="3" fill="#D7263D"/>'
+                         '<rect x="2" y="-58" width="14" height="10" rx="3" fill="#1E5BD8"/>')
+        huy_hieu = (f'<g><circle cx="0" cy="-88" r="28" fill="{T}" stroke="{N}" stroke-width="4"/>'
+                    f'<text x="0" y="-78" text-anchor="middle" font-family="BVP" font-weight="800" font-size="34" '
+                    f'fill="{N}">{so}</text></g>') if so else ""
+        return f'<g id="{xid}"><g id="{xid}-q">{than}</g>{huy_hieu}</g>'
+
+    def _nen_duong(self, sd: dict) -> str:
+        CX, CY, H2 = self.CX, self.CY, self.NUA
+        duong, vach, sang = "#2B3F5C", "#E8EEF6", "#3A5478"
+        uu = sd.get("duong_uu_tien")
+        mau_doc = sang if uu == "doc" else duong
+        mau_ngang = sang if uu == "ngang" else duong
+        s = [f'<rect x="{CX - H2}" y="480" width="{2 * H2}" height="1100" fill="{mau_doc}"/>',
+             f'<rect x="40" y="{CY - H2}" width="1000" height="{2 * H2}" fill="{mau_ngang}"/>',
+             f'<rect x="{CX - H2}" y="{CY - H2}" width="{2 * H2}" height="{2 * H2}" fill="{sang if uu else duong}"/>']
+        for y0, y1 in ((480, CY - H2 - 30), (CY + H2 + 30, 1580)):
+            s.append(f'<line x1="{CX}" y1="{y0}" x2="{CX}" y2="{y1}" stroke="{vach}" stroke-width="6" stroke-dasharray="34 26"/>')
+        for x0, x1 in ((40, CX - H2 - 30), (CX + H2 + 30, 1040)):
+            s.append(f'<line x1="{x0}" y1="{CY}" x2="{x1}" y2="{CY}" stroke="{vach}" stroke-width="6" stroke-dasharray="34 26"/>')
+        if uu:
+            ten = "ĐƯỜNG ƯU TIÊN"
+            if uu == "ngang":  # chữ nằm trên mặt đường ưu tiên, bên phải ngã tư
+                s.append(f'<text x="{CX + H2 + 24}" y="{CY - 18}" font-family="BVP" font-weight="800" font-size="30" fill="{self.TRANG}">{ten}</text>')
+            else:
+                s.append(f'<text x="{CX + 18}" y="{CY + H2 + 60}" font-family="BVP" font-weight="800" font-size="30" fill="{self.TRANG}" '
+                         f'transform="rotate(90 {CX + 18} {CY + H2 + 60})">{ten}</text>')
+        return "".join(s)
+
+    def _so_do_giao_nhau(self, sid: str, sd: dict, D: float) -> tuple[str, list[str]]:
+        xe = sorted(sd.get("xe") or [], key=lambda x: x["thu_tu"])
+        svg, js = [self._nen_duong(sd)], []
+        can = 1.3 + 1.4 * len(xe)
+        k = min(1.0, max(0.4, (D - 0.4) / can))  # co giãn cho vừa thời lượng cảnh
+        for i, x in enumerate(xe):
+            (sx, sy), (dx, dy), (ex, ey), goc = self.LAN[x["tu"]]
+            xid = f"{sid}-xe{i}"
+            mau = self.CAM if x["thu_tu"] == 1 else self.XANH
+            svg.append(self._xe_svg(xid, x.get("loai", "xe_may"), mau, x["thu_tu"]))
+            js.append(f'tl.set("#{xid}",{{x:{sx},y:{sy}}},0); tl.set("#{xid}-q",{{rotation:{goc},transformOrigin:"50% 50%"}},0);')
+            js.append(f'tl.to("#{xid}",{{x:{dx},y:{dy},duration:{0.8 * k:.2f},ease:"power2.out"}},{0.2 * k:.2f});')
+            t = round((1.3 + 1.4 * (x["thu_tu"] - 1)) * k, 2)
+            js.append(f'tl.to("#{xid}",{{x:{ex},y:{ey},duration:{1.2 * k:.2f},ease:"power1.in"}},{t});')
+            if x["thu_tu"] > 1:
+                js.append(f'tl.fromTo("#{xid}",{{opacity:1}},{{opacity:0.55,duration:0.25,yoyo:true,repeat:{max(1, x["thu_tu"] - 1)}}},{round(1.0 * k, 2)});')
+        return "".join(svg), js
+
+    def _so_do_vong_xuyen(self, sid: str, sd: dict, D: float) -> tuple[str, list[str]]:
+        import math
+        CX, CY, R = self.CX, self.CY, 165
+        duong, vach = "#2B3F5C", "#E8EEF6"
+        svg = []
+        for ten, phi in self.GOC_NHANH.items():  # 4 nhánh đường
+            rad = math.radians(phi)
+            x2, y2 = CX + 560 * math.cos(rad), CY + 560 * math.sin(rad)
+            svg.append(f'<line x1="{CX}" y1="{CY}" x2="{x2:.0f}" y2="{y2:.0f}" stroke="{duong}" stroke-width="210"/>')
+        svg.append(f'<circle cx="{CX}" cy="{CY}" r="{R}" fill="none" stroke="{duong}" stroke-width="130"/>')
+        svg.append(f'<circle cx="{CX}" cy="{CY}" r="{R - 72}" fill="#2E7D4F" stroke="{vach}" stroke-width="6"/>')
+        for a in (45, 135, 225, 315):  # mũi tên chiều đi: ngược chiều kim đồng hồ
+            rad = math.radians(a)
+            px, py = CX + R * math.cos(rad), CY + R * math.sin(rad)
+            svg.append(f'<g transform="translate({px:.0f},{py:.0f}) rotate({a})"><path d="M -14 18 L 0 -18 L 14 18 Z" fill="{vach}"/></g>')
+        xe = sorted(sd.get("xe") or [], key=lambda x: x["thu_tu"])
+        js = []
+        if not xe:
+            return "".join(svg), js
+        k = min(1.0, max(0.4, (D - 0.4) / (1.0 + 1.6 * len(xe))))
+        cho = xe[1]["tu"] if len(xe) > 1 else xe[0]["tu"]
+        phi_cho = self.GOC_NHANH[cho]
+        for i, x in enumerate(xe):
+            mau = self.CAM if x["thu_tu"] == 1 else self.XANH
+            loai = x.get("loai", "xe_may")
+            if x["thu_tu"] == 1:  # xe đang đi trong vòng xuyến, đến từ bên trái của xe chờ -> được đi trước
+                gid = f"{sid}-vong{i}"
+                svg.append(f'<g id="{gid}"><g transform="translate({CX + R},{CY})">{self._xe_svg(f"{sid}-xe{i}", loai, mau, None)}</g></g>')
+                js.append(f'tl.set("#{gid}",{{rotation:{phi_cho + 100},svgOrigin:"{CX} {CY}"}},0);')
+                js.append(f'tl.to("#{gid}",{{rotation:{phi_cho - 80},duration:{2.2 * k:.2f},ease:"none"}},{0.2 * k:.2f});')
+            else:  # xe chờ ở nhánh, nhường rồi mới vào
+                phi = self.GOC_NHANH[x["tu"]]
+                rad = math.radians(phi)
+                ax, ay = CX + (R + 150) * math.cos(rad), CY + (R + 150) * math.sin(rad)
+                aid, gid = f"{sid}-xe{i}", f"{sid}-vao{i}"
+                svg.append(self._xe_svg(aid, loai, mau, x["thu_tu"]))
+                svg.append(f'<g id="{gid}" opacity="0"><g transform="translate({CX + R},{CY})">'
+                           f'{self._xe_svg(f"{sid}-xv{i}", loai, mau, None)}</g></g>')
+                js.append(f'tl.set("#{aid}",{{x:{ax:.0f},y:{ay:.0f}}},0); tl.set("#{aid}-q",{{rotation:{phi - 90},transformOrigin:"50% 50%"}},0);')
+                t = round((1.0 + 1.6 * (x["thu_tu"] - 1)) * k + 0.6, 2)
+                js.append(f'tl.to("#{aid}",{{opacity:0,duration:0.2}},{t});')
+                js.append(f'tl.set("#{gid}",{{rotation:{phi},svgOrigin:"{CX} {CY}"}},0);')
+                js.append(f'tl.to("#{gid}",{{opacity:1,duration:0.2}},{t});')
+                js.append(f'tl.to("#{gid}",{{rotation:{phi - 90},duration:{1.4 * k:.2f},ease:"none"}},{t});')
+        return "".join(svg), js
+
+    def so_do(self, sid: str, sd: dict, D: float) -> tuple[str, list[str]]:
+        if sd["kieu"] == "giao_nhau":
+            ve, js = self._so_do_giao_nhau(sid, sd, D)
+        elif sd["kieu"] == "vong_xuyen":
+            ve, js = self._so_do_vong_xuyen(sid, sd, D)
+        else:  # the_chu: chữ lớn trên nền thương hiệu
+            chu = e(sd.get("chu", ""))
+            ve = (f'<rect x="120" y="760" width="840" height="300" rx="36" fill="{self.TRANG}"/>'
+                  f'<foreignObject x="150" y="780" width="780" height="260"><div xmlns="http://www.w3.org/1999/xhtml" '
+                  f'style="font-family:BVP,sans-serif;font-weight:800;font-size:64px;line-height:1.15;color:{self.NAVY};'
+                  f'display:flex;align-items:center;justify-content:center;height:260px;text-align:center">{chu}</div></foreignObject>')
+            js = [f'tl.fromTo("#{sid}-sd",{{opacity:0,scale:0.96}},{{opacity:1,scale:1,duration:0.4,ease:"expo.out",transformOrigin:"50% 50%"}},0.1);']
+        media = (f'<svg id="{sid}-sd" class="clip" data-start="0" data-duration="{D}" data-track-index="0" '
+                 f'viewBox="0 0 {W} {H}" width="{W}" height="{H}" style="position:absolute;left:0;top:0;'
+                 f'background:linear-gradient(180deg,{self.NAVY},#16467F)">{ve}</svg>')
+        return media, js
+
     # ---------- cảnh có thẻ chữ ----------
     def canh(self, c: dict) -> str:
         sid = c["doan"]
         l1, l2, src, mau2, kieu = self.the.get(sid) or ("", "", None, self.XANH, "word")
         D = c["dai"]
         cid = c["id"]
-        if c["anh"]:
+        js_so_do: list[str] = []
+        if c.get("so_do"):
+            media, js_so_do = self.so_do(sid, c["so_do"], D)
+        elif c["anh"]:
             anh = next((p.name for p in (self.P / "hf/assets/img").glob(f"{cid}.*")), f"{cid}.jpg")
             media = (f'<img id="{sid}-v" class="clip" data-start="0" data-duration="{D}" data-track-index="0" '
                      f'src="assets/img/{anh}" alt="{e(self.TEN)}" />')
@@ -113,9 +248,10 @@ class Dung:
             js.append(f'tl.fromTo("#{sid}-src",{{opacity:0}},{{opacity:1,duration:0.25,ease:"power1.out"}},0.6);')
         if c["anh"]:
             js.append(f'tl.fromTo("#{sid}-cam",{{scale:1}},{{scale:1.08,duration:{D},ease:"none"}},0);')
-        elif sid == self.kh["doan"][0]["id"]:
+        elif sid == self.kh["doan"][0]["id"] and not c.get("so_do"):
             js.append(f'tl.fromTo("#{sid}-cam",{{scale:1}},{{scale:1.06,duration:{D},ease:"none"}},0);')
         js.append(f'tl.to("#{sid}-card",{{opacity:0,filter:"blur(6px)",duration:0.16,ease:"power2.in"}},{round(D-0.18,2)});')
+        js += js_so_do
         N, T = self.NAVY, self.TRANG
         return f"""<template>
   <style>

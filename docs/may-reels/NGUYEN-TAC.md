@@ -116,11 +116,23 @@ Với kênh Vạn Xuân hiện tại, các quy tắc là:
 
 ---
 
-## 5. Thiếu cảnh quay thì ghi vào tab "Cần quay"
+## 5. Thiếu cảnh quay: ghi tab "Cần quay" và dùng cảnh tạm bằng sơ đồ động
 
-Kho cảnh có chọn được mà không khớp (không đủ cảnh, sai bối cảnh, độ phân giải quá thấp, không có cảnh hợp lệ cho một ý), máy **không** lấp chỗ trống bằng ảnh AI, stock, cảnh lặp lại hay thẻ chữ thay cảnh.
+Kho cảnh có thể không có cảnh khớp một ý: không đủ cảnh, sai bối cảnh, độ phân giải quá thấp, hoặc không có cảnh hợp lệ. Khi đó máy **không** lấp chỗ trống bằng ảnh AI, stock, cảnh lặp lại hay cảnh kho không khớp ý.
 
-Máy ghi yêu cầu vào tab "Cần quay": kênh, mã video, ý cần minh họa, mô tả cảnh cần quay, khổ, thời lượng tối thiểu, lý do không dùng được cảnh có sẵn. Video đó dừng ở trạng thái "chờ cảnh".
+**Cập nhật 2026-11-15** (người dùng chốt):
+1. **Vẫn ghi yêu cầu vào tab "Cần quay"**: kênh, mã video, ý cần minh họa, mô tả cảnh cần quay, gợi ý quay, lý do.
+2. Đoạn đó dùng **cảnh tạm** dạng sơ đồ động (`canh.so_do`: `giao_nhau`, `vong_xuyen`, `the_chu`). Sơ đồ vẽ bằng code (SVG + GSAP trong HyperFrames), **không phải AI, không phải stock**.
+   - Chỉ đoạn có trong `thieu_canh` mới được dùng cảnh tạm.
+   - Mỗi cảnh tạm bị trừ 3 điểm QA, tối đa 15.
+   - Code nằm ở `may_reels/dung/hf.py`.
+3. **Video có cảnh tạm vẫn vào Hàng chờ và được đăng như video khác**, kèm cảnh báo "Có cảnh tạm (sơ đồ): s3, s4". Job ghi danh sách cảnh tạm ở `reel_job.metadata.canh_tam`.
+4. **Thay bằng cảnh thật sau:**
+   1. Người quay xong thì chọn "Đã quay" ở cột `trang_thai_quay` của tab Cần quay, rồi nạp lại kho (`tools_local/nap_kenh.py`).
+   2. Lệnh `python -m may_reels thay-canh` cho agent thay sơ đồ bằng cảnh thật khớp ý, dựng lại, cập nhật Hàng chờ và ghi `trang_thai_nap`.
+   3. Nền tảng nào đã "Duyệt"/"Bỏ" thì máy không thay video, vì lời duyệt đó dành cho bản cũ.
+5. Trạng thái `cho_quay` chỉ còn dùng khi không dựng được cả cảnh tạm, ví dụ cảnh kho đã chọn không đủ độ dài.
+   - Chạy `san-xuat --ca-cho-quay` để dựng lại các chủ đề này với cảnh tạm.
 
 Điều này khớp với luật "No Unilateral Substitutions" và "Escalate Blockers Explicitly" trong `AGENT_GUIDE.md`.
 

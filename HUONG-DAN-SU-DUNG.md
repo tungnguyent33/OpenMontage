@@ -297,6 +297,18 @@ tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng
   - Chọn **Sửa** và ghi lý do vào `ghi_chu_sua`, rồi chạy lệnh `sua`. Máy sửa kế hoạch, dựng lại (đoạn giọng không đổi thì dùng lại), cập nhật bản xem thử (tên file có hậu tố `-v2`, `-v3`…) và đưa ô về "Chờ duyệt".
   - Muốn sửa một nền tảng thì các nền tảng khác của cùng video cũng phải chưa chọn "Duyệt"/"Bỏ", vì máy không thay video đã có lời duyệt.
 - **Thư mục đăng tay** của từng nền tảng (video + `description.txt`) được ghi ở cột `ghi_chu_may`.
+- **Thiếu cảnh thật:** máy dùng **cảnh tạm** là sơ đồ động (ngã tư, vòng xuyến, chữ lớn), vẽ bằng code, không AI, không stock. Video vẫn vào Hàng chờ kèm cảnh báo "Có cảnh tạm", và tab **Cần quay** vẫn ghi yêu cầu quay.
+- **Thay cảnh tạm bằng cảnh thật:**
+  1. Quay xong thì chọn **Đã quay** ở cột `trang_thai_quay` trên tab Cần quay.
+  2. Nạp lại kho cảnh.
+  3. Chạy lệnh thay cảnh:
+
+  ```powershell
+  tools_local\py.cmd tools_local/nap_kenh.py --id vanxuan
+  tools_local\py.cmd -m may_reels thay-canh                              # thay sơ đồ bằng cảnh thật, dựng lại, cập nhật Hàng chờ
+  tools_local\py.cmd -m may_reels san-xuat --kenh vanxuan --ca-cho-quay  # dựng lại cả chủ đề đang "chờ quay" bằng cảnh tạm
+  ```
+- **Dung lượng ổ đĩa:** mỗi video khoảng 150 MB, cộng khoảng 120 MB file tạm của HyperFrames trong `hf/`. Bản đóng gói đăng tay dùng hard link nên không tốn thêm chỗ. HyperFrames từ chối render khi ổ còn dưới khoảng 1 GB.
 
 **Đăng bài** (tạm hoãn; làm theo `CAI-DAT-DANG-BAI.md` trước):
 

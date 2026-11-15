@@ -54,7 +54,20 @@ Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/
 - **Một cảnh không dùng quá một lần trong cùng video.** Ngoại lệ duy nhất: cảnh có thẻ trong `canh.lap_duoc_neu_the` (cảnh nói trước máy).
 - **Ưu tiên cảnh ít dùng.** Xem `so_lan_dung_canh` trong `yeu_cau.json`. Cảnh đã dùng từ 3 lần trở lên bị trừ điểm QA.
 - Cảnh phải khớp ý của đoạn (xem `mo_ta`, `the`, `dia_diem`). Ghi lý do chọn vào `canh.ly_do_chon`.
-- **Thiếu cảnh thật cho một ý:** không lấp bằng cảnh không khớp. Ghi một mục vào `thieu_canh` (`doan`, `y_can_canh`, `mo_ta_canh`, `goi_y_quay`, `ly_do`). Khi đó máy ghi tab "Cần quay", chuyển job sang `cho_quay`, và không dựng video.
+- **Thiếu cảnh thật cho một ý:** không lấp bằng cảnh kho không khớp.
+  1. Ghi một mục vào `thieu_canh` (`doan`, `y_can_canh`, `mo_ta_canh`, `goi_y_quay`, `ly_do`). Máy ghi mục này vào tab "Cần quay".
+  2. Đoạn đó dùng **cảnh tạm** dạng sơ đồ động: `canh = {"so_do": {...}, "mo_ta": "..."}`. Máy vẽ sơ đồ bằng HTML/SVG, không dùng AI, không dùng stock. Video vẫn được dựng và vào Hàng chờ, kèm cảnh báo "Có cảnh tạm".
+  3. Sau này, khi người dùng quay xong và nạp lại kho, lệnh `thay-canh` thay sơ đồ bằng cảnh thật.
+- **Cách dùng sơ đồ** (`so_do`):
+  - `giao_nhau`: ngã tư nhìn từ trên.
+    - `xe` là tối đa 4 xe, mỗi xe có `tu` (`duoi`/`tren`/`trai`/`phai`: xe đến từ phía nào), `thu_tu` (1 = đi trước) và `loai` (`xe_may`, `o_to` hoặc `uu_tien` cho xe cứu thương, cứu hỏa).
+    - `duong_uu_tien` (`ngang` hoặc `doc`) tô sáng con đường ưu tiên.
+    - Thứ tự đi **phải đúng luật đã trích** trong `nguon_luat`.
+  - `vong_xuyen`: vòng xuyến chạy ngược chiều kim đồng hồ.
+    - Xe `thu_tu` 1 là xe đang đi trong vòng; xe số 2 trở đi chờ ở nhánh của mình.
+    - Nên đặt xe chờ ở nhánh `trai`, `phai` hoặc `tren`, vì nhánh `duoi` bị phụ đề che.
+  - `the_chu`: chữ lớn (`chu`, tối đa 60 ký tự) cho ý không vẽ được bằng hai kiểu trên.
+- Chỉ đoạn có trong `thieu_canh` mới được dùng `so_do`. Mỗi cảnh tạm bị trừ 3 điểm QA, nên vẫn ưu tiên cảnh thật khi kho có cảnh khớp ý.
 
 ## Caption và hashtag
 
@@ -74,6 +87,10 @@ Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/
 - `phan_hoi` liệt kê lỗi kế hoạch hoặc điểm QA dưới ngưỡng (`san-xuat.yaml` → `cham_diem.nguong`). Sửa đúng các mục đó và giữ nguyên phần đã đạt.
 - Máy cho tối đa `cham_diem.so_vong_sua` vòng (2). Sau đó video vẫn vào Hàng chờ, kèm cảnh báo "Dưới ngưỡng".
 - Lệnh `sua`: đọc `ghi_chu_sua` của người duyệt rồi sửa `ke_hoach.json` hiện có. Chỉ đổi phần người duyệt yêu cầu, không viết lại toàn bộ.
+- Lệnh `thay-canh`: `yeu_cau.json` có `ghi_chu_sua` liệt kê các đoạn đang dùng cảnh tạm.
+  - Tìm trong `kho_canh` (đã nạp lại) cảnh thật khớp ý của từng đoạn, rồi thay `canh` bằng cảnh đó và bỏ mục tương ứng khỏi `thieu_canh`.
+  - Không có cảnh khớp thì giữ nguyên sơ đồ.
+  - Không đổi lời đọc.
 
 ## Kết thúc
 

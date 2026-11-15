@@ -501,3 +501,12 @@ def test_import_dang_bai_va_publisher_khong_keo_googleapiclient():
     kq = subprocess.run([sys.executable, "-c", code], cwd=REPO, capture_output=True, text=True, encoding="utf-8")
     assert kq.returncode == 0, kq.stderr
     assert kq.stdout.strip() == "['export_bundle', 'facebook_reels', 'tiktok_handoff', 'youtube_shorts'] False"
+
+
+def test_dong_goi_dung_hard_link_khong_chep_video(moi_truong):
+    import os
+    moi_truong["them"]()
+    ban_ghi = json.loads((moi_truong["goc"] / "projects/_may_reels/hang_cho/video-thu.json").read_text(encoding="utf-8"))
+    goc_video = Path(ban_ghi["video"])
+    ban = list((moi_truong["goc"] / "projects/_may_reels/xuat/video-thu").glob("*/video/*.mp4"))
+    assert len(ban) == 3 and all(os.path.samefile(b, goc_video) for b in ban)

@@ -109,13 +109,31 @@ def chay_dung(ma_video: str, *, goc: Path = GOC, giay: int = GIAY_DUNG, stages: 
 
 
 # ---------------------------------------------------------------- chọn chủ đề, đặt mã
-def chon_chu_de(bang: BangNguon, kenh: str, so_luong: int, goc: Path = GOC) -> list[dict]:
-    da_co = {json.loads(f.read_text(encoding="utf-8")).get("ma_chu_de") for f in (goc / "projects").glob("*/reel_job.json")}
+def _jobs(goc: Path) -> dict[str, dict]:
+    """ma_chu_de -> reel_job (đọc projects/*/reel_job.json)."""
+    out = {}
+    for f in (goc / "projects").glob("*/reel_job.json"):
+        try:
+            j = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        out[j.get("ma_chu_de")] = j
+    return out
+
+
+def chon_chu_de(bang: BangNguon, kenh: str, so_luong: int, goc: Path = GOC, ca_cho_quay: bool = False) -> list[dict]:
+    """Chủ đề "Làm" chưa sản xuất. ca_cho_quay: thêm chủ đề có job đang cho_quay (dựng lại với cảnh tạm)."""
+    jobs = _jobs(goc)
     out = []
     for r in doc_dong(bang, Y_TUONG):
         if r.get("kenh") != kenh or chuan(r.get("duyet_chu_de")) != "Làm":
             continue
-        if chuan(r.get("trang_thai_san_xuat")) not in DA_SAN_XUAT or r.get("ma") in da_co:
+        j = jobs.get(r.get("ma"))
+        if j:
+            if not (ca_cho_quay and j.get("trang_thai") == "cho_quay"):
+                continue
+            r = {**r, "_ma_video": j["ma_video"]}
+        elif chuan(r.get("trang_thai_san_xuat")) not in DA_SAN_XUAT:
             continue
         out.append(r)
         if len(out) >= so_luong:
@@ -190,15 +208,21 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
     cd = {**cd_brand, **{k: v for k, v in chu_de.items() if v}}
     P = goc / "projects" / ma_video
     P.mkdir(parents=True, exist_ok=True)
-    job = tao_job(ma_video=ma_video, kenh=kenh, ma_chu_de=ma, chu_de=cd.get("chu_de") or ma,
-                  dinh_dang=cd.get("dinh_dang") or "khac", nen_tang_dich=["fb_reels", "yt_shorts", "tiktok"],
-                  project_dir=f"projects/{ma_video}", luc=datetime.now(TZ_VN).isoformat(timespec="seconds"))
-    job = chuyen_trang_thai(job, "dang_san_xuat", ly_do="Sheet: duyet_chu_de = Làm")
+    phan_hoi = None
+    if (P / "reel_job.json").is_file():  # job cũ đang cho_quay: dựng lại, đoạn thiếu cảnh dùng cảnh tạm
+        job = json.loads((P / "reel_job.json").read_text(encoding="utf-8"))
+        job = chuyen_trang_thai(job, "dang_san_xuat", ly_do="Dựng lại với cảnh tạm (sơ đồ) cho đoạn thiếu cảnh")
+        phan_hoi = ("Lần trước thiếu cảnh thật nên chưa dựng. Giữ thieu_canh, và cho mỗi đoạn trong thieu_canh dùng "
+                    "cảnh tạm canh.so_do (xem skill mục Chọn cảnh). Kiểm tra lại kho: nếu nay đã có cảnh thật khớp ý thì dùng cảnh thật.")
+    else:
+        job = tao_job(ma_video=ma_video, kenh=kenh, ma_chu_de=ma, chu_de=cd.get("chu_de") or ma,
+                      dinh_dang=cd.get("dinh_dang") or "khac", nen_tang_dich=["fb_reels", "yt_shorts", "tiktok"],
+                      project_dir=f"projects/{ma_video}", luc=datetime.now(TZ_VN).isoformat(timespec="seconds"))
+        job = chuyen_trang_thai(job, "dang_san_xuat", ly_do="Sheet: duyet_chu_de = Làm")
     _luu_job(P, job)
     _cap_nhat_y_tuong(bang, kenh, ma, NHAN_TRANG_THAI["dang_san_xuat"])
     nguong = int((sx.get("cham_diem") or {}).get("nguong", 75))
     so_vong = int((sx.get("cham_diem") or {}).get("so_vong_sua", 2))
-    phan_hoi = None
     tom: dict = {}
     try:
         for vong in range(so_vong + 1):
@@ -252,6 +276,10 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
         if hq.loi:
             raise RuntimeError("không đưa được vào Hàng chờ: " + "; ".join(hq.loi))
         kq.canh_bao = hq.canh_bao
+        if kh["thieu_canh"]:  # cảnh tạm: vẫn giữ yêu cầu quay để thay sau (lệnh thay-canh)
+            kq.thieu_canh = kh["thieu_canh"]
+            ghi_can_quay(bang, kenh, ma, ma_video, kh["thieu_canh"])
+            job.setdefault("metadata", {})["canh_tam"] = [t["doan"] for t in kh["thieu_canh"]]
         job = chuyen_trang_thai(job, "cho_duyet", ly_do=f"QA {kq.diem_qa}")
         _luu_job(P, job)
         _cap_nhat_y_tuong(bang, kenh, ma, NHAN_TRANG_THAI["cho_duyet"], kq.diem_qa)
@@ -281,15 +309,20 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
 
 
 def san_xuat(bang: BangNguon, kenh: str, so_luong: int, *, goc: Path = GOC, log: Callable[[str], None] = print,
-             **kw) -> list[KetQuaJob]:
-    ds = chon_chu_de(bang, kenh, so_luong, goc)
+             ca_cho_quay: bool = False, **kw) -> list[KetQuaJob]:
+    ds = chon_chu_de(bang, kenh, so_luong, goc, ca_cho_quay)
     if not ds:
         log("Không có chủ đề nào đã chọn 'Làm' mà chưa sản xuất.")
         return []
     tien_to, so = so_tiep_theo(kenh, goc)
     ket_qua = []
-    for i, cd in enumerate(ds):
-        ma_video = f"{tien_to}-{so + i:03d}-{cd['ma']}"
+    i_moi = 0
+    for cd in ds:
+        if cd.get("_ma_video"):
+            ma_video = cd["_ma_video"]
+        else:
+            ma_video = f"{tien_to}-{so + i_moi:03d}-{cd['ma']}"
+            i_moi += 1
         log(f"== {ma_video}: {cd.get('chu_de')}")
         kq = san_xuat_mot(bang, cd, ma_video, goc=goc, log=log, **kw)
         log(f"   -> {kq.trang_thai} | QA {kq.diem_qa} | {kq.giay:.0f}s | {'; '.join(kq.canh_bao)} {kq.loi}")
