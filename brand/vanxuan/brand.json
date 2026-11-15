@@ -1,6 +1,18 @@
 {
   "id": "vanxuan",
-  "nguon_kenh": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan",
+  "nguon_kenh": {
+    "bien_moi_truong": "KENH_GOC_DIR",
+    "thu_muc_con": "vanxuan",
+    "ghi_chu": "File thật = thư mục kênh gốc / file_tuong_doi"
+  },
+  "cau_hinh": {
+    "tien_to_ma_video": "vx",
+    "thu_muc_video": "../../videos",
+    "fonts": [
+      "BeVietnamPro-ExtraBold.ttf",
+      "BeVietnamPro-Bold.ttf"
+    ]
+  },
   "kenh": {
     "ten_kenh": "Đào tạo lái xe Vạn Xuân",
     "ten_day_du": "Trung tâm đào tạo lái xe Phú Thọ - chi nhánh Vạn Xuân",
@@ -111,20 +123,24 @@
   },
   "context": {
     "business": {
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\context\\business.md",
-      "noi_dung": "# Business\n\n> Nguồn: website chính thức (https://van-xuan-driving-school.vercel.app/) qua `/init-context`\n> ngày 2026-09-13. Các mục còn \"(chưa có)\" là do website/fanpage cũng chưa công bố — hỏi lại\n> người dùng thay vì tự bịa.\n\n## Trung tâm\n- Tên đầy đủ: Đào tạo lái xe Vạn Xuân\n- Địa chỉ: Thôn 18, xã Vạn Xuân, tỉnh Phú Thọ (nhà văn hóa Thôn 18)\n- Hotline: 0823279999\n- Zalo OA: https://zalo.me/0823279999\n- Website: https://van-xuan-driving-school.vercel.app/\n- Fanpage: https://www.facebook.com/hoclaixephutho/\n- Giấy phép đào tạo: (chưa có)\n- Giờ làm việc: (chưa có)\n\n## Khóa học\n| Hạng bằng | Thời gian đào tạo | Học phí | Ghi chú |\n|---|---|---|---|\n| A1 (xe máy dưới 125cc) | (chưa có) | (chưa có) | Đang mở lớp — website ghi \"còn 3 chỗ\" (số liệu minh họa, không dùng làm số liệu thật) |\n| A (xe máy phân khối lớn) | (chưa có) | (chưa có) | |\n| Cấp đổi / cấp lại bằng | (chưa có) | (chưa có) | Gồm dịch vụ đổi bằng giấy (mẫu cũ) sang thẻ PET |\n| B1, B2, C... | (chưa mở, hoặc chưa công bố) | | Sitemap website có chừa chỗ mở rộng nhưng chưa có trang riêng |\n\n## Lịch khai giảng\n- (chưa có — xem `/lich-khai-giang` trên website khi có lịch thật)\n\n## Lịch thi sát hạch (thông tin thật, người dùng cung cấp 2026-09-26)\n- Lịch thi GPLX mô tô tháng 11/2026: Đang xếp lịch\n- Số điện thoại đăng ký/tư vấn dùng trong các bài thông báo lịch thi: 0823.279.999 –\n  0978.639.199 (số thứ 2 mới xuất hiện từ bài 34, chưa có trong `data/contact.ts` — xác nhận\n  với người dùng nếu muốn thêm vào danh sách hotline chính thức).\n\n## Sân tập thực hành (thông tin thật, người dùng cung cấp 2026-09-26)\n- Đã hoàn thành 2 sân tập thực hành hạng A và A1.\n- Địa chỉ: Thôn 18, xã Vạn Xuân, Phú Thọ.\nSân 2: Trường cấp 2 Thanh Uyên, xã Hiền Quan, tỉnh Phú Thọ\nSân số 3: Sân UBND xã Xuân Quang cũ Thôn 2, xã Hiền Quan, tỉnh Phú Thọ\n\n\n## Điểm khác biệt so với trung tâm khác trong khu vực\n- Minh bạch học phí — công khai rõ ràng từ đầu, không phát sinh chi phí ẩn.\n- Hỗ trợ ôn thi sát hạch sát với bài thi thực tế.\n- Đồng hành cùng học viên từ ngày đăng ký tới khi nhận bằng.\n- Đội ngũ giáo viên (tự nhận là) giàu kinh nghiệm — thông tin cụ thể từng giáo viên chưa có.\n\n## Số liệu thật (dùng cho StatBlock/so sánh, xác nhận lại định kỳ)\n- Hoạt động từ: 2023\n- Học viên đã đào tạo: hơn 500+\n- Tỉ lệ đỗ: trên 90%\n\n## Câu hỏi thường gặp (FAQ)\n*(copy từ trang `/faq` của website — có thể tái sử dụng nguyên văn hoặc viết lại cho phù hợp bài đăng)*\n\n**Hồ sơ & điều kiện**\n- Cần chuẩn bị giấy tờ gì để đăng ký học? → CMND/CCCD còn hiệu lực, ảnh thẻ 3x4 nền trắng, giấy khám sức khỏe theo mẫu quy định, đơn đăng ký học lái xe.\n- Độ tuổi tối thiểu? → Hạng A1 và hạng A: từ đủ 18 tuổi trở lên (theo quy định hiện hành).\n- Người ở tỉnh/thành khác học được không? → Tùy khu vực/chi nhánh tiếp nhận, cần liên hệ tư vấn cụ thể.\n\n**Học phí & thanh toán**\n- Học phí từng hạng, đóng theo đợt, có gồm lệ phí thi không? → Đang cập nhật, cần liên hệ trung tâm để có báo giá chính xác (KHÔNG bịa số liệu học phí khi viết bài).\n\n**Lịch học & thi**\n- Lịch học có linh hoạt cho người đi làm? → Trung tâm cố gắng sắp xếp phù hợp, xem lịch khai giảng gần nhất.\n- Bao lâu thì được thi sát hạch? → Phụ thuộc tiến độ học và lịch tổ chức thi.\n- Thi không đạt thì sao? → Được hỗ trợ ôn tập và đăng ký thi lại theo quy định.\n\n**Cấp đổi / cấp lại bằng**\n- Bằng hết hạn có cần thi lại lý thuyết không? → Tùy thời gian hết hạn theo quy định hiện hành.\n- Mất bằng lái cần làm gì? → Xem checklist hồ sơ tại trang Cấp đổi/cấp lại hoặc liên hệ tư vấn.\n- Đổi từ bằng giấy sang thẻ PET có mất phí không? → Chi phí dịch vụ đang cập nhật.\n"
+      "file_tuong_doi": "context/business.md",
+      "ban_local": "brand/vanxuan/_local/context/business.md",
+      "sha1": "726e26a168dd"
     },
     "brand-style": {
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\context\\brand-style.md",
-      "noi_dung": "# Brand Style — Bộ nhận diện hình ảnh Vạn Xuân\n\n> Rút ra từ banner treo biển thật (`Đào_tạo_lái_xe_Vạn_xuân_khổ_3_2.png`) — đây là tài sản\n> thương hiệu cụ thể nhất hiện có, nên dùng làm gốc cho mọi định dạng khác (carousel,\n> infographic). Mã màu bên dưới lấy mẫu trực tiếp từ file ảnh (ước lượng theo pixel) — nếu có\n> file gốc logo (AI/SVG/PNG nền trong suốt) thì nên đối chiếu lại cho chính xác 100%.\n>\n> Dùng file này khi viết **prompt tạo ảnh** cho Gemini (theo đúng quy tắc trong `CLAUDE.md`:\n> Gemini không tự đọc được ảnh mẫu, phải mô tả bằng lời) — copy các mục 1–4 vào phần mô tả\n> phong cách của prompt.\n\n## 1. Bảng màu\n| Vai trò | Mã hex | Dùng khi nào |\n|---|---|---|\n| Xanh navy đậm | `#0E3970` | Nền góc tối, vùng gradient sẫm, logo phần chữ V |\n| Xanh dương chính | `#048DD1` | Nền chủ đạo (gradient sáng hơn), màu nhận diện chính |\n| Cam nhấn | `#E4661F` | Logo phần chữ X, nút/nhãn CTA, thanh liên hệ, chi tiết cần nổi bật |\n| Trắng | `#FFFFFF` | Nền panel logo, viền ảnh, chữ trên nền xanh |\n| Đen/xám đậm | dùng làm bóng đổ nhẹ cho chữ, không phải màu nền |\n\n## 2. Logo\n- Biểu tượng \"VX\" cách điệu: chữ **V** màu xanh navy lồng hình vô-lăng bên trong, chữ **X** tạo bằng dải ruy-băng gradient xanh → cam vắt chéo qua.\n- Luôn đặt trên nền đủ tương phản (nền trắng hoặc nền xanh navy đặc) — không đặt trực tiếp lên ảnh thật (ảnh học viên/xe) vì dễ bị chìm.\n- Vị trí chuẩn: góc trên-trái, trong khối nền trắng riêng biệt với phần còn lại.\n\n## 3. Kiểu chữ (typography)\n- **Tiêu đề chính**: chữ hoa toàn bộ, font sans-serif cực đậm (extra-bold/black), có hiệu ứng bóng đổ/nổi khối nhẹ (bevel) để nổi bật trên nền xanh — không dùng font mảnh hay chữ thường cho tiêu đề.\n- **Nhãn phụ nhấn mạnh** (kiểu \"HẠNG A, A1\"): chữ hoa đậm, trắng trên nền cam bo góc — dùng cho 1 cụm từ khoá quan trọng nhất của bài/slide.\n- **Chữ thông tin** (liên hệ, địa chỉ): đậm vừa phải, rõ ràng, không dùng font trang trí/viết tay.\n\n## 4. Bố cục / mô-típ hình ảnh\n- **Chia chéo (diagonal split)**: mảng trắng chứa logo ở góc trên-trái, cắt chéo sang mảng xanh navy/gradient chiếm phần lớn khung hình.\n- **Hoạ tiết vòng lặp con đường**: đường cong mờ dạng vòng lặp, viền trắng mảnh, độ trong suốt thấp ở nền — chi tiết ngầm gợi \"đường/lái xe\", không lấn át nội dung chính. Có thể bỏ ở các định dạng đơn giản (slide nội dung, infographic) để đỡ rối.\n- **Ảnh thật** (học viên/xe/cơ sở vật chất): đặt trong khung viền trắng mỏng, hơi nghiêng — tạo cảm giác ảnh dán trên bảng, tăng độ chân thực, tránh nhìn như ảnh stock.\n- **Thanh liên hệ**: khối màu cam, góc dưới-trái, có icon điện thoại/Zalo đi kèm số.\n- **Địa chỉ**: đặt trên nền trắng, thường ở cuối bố cục.\n- **QR code** (nếu có): góc dưới-phải.\n\n## 5. Áp dụng cho từng loại nội dung\n\n### Carousel (Facebook, nhiều slide)\n- **Slide bìa**: giữ nguyên tinh thần banner — nền xanh navy/gradient, logo góc trên-trái, tiêu đề chữ hoa đậm trắng, 1 nhãn cam nhấn từ khoá chính của bài (thay vì \"HẠNG A, A1\" thì đổi thành tên chủ đề, VD \"MẸO THI SA HÌNH\").\n- **Slide nội dung** (giữa): đơn giản hoá để dễ đọc — nền trắng hoặc nền xanh navy đặc (bỏ hoạ tiết vòng lặp), giữ logo nhỏ góc để nhận diện xuyên suốt, dùng khối cam cho số thứ tự/icon nhấn ý, chữ tối màu trên nền sáng.\n- **Slide cuối (CTA)**: quay lại tông banner — nền cam hoặc xanh đậm, nhắc lại số điện thoại/Zalo đúng kiểu thanh liên hệ trên banner.\n\n### Infographic (1 ảnh, nhiều thông tin)\n- Tiêu đề trên cùng theo đúng kiểu chữ hoa đậm/bóng đổ như banner.\n- Nội dung chia khối rõ ràng (số liệu, các bước, lỗi hay gặp...), dùng cam đánh dấu số/icon quan trọng, xen kẽ nền trắng/xanh navy để phân tách khối.\n- Chân trang lặp lại thanh liên hệ cam giống banner — tạo cảm giác mọi nội dung đều từ cùng một nguồn nhất quán.\n\n### Copywriting\n- Đồng bộ với giọng \"thẳng thắn, minh bạch, gần gũi\" đã định nghĩa ở `voice-analysis.md`. Logic màu cam = \"trọng tâm cần chú ý\" trong hình ảnh nên khớp với cách dùng emoji nhấn ý (📌 ⚠️ ✅) trong bài viết — visual và câu chữ cùng một logic nhấn mạnh.\n\n## 6. Khung prompt tạo ảnh gợi ý (Gemini, viết bằng tiếng Anh khi dùng thật)\n\n```\nStyle: modern Vietnamese driving-school ad graphic, bold and trustworthy, not playful.\nPalette: deep navy blue (#0E3970) to vivid blue (#048DD1) gradient background, orange accent\n(#E4661F) for callout badges/CTA blocks, white for text and photo frames.\nTypography: extra-bold condensed sans-serif, all caps, white with subtle bevel/drop-shadow for\nheadline; bold white-on-orange rounded badge for one key phrase.\nLayout: diagonal split with a white panel (top-left) transitioning into the navy/blue panel;\nfaint looping road-line motif in the background at low opacity; real photo inset with a thin\nwhite border, slightly tilted; orange contact bar (bottom-left) with phone/Zalo icon; address on\nwhite strip; QR code bottom-right if needed.\nLogo placement: reserve top-left white area for the \"VX\" logo (steering-wheel V + blue-to-orange\nribbon X) — do not redraw the logo itself, leave clean space to overlay it afterward.\n```\n*(Không tự tạo file ảnh — theo đúng quy tắc trong `CLAUDE.md`, viết prompt để người dùng tự dán vào Gemini.)*\n\n## 7. Việc cần làm tiếp\n- Lưu banner gốc vào `reference/carousel-samples/` hoặc tạo thư mục mới `reference/brand-assets/` để mở lại xem khi viết prompt.\n- Nếu có file gốc logo (vector/PNG nền trong suốt) hoặc bảng màu chính thức từ nhà thiết kế, nên thêm vào cùng thư mục và cập nhật lại mã hex ở mục 1 cho chính xác tuyệt đối.\n"
+      "file_tuong_doi": "context/brand-style.md",
+      "ban_local": "brand/vanxuan/_local/context/brand-style.md",
+      "sha1": "b44dee8d0ec6"
     },
     "icp": {
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\context\\icp.md",
-      "noi_dung": "# ICP — Chân dung học viên mục tiêu\n\n> Phác thảo ban đầu dựa trên khóa học đang mở (A1, A, cấp đổi/cấp lại) — CHƯA có khảo sát học\n> viên thật, cần người dùng xác nhận lại trước khi dùng để định hướng content.\n\n- Độ tuổi: 2 nhóm chính — (1) 18-22 tuổi mới đủ tuổi thi A1/A lần đầu; (2) người đã có bằng cần\n  cấp đổi/cấp lại (độ tuổi rộng hơn, thường 25+).\n- Nghề nghiệp phổ biến: (chưa có — hỏi người dùng)\n- Nhu cầu chính: nhóm (1) cần bằng A1/A để tự đi lại/đi làm; nhóm (2) cần hợp thức hóa giấy tờ\n  (bằng hết hạn, mất bằng, đổi giấy sang thẻ PET) để tiếp tục lưu thông hợp pháp.\n- Nỗi lo thường gặp khi chọn trung tâm học lái xe: sợ phát sinh chi phí ẩn, sợ cam kết \"bao đậu\"\n  không thật, không rõ lịch học/thi có linh hoạt cho người đi làm không.\n- Kênh họ hay dùng để tìm thông tin: Fanpage Facebook, Zalo (theo nền tảng ưu tiên hiện có ở\n  `strategy.md`) — cần xác nhận thêm qua dữ liệu thật.\n"
+      "file_tuong_doi": "context/icp.md",
+      "ban_local": "brand/vanxuan/_local/context/icp.md",
+      "sha1": "34618ee60145"
     },
     "voice-analysis": {
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\context\\voice-analysis.md",
-      "noi_dung": "# Voice Analysis — Giọng văn cho Bài viết Facebook\n\n> **Trạng thái: nháp ban đầu.** File này được xây dựng từ mục \"Giọng điệu bắt buộc\" và\n> \"Điểm khác biệt\" trong `CLAUDE.md` / `context/business.md`, VÌ CHƯA có dữ liệu bài đăng thật\n> (chưa chạy Apify scrape Fanpage, chưa có bài mẫu dán tay). Khi có bài đăng thật, chạy lại\n> `/init-context` để Claude phân tích và **thay thế** các con số/quy tắc bên dưới bằng số liệu đo\n> được thật (độ dài câu trung bình thật, tần suất emoji thật...) thay vì giữ nguyên bản nháp này.\n\n## 1. Mức độ trang trọng\nThân thiện – trung lập, giống người quen làm ở trung tâm tư vấn trực tiếp, không phải fanpage doanh nghiệp nói giọng hành chính. Không dùng \"kính gửi\", \"quý khách hàng thân mến\". Không suồng sã kiểu ngôn ngữ giới trẻ/teencode, vì đối tượng có cả nhóm 25+ đi đổi bằng.\n\n## 2. Xưng hô\n- Xưng \"mình\" (đại diện trung tâm), gọi người đọc là \"bạn\".\n- Khi kể chuyện học viên có thể chuyển sang xưng tên/vai trò cụ thể (\"anh Long — học viên hạng B2\").\n\n## 3. Độ dài câu & đoạn (áp dụng cho Facebook, đọc trên di động)\n- Câu ngắn, mỗi câu 1 ý. Tránh câu ghép nhiều mệnh đề.\n- Đoạn tối đa 2–3 dòng rồi xuống dòng — không viết thành khối chữ dài.\n- Bài viết Facebook thường: 80–150 chữ cho bài ngắn (mẹo nhanh, FAQ), 150–250 chữ cho bài có câu chuyện/giải thích luật.\n\n## 4. Emoji\n- Dùng tiết chế: 1 emoji mở đầu hook (tuỳ chọn) + 2–4 emoji đánh dấu ý trong bài (không trang trí cuối mỗi câu).\n- Emoji nên mang nghĩa chức năng, không phải trang trí: ✅ (mẹo/đúng), ⚠️ (cảnh báo/lỗi hay gặp), 📌 (lưu ý quan trọng), 📅 (lịch/thời gian).\n- Tránh: emoji cảm xúc quá đà (😍🥰), icon tiền/chiến thắng kiểu quảng cáo (💰🔥🎉) — không hợp giọng \"minh bạch, không sáo rỗng\".\n\n## 5. Cụm từ đặc trưng nên lặp lại (xây bản sắc thương hiệu)\n- \"đồng hành cùng bạn từ ngày đăng ký tới khi nhận bằng\"\n- \"minh bạch học phí — không phát sinh chi phí ẩn\"\n- \"cập nhật đúng quy định hiện hành\" (khi nói về luật/lệ phí)\n- Ký tên cuối bài dạng nhất quán, ví dụ: \"— Vạn Xuân\" hoặc \"Trung tâm đào tạo lái xe Phú Thọ, chi nhánh Vạn Xuân\"\n\n## 6. Cụm từ / giọng điệu PHẢI tránh (đồng bộ với `CLAUDE.md`)\n- \"bao đậu\", \"chắc chắn đậu 100%\", \"học nhanh không cần thi lý thuyết\"\n- So sánh hạ thấp trung tâm khác\n- Ngôn ngữ quảng cáo sáo rỗng kiểu \"ưu đãi khủng\", \"duy nhất hôm nay\", \"số lượng có hạn\" (trừ khi là thông tin lịch khai giảng có thật)\n- Số liệu/quy định chưa xác minh — nếu không chắc, viết \"cần xác nhận lại quy định mới nhất\" thay vì bịa\n\n## 7. Hook (câu mở đầu) ưu tiên\nChọn 1 trong 3 kiểu tùy chủ đề:\n1. **Tình huống thật**: \"Chuẩn bị thi mà tay cứ run, sợ quên bài — bạn có giống vậy không?\"\n2. **Cảnh báo định tính** (không bịa số liệu %): \"Phần lớn học viên hay mất điểm ở đúng bài này...\"\n3. **Câu hỏi trực tiếp**: \"Biết đổi bằng giấy sang thẻ PET cần giấy tờ gì chưa?\"\n\n## 8. Cấu trúc thân bài theo từng dạng nội dung\n\n**Kinh nghiệm thi hạng bằng**\nHook (tình huống lo lắng) → 2–3 mẹo cụ thể, thực hành được ngay → nhắc nhẹ \"kết quả còn tùy luyện tập, trung tâm chỉ đồng hành hỗ trợ\" (không cam kết đậu) → CTA nhẹ.\n\n**Lỗi hay bị trừ điểm khi thi sát hạch**\nHook cảnh báo → liệt kê lỗi (2–4 gạch đầu dòng) → cách khắc phục từng lỗi → CTA.\n\n**Thay đổi quy định/luật giao thông**\nHook thời sự ngắn → nội dung thay đổi, viết đúng những gì đã xác minh → ảnh hưởng thực tế đến người học/người lái → câu chốt \"cần xác nhận lại quy định mới nhất\" nếu có phần chưa chắc chắn.\n\n**Câu chuyện học viên**\nTrước (khó khăn ban đầu) → Trong (quá trình học, có thể trích lời học viên) → Sau (kết quả) → 1 câu bài học/thông điệp chung.\n\n**Giới thiệu giáo viên / cơ sở vật chất**\nMô tả ngắn, cụ thể, dùng ảnh thật trong `context/image/` — nêu điểm khác biệt thật, không thổi phồng (\"giàu kinh nghiệm\" cần đi kèm chi tiết cụ thể nếu có, không thì bỏ qua thay vì nói chung chung).\n\n**Giải đáp câu hỏi thường gặp (FAQ)**\nCâu hỏi học viên hay hỏi thật (lấy từ `business.md` mục FAQ) → trả lời ngắn gọn, đúng trọng tâm → nếu chưa có số liệu chính xác (VD học phí), ghi rõ \"liên hệ trung tâm để có báo giá chính xác\", không bịa số.\n\n## 9. Kết bài / CTA\nNhẹ nhàng, không thúc ép kiểu \"chốt đơn ngay\". Ưu tiên dẫn về kênh đã có trong `strategy.md`:\n- \"Cần tư vấn thêm, nhắn Zalo OA hoặc để lại bình luận nhé.\"\n- \"Theo dõi Fanpage để cập nhật lịch khai giảng mới nhất.\"\n\n## 10. Ví dụ minh họa (bài mẫu theo giọng này)\n\n> ⚠️ Lỗi này rất nhiều học viên hay mắc khi thi sa hình: quên bật xi-nhan trước khi chuyển làn, dù xe đã đi đúng hướng.\n>\n> Theo quy định, chỉ cần thiếu xi-nhan là bị trừ điểm ngay, dù kỹ năng lái không sai.\n>\n> Mẹo nhỏ: tập thành phản xạ \"nhìn gương → bật xi-nhan → rồi mới đánh lái\", làm đi làm lại vài lần trong buổi thực hành là quen tay.\n>\n> Kết quả thi còn tùy vào luyện tập của mỗi người, nhưng đây là lỗi hoàn toàn có thể tránh được nếu để ý sớm.\n>\n> 📌 Cần tư vấn thêm, nhắn Zalo OA hoặc để lại bình luận nhé.\n> — Vạn Xuân\n"
+      "file_tuong_doi": "context/voice-analysis.md",
+      "ban_local": "brand/vanxuan/_local/context/voice-analysis.md",
+      "sha1": "5cb2ea20498a"
     }
   },
   "cam": {
@@ -374,24 +390,23 @@
     }
   ],
   "anh_that": [
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\HocLyThuyet.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Hướng dẫn học viên học lưu động.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Hướng dẫn học viên lưu động.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên chờ vào thi.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên học lý thuyết 2.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên học lý thuyết.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên xếp hàng chờ thi.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Phòng máy.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\SanThucHanh.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Sân tập với moto hạng A.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Thầy giáo hướng dẫn học viên tại Trung tâm.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Vị trí cơ sở.jpg",
-    "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Xếp hồ sơ thi.jpg"
+    "image/HocLyThuyet.jpg",
+    "image/Hướng dẫn học viên học lưu động.jpg",
+    "image/Hướng dẫn học viên lưu động.jpg",
+    "image/Học viên chờ vào thi.jpg",
+    "image/Học viên học lý thuyết 2.jpg",
+    "image/Học viên học lý thuyết.jpg",
+    "image/Học viên xếp hàng chờ thi.jpg",
+    "image/Phòng máy.jpg",
+    "image/SanThucHanh.jpg",
+    "image/Sân tập với moto hạng A.jpg",
+    "image/Thầy giáo hướng dẫn học viên tại Trung tâm.jpg",
+    "image/Vị trí cơ sở.jpg",
+    "image/Xếp hồ sơ thi.jpg"
   ],
   "kho_canh": [
     {
       "ma": "hoc-vien-cho-vao-thi-36fdeb",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên chờ vào thi.jpg",
       "file_tuong_doi": "image/Học viên chờ vào thi.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -431,7 +446,6 @@
     },
     {
       "ma": "hoc-vien-hoc-ly-thuyet-2-2f24bd",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên học lý thuyết 2.jpg",
       "file_tuong_doi": "image/Học viên học lý thuyết 2.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -472,7 +486,6 @@
     },
     {
       "ma": "hoc-vien-hoc-ly-thuyet-5e7dfe",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên học lý thuyết.jpg",
       "file_tuong_doi": "image/Học viên học lý thuyết.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -511,7 +524,6 @@
     },
     {
       "ma": "hoc-vien-nam-hang-a-trung-canh-78c68e",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Học Viên Nam_Hạng A_ trung cảnh.mp4",
       "file_tuong_doi": "canh-quay/Học Viên Nam_Hạng A_ trung cảnh.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -561,7 +573,6 @@
     },
     {
       "ma": "hoc-vien-nam-trung-canh-5aa9c3",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Học Vien Nam_Trung Cảnh.mp4",
       "file_tuong_doi": "canh-quay/Học Vien Nam_Trung Cảnh.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -609,7 +620,6 @@
     },
     {
       "ma": "hoc-vien-nu-santap-cancanh-9e426a",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Hoc_vien_nu_SanTap_Cancanh.mp4",
       "file_tuong_doi": "canh-quay/Hoc_vien_nu_SanTap_Cancanh.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -658,7 +668,6 @@
     },
     {
       "ma": "hoc-vien-tap-xe-a-ga-e53d1f",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Học viên tập xe A ga.mp4",
       "file_tuong_doi": "canh-quay/Học viên tập xe A ga.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -707,7 +716,6 @@
     },
     {
       "ma": "hoc-vien-tap-xe-hang-a-f6364b",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Học viên tập xe hạng A.mp4",
       "file_tuong_doi": "canh-quay/Học viên tập xe hạng A.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -754,7 +762,6 @@
     },
     {
       "ma": "hoc-vien-xep-hang-cho-thi-322aad",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Học viên xếp hàng chờ thi.jpg",
       "file_tuong_doi": "image/Học viên xếp hàng chờ thi.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -794,7 +801,6 @@
     },
     {
       "ma": "hoclythuyet-1324bf",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\HocLyThuyet.jpg",
       "file_tuong_doi": "image/HocLyThuyet.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -832,7 +838,6 @@
     },
     {
       "ma": "huong-dan-hoc-vien-hoc-luu-don-c36bfc",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Hướng dẫn học viên học lưu động.jpg",
       "file_tuong_doi": "image/Hướng dẫn học viên học lưu động.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -870,7 +875,6 @@
     },
     {
       "ma": "huong-dan-hoc-vien-luu-dong-08dbbb",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Hướng dẫn học viên lưu động.jpg",
       "file_tuong_doi": "image/Hướng dẫn học viên lưu động.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -909,7 +913,6 @@
     },
     {
       "ma": "nguoi-buc-boi-truoc-may-tinh-98561a",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\stock\\mixkit\\nguoi-buc-boi-truoc-may-tinh.mp4",
       "file_tuong_doi": "canh-quay/stock/mixkit/nguoi-buc-boi-truoc-may-tinh.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -955,7 +958,6 @@
     },
     {
       "ma": "nhieu-hoc-vien-nu-cancanh-e2ece6",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Nhieu_hoc_vien_nu_Cancanh.mp4",
       "file_tuong_doi": "canh-quay/Nhieu_hoc_vien_nu_Cancanh.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -1003,7 +1005,6 @@
     },
     {
       "ma": "phong-may-aacee1",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Phòng máy.jpg",
       "file_tuong_doi": "image/Phòng máy.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -1041,7 +1042,6 @@
     },
     {
       "ma": "phong-may-trung-canh-e9d674",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Phòng Máy _Trung Cảnh.mp4",
       "file_tuong_doi": "canh-quay/Phòng Máy _Trung Cảnh.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -1087,7 +1087,6 @@
     },
     {
       "ma": "san-tap-voi-moto-hang-a-d5f7b7",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Sân tập với moto hạng A.jpg",
       "file_tuong_doi": "image/Sân tập với moto hạng A.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -1124,7 +1123,6 @@
     },
     {
       "ma": "santhuchanh-37a130",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\SanThucHanh.jpg",
       "file_tuong_doi": "image/SanThucHanh.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -1164,7 +1162,6 @@
     },
     {
       "ma": "snaptik-vn-7707073360106179892-936e3b",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\Video quay demo\\snaptik.vn_7707073360106179892.mp4",
       "file_tuong_doi": "canh-quay/Video quay demo/snaptik.vn_7707073360106179892.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -1236,7 +1233,6 @@
     },
     {
       "ma": "tay-dung-chuot-e5db7e",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\stock\\mixkit\\tay-dung-chuot.mp4",
       "file_tuong_doi": "canh-quay/stock/mixkit/tay-dung-chuot.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -1279,7 +1275,6 @@
     },
     {
       "ma": "tay-go-laptop-fb3adb",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\stock\\mixkit\\tay-go-laptop.mp4",
       "file_tuong_doi": "canh-quay/stock/mixkit/tay-go-laptop.mp4",
       "ton_tai": true,
       "loai_file": "video",
@@ -1323,7 +1318,6 @@
     },
     {
       "ma": "thay-giao-huong-dan-hoc-vien-t-fb3573",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Thầy giáo hướng dẫn học viên tại Trung tâm.jpg",
       "file_tuong_doi": "image/Thầy giáo hướng dẫn học viên tại Trung tâm.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -1363,7 +1357,6 @@
     },
     {
       "ma": "vi-tri-co-so-efb606",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Vị trí cơ sở.jpg",
       "file_tuong_doi": "image/Vị trí cơ sở.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -1402,7 +1395,6 @@
     },
     {
       "ma": "xep-ho-so-thi-b8392e",
-      "duong_dan": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\image\\Xếp hồ sơ thi.jpg",
       "file_tuong_doi": "image/Xếp hồ sơ thi.jpg",
       "ton_tai": true,
       "loai_file": "anh",
@@ -1444,7 +1436,7 @@
       ]
     }
   ],
-  "kho_md": "C:\\Users\\Thinkpad P15V3\\Desktop\\Claude code\\video-agent-team-kit\\video-agent-team\\channels\\vanxuan\\canh-quay\\_kho\\KHO.md",
+  "kho_md": "canh-quay/_kho/KHO.md",
   "mau_tong_hop": "# Tổng hợp video mẫu: kênh Vạn Xuân\n\n## Danh sách mẫu\n\n| Mã | Người đăng | Chủ đề | Thời lượng | Điểm đáng học nhất |\n|---|---|---|---|---|\n| facebook-2410452966429345 | Tran Hoai | Ủ cà phê lạnh bằng Arabica (khác ngành) | 220,3 s | Hook khẳng định, chữ chạy từng từ cùng tiếng; chữ nhấn hai tầng trắng và cam |\n\n## Mẫu lặp lại\n\nChưa đủ mẫu (mới có 1 mẫu; cần từ 2 mẫu trở lên mới ghi kỹ thuật lặp lại).\n\n## Đề xuất cho kênh\n\nMới có một mẫu, nên các đề xuất dưới đây còn tạm, chỉ để thử.\n\n1. Chữ nhấn hai tầng (dòng trên trắng, dòng dưới cam) cho cảnh 4 của `hoi-dap`. Công sức nhỏ, chỉ đổi kiểu chữ tu_khoa. Căn cứ: facebook-2410452966429345.\n2. Chữ hook hiện cộng dồn từng từ theo `captions_file`, bắt đầu từ 0 s (mẫu hiện chậm 2 s, nên sửa chỗ đó). Căn cứ: facebook-2410452966429345.\n3. Viết kịch bản: mỗi ý một cảnh, hai cảnh liền kề không cùng nền; chữ chỉ giữ ý chính, không chạy toàn bộ lời. Căn cứ: facebook-2410452966429345.\n4. Cảnh liệt kê 2–3 bước bằng các ô ảnh hiện lần lượt trên nền tối, dùng cho `loi_giai`. Công sức vừa. Căn cứ: facebook-2410452966429345.\n5. Thử hook cận cảnh tay/vật thật ở 0–2 s khi có ảnh thật được phép dùng (trong `image/` hoặc quay mới). Cần thêm điều kiện về nguồn ảnh. Căn cứ: facebook-2410452966429345.\n\nKhông mượn: độ dài 220 s, CTA bán hàng, lời hứa lợi ích, số liệu chuyên môn của mẫu.\n",
   "mau_thuan_business_vs_channel": [
     {
@@ -1512,5 +1504,6 @@
     }
   ],
   "file_thieu": [],
+  "canh_bao": [],
   "nhan_khong_co_trong_index": []
 }

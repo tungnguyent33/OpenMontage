@@ -6,8 +6,19 @@ Mỗi kênh một thư mục riêng, không dùng chung file nào với kênh kh
     brand/<id>/quy-tac-rieng.yaml  (sửa tay; script chỉ đọc, không ghi đè)
     brand/<id>/assets/             (logo + fonts chép từ thư mục kênh)
 
-Dùng:
-    python tools_local/nap_kenh.py "<thư mục kênh>" [--out brand] [--id <mã>]
+Dùng (PowerShell, từ gốc repo):
+    tools_local/py.cmd tools_local/nap_kenh.py --id <mã>          (thư mục kênh = $KENH_GOC_DIR/<mã>)
+    tools_local/py.cmd tools_local/nap_kenh.py "<thư mục kênh>"   (chỉ định thẳng, bỏ qua .env)
+
+KENH_GOC_DIR đặt trong .env: thư mục chứa các thư mục kênh. brand.json KHÔNG chứa
+đường dẫn tuyệt đối; mọi file của kênh ghi bằng đường dẫn tương đối (file_tuong_doi),
+ghép với thu_muc_kenh(<mã>) khi cần mở file thật.
+
+Repo public: toàn văn context/*.md của kênh chép sang brand/<id>/_local/ (bị gitignore);
+brand.json chỉ giữ đường dẫn tương đối và sha1.
+
+Giá trị riêng của từng kênh (tiền tố mã video, thư mục video, font) đọc từ
+brand/<id>/cau-hinh.yaml (sửa tay), không viết cứng trong file này.
 
 Tất định: không gọi LLM, không ghi thời điểm chạy, khóa JSON sắp xếp cố định.
 Thư mục kênh chỉ được đọc; mọi file ghi ra nằm trong dự án này.
@@ -45,7 +56,9 @@ FILE_CAN_DOC = [
     "mau/TONG-HOP.md",
 ]
 
-FONT_CAN = ["BeVietnamPro-ExtraBold.ttf", "BeVietnamPro-Bold.ttf"]
+BIEN_KENH_GOC = "KENH_GOC_DIR"
+THU_MUC_LOCAL = "_local"  # brand/<id>/_local/: bị gitignore, chứa nội dung không đưa lên repo public
+CONTEXT_CAN = ["business", "brand-style", "icp", "voice-analysis"]
 ANH_DUOI = {".jpg", ".jpeg", ".png", ".webp"}
 TZ_VN = timezone(timedelta(hours=7))
 
@@ -100,7 +113,11 @@ def doc_banned(text: str) -> dict:
 
 
 # ---------- chu-de.md ----------
-def doc_chu_de(text: str, thu_muc_videos: Path | None) -> list[dict]:
+def doc_chu_de(text: str, thu_muc_videos: Path | None, tien_to: str | None) -> list[dict]:
+    """Đọc bảng chủ đề. Thư mục video đã làm có dạng <tien_to>-<số>[chữ]-<mã chủ đề>[-thu].
+
+    tien_to lấy từ brand/<id>/cau-hinh.yaml; không có thì không dò được chủ đề đã làm.
+    """
     rows = []
     for line in text.splitlines():
         if not line.startswith("|") or line.startswith("|---") or line.startswith("| Mã"):
@@ -110,9 +127,10 @@ def doc_chu_de(text: str, thu_muc_videos: Path | None) -> list[dict]:
             continue
         rows.append(dict(zip(["ma", "tru_cot", "dinh_dang", "chu_de", "y_chinh", "nguon_doi_chieu", "trend"], cells)))
     da_lam = {}
-    if thu_muc_videos and thu_muc_videos.is_dir():
+    if tien_to and thu_muc_videos and thu_muc_videos.is_dir():
+        mau = re.compile(rf"^{re.escape(tien_to)}-\d+[a-z]?-(.+)$")
         for d in sorted(thu_muc_videos.iterdir()):
-            m = re.match(r"^vx-\d+[a-z]?-(.+)$", d.name)
+            m = mau.match(d.name)
             if d.is_dir() and m:
                 ma = re.sub(r"-thu$", "", m.group(1))
                 da_lam.setdefault(ma, []).append(d.name)
@@ -215,8 +233,7 @@ def doc_kho(kenh: Path, index: dict, nhan: dict, qh: dict, nguon_cam: dict | Non
             ly_do.append("file không tồn tại")
         out.append({
             "ma": ma,
-            "duong_dan": str(p),
-            "file_tuong_doi": rel,
+            "file_tuong_doi": rel.replace("\\", "/"),
             "ton_tai": p.exists(),
             "loai_file": meta.get("loai_file"),
             "rong": meta.get("rong"), "cao": meta.get("cao"), "huong": meta.get("huong"),
@@ -250,13 +267,50 @@ def tim_font(ten: str) -> Path | None:
     return None
 
 
-def main() -> int:
+def nap_env() -> None:
+    """Nạp .env ở gốc repo nếu có. Import trong hàm để import module này vẫn nhẹ."""
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return
+    load_dotenv(ROOT / ".env", override=False)
+
+
+def thu_muc_kenh(ma: str) -> Path | None:
+    """Thư mục kênh gốc của <ma> = $KENH_GOC_DIR/<ma>. None nếu chưa đặt biến."""
+    goc = os.environ.get(BIEN_KENH_GOC, "").strip().strip('"').strip("'")
+    return (Path(goc) / ma) if goc else None
+
+
+def doc_cau_hinh(out: Path) -> dict:
+    """brand/<id>/cau-hinh.yaml: cấu hình riêng của kênh, sửa tay, script chỉ đọc."""
+    f = out / "cau-hinh.yaml"
+    return (yaml.safe_load(doc(f)) or {}) if f.exists() else {}
+
+
+def tuong_doi(p: Path, goc: Path) -> str:
+    return p.relative_to(goc).as_posix()
+
+
+def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("kenh")
+    ap.add_argument("kenh", nargs="?",
+                    help=f"thư mục kênh gốc; bỏ trống thì dùng {BIEN_KENH_GOC}/<--id> trong .env")
     ap.add_argument("--out", default=str(ROOT / "brand"), help="thư mục gốc chứa các kênh")
     ap.add_argument("--id", help="mã kênh (mặc định: id trong channel.yaml, rồi tên thư mục kênh)")
-    a = ap.parse_args()
-    kenh = Path(a.kenh).resolve()
+    a = ap.parse_args(argv)
+    nap_env()
+    if a.kenh:
+        kenh = Path(a.kenh).resolve()
+    elif a.id:
+        tm = thu_muc_kenh(a.id)
+        if tm is None:
+            print(f"LỖI: chưa đặt {BIEN_KENH_GOC} trong .env (thư mục chứa các thư mục kênh).", file=sys.stderr)
+            return 2
+        kenh = tm.resolve()
+    else:
+        print(f"LỖI: cần --id <mã> (đọc {BIEN_KENH_GOC} trong .env) hoặc đường dẫn thư mục kênh.", file=sys.stderr)
+        return 2
     if not kenh.is_dir():
         print(f"LỖI: không thấy thư mục kênh {kenh}", file=sys.stderr)
         return 2
@@ -272,11 +326,23 @@ def main() -> int:
         print("LỖI: thư mục ra trùng/lồng với thư mục kênh (chỉ đọc).", file=sys.stderr)
         return 2
     (out / "assets" / "fonts").mkdir(parents=True, exist_ok=True)
-    ctx = {}
-    for k in ["business", "brand-style", "icp", "voice-analysis"]:
+    ch_cfg = doc_cau_hinh(out)
+    canh_bao = []
+
+    # context/*.md: toàn văn sang brand/<id>/_local/context/ (gitignore); brand.json chỉ giữ tham chiếu
+    local_ctx = out / THU_MUC_LOCAL / "context"
+    local_ctx.mkdir(parents=True, exist_ok=True)
+    ctx, noi_dung_ctx = {}, {}
+    for k in CONTEXT_CAN:
         p = kenh / "context" / f"{k}.md"
-        ctx[k] = {"duong_dan": str(p), "noi_dung": doc(p)} if p.exists() else None
-    biz = (ctx["business"] or {}).get("noi_dung", "")
+        if not p.exists():
+            ctx[k] = None
+            continue
+        noi_dung_ctx[k] = doc(p)
+        dst = local_ctx / f"{k}.md"
+        dst.write_text(noi_dung_ctx[k], encoding="utf-8")
+        ctx[k] = {"file_tuong_doi": f"context/{k}.md", "ban_local": tuong_doi(dst, ROOT), "sha1": sha1(dst)}
+    biz = noi_dung_ctx.get("business", "")
 
     banned = doc_banned(doc(kenh / "banned.md")) if (kenh / "banned.md").exists() else {}
     # Quy tắc riêng của kênh này do người dùng bổ sung (sửa tay trong brand/<id>/quy-tac-rieng.yaml)
@@ -285,8 +351,12 @@ def main() -> int:
     banned["cum_tu_cam_du_an"] = list(qt.get("cum_tu_cam") or [])
     banned["cam_du_an"] = list(qt.get("quy_tac") or [])
 
-    videos_dir = (kenh / ".." / ".." / "videos").resolve()
-    chu_de = doc_chu_de(doc(kenh / "chu-de.md"), videos_dir) if (kenh / "chu-de.md").exists() else []
+    tien_to = ch_cfg.get("tien_to_ma_video")
+    tm_video = ch_cfg.get("thu_muc_video")  # tương đối so với thư mục kênh gốc
+    videos_dir = (kenh / tm_video).resolve() if tm_video else None
+    if not tien_to or not tm_video:
+        canh_bao.append("cau-hinh.yaml thiếu tien_to_ma_video hoặc thu_muc_video: không dò được chủ đề đã làm")
+    chu_de = doc_chu_de(doc(kenh / "chu-de.md"), videos_dir, tien_to) if (kenh / "chu-de.md").exists() else []
 
     qh = ch.get("quyen_hinh") or {}
     kho_dir = kenh / "canh-quay" / "_kho"
@@ -299,7 +369,7 @@ def main() -> int:
     if (kenh / "image").is_dir():
         for p in sorted((kenh / "image").iterdir()):
             if p.suffix.lower() in ANH_DUOI:
-                anh.append(str(p))
+                anh.append(tuong_doi(p, kenh))
 
     # Chép logo + font
     assets = {}
@@ -310,7 +380,10 @@ def main() -> int:
             shutil.copyfile(src, dst)
             assets[k] = {"duong_dan": str(dst.relative_to(ROOT)).replace("\\", "/"), "sha1": sha1(dst)}
     fonts = {}
-    for f in FONT_CAN:
+    font_can = list(ch_cfg.get("fonts") or [])
+    if not font_can:
+        canh_bao.append("cau-hinh.yaml chưa khai báo fonts: không chép font nào")
+    for f in font_can:
         src = (kenh / "fonts" / f) if (kenh / "fonts" / f).exists() else tim_font(f)
         if src:
             dst = out / "assets" / "fonts" / f
@@ -325,7 +398,9 @@ def main() -> int:
     mau_tonghop = kenh / "mau" / "TONG-HOP.md"
     brand = {
         "id": ch.get("id"),
-        "nguon_kenh": str(kenh),
+        "nguon_kenh": {"bien_moi_truong": BIEN_KENH_GOC, "thu_muc_con": kenh.name,
+                       "ghi_chu": "File thật = thư mục kênh gốc / file_tuong_doi"},
+        "cau_hinh": ch_cfg,
         "kenh": {k: ch.get(k) for k in ["ten_kenh", "ten_day_du", "khan_gia", "tru_cot_noi_dung"]},
         "lien_he": {k: ch.get(k) for k in ["hotline", "zalo", "zalo_oa", "fanpage", "dia_chi"]},
         "cta": ch.get("cta", []),
@@ -340,10 +415,11 @@ def main() -> int:
         "chu_de": chu_de,
         "anh_that": anh,
         "kho_canh": kho,
-        "kho_md": str(kho_dir / "KHO.md") if (kho_dir / "KHO.md").exists() else None,
+        "kho_md": "canh-quay/_kho/KHO.md" if (kho_dir / "KHO.md").exists() else None,
         "mau_tong_hop": doc(mau_tonghop) if mau_tonghop.exists() else None,
         "mau_thuan_business_vs_channel": so_sanh(ch, biz, banned["cum_tu_cam_du_an"]),
         "file_thieu": thieu,
+        "canh_bao": canh_bao,
         "nhan_khong_co_trong_index": nhan_thieu_index,
     }
     brand["id"] = ma
@@ -376,6 +452,9 @@ def main() -> int:
     for m in brand["mau_thuan_business_vs_channel"]:
         p(f"   ! [{m['kieu']}] {m['truong']}: yaml={m['channel_yaml']!r} | business={m['business_md']!r} -> {m['ghi_chu']}")
     p(f"File thiếu: {thieu or 'không có'}")
+    for c in canh_bao:
+        p(f"   ! {c}")
+    p(f"Context (toàn văn, không commit): {tuong_doi(local_ctx, ROOT)}")
     if nhan_thieu_index:
         p(f"Nhãn không có trong index: {nhan_thieu_index}")
     return 0

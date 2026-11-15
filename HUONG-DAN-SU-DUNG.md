@@ -25,6 +25,14 @@ Copy-Item .env.example .env      # bỏ qua nếu đã có .env
 - Máy hiện tại đã có `.venv` và `.env`, nên chỉ cần **kích hoạt môi trường** mỗi lần dùng:
   `.\.venv\Scripts\Activate.ps1`
 
+**In tiếng Việt không lỗi (PYTHONUTF8=1).** Console Windows mặc định dùng cp1252, nên Python báo `UnicodeEncodeError` khi in chữ có dấu. Chọn một trong ba cách:
+
+```powershell
+$env:PYTHONUTF8 = "1"                       # cho phiên PowerShell hiện tại
+tools_local\py.cmd <script.py> [tham số]    # wrapper: tự đặt PYTHONUTF8=1 rồi gọi Python của .venv
+setx PYTHONUTF8 1                           # đặt vĩnh viễn cho tài khoản Windows (mở lại PowerShell)
+```
+
 **Kiểm tra máy có những công cụ gì:**
 
 ```powershell
@@ -121,7 +129,9 @@ Mỗi kênh có **một thư mục riêng** trong `brand/` để mọi video dù
 brand/vanxuan/
 ├── brand.json            sinh tự động — đừng sửa tay
 ├── quy-tac-rieng.yaml    sửa tay — cụm từ cấm, quy tắc nội dung, nguồn cảnh bị loại
-└── assets/               logo, fonts
+├── cau-hinh.yaml         sửa tay — tiền tố mã video, thư mục video, font cần chép
+├── assets/               logo, fonts
+└── _local/               sinh tự động, KHÔNG commit (gitignore) — toàn văn context/*.md của kênh
 ```
 
 Hiện có: **`brand/vanxuan/`** — Đào tạo lái xe Vạn Xuân (màu navy `#0E3970`, xanh `#048DD1`, cam `#E4661F`; font Be Vietnam Pro). Chi tiết xem `brand/README.md`.
@@ -131,10 +141,25 @@ Hiện có: **`brand/vanxuan/`** — Đào tạo lái xe Vạn Xuân (màu navy 
 **Cập nhật lại khi dữ liệu kênh thay đổi** (thư mục kênh gốc chỉ được đọc, không bị sửa):
 
 ```powershell
-python tools_local/nap_kenh.py "C:\Users\Thinkpad P15V3\Desktop\Claude code\video-agent-team-kit\video-agent-team\channels\vanxuan"
+tools_local\py.cmd tools_local/nap_kenh.py --id vanxuan
 ```
 
-**Thêm kênh mới:** chạy lệnh trên với thư mục của kênh đó. Kênh mới được tạo ở `brand/<mã-kênh>/`, không ảnh hưởng gì đến Vạn Xuân. Nếu kênh có quy tắc riêng, tạo `brand/<mã-kênh>/quy-tac-rieng.yaml` theo mẫu của Vạn Xuân trước khi nạp. Khi yêu cầu video, nói rõ `cho kênh <mã-kênh>`.
+Lệnh này đọc thư mục kênh từ biến `KENH_GOC_DIR` trong `.env`. Biến này trỏ tới **thư mục chứa các kênh**, không phải thư mục của một kênh:
+
+```
+KENH_GOC_DIR='C:/<đường dẫn>/video-agent-team/channels'
+```
+
+Muốn chỉ định thẳng một thư mục kênh thì vẫn dùng được `tools_local\py.cmd tools_local/nap_kenh.py "<thư mục kênh>"`.
+
+`brand.json` **không chứa đường dẫn tuyệt đối**, vì repo đang public. Cảnh trong kho chỉ ghi `file_tuong_doi`, nên file thật nằm ở `$KENH_GOC_DIR/<mã-kênh>/<file_tuong_doi>`. Toàn văn `context/*.md` được chép sang `brand/<mã-kênh>/_local/context/`. Thư mục này bị gitignore, đừng commit nó.
+
+**Thêm kênh mới:**
+1. Tạo `brand/<mã-kênh>/cau-hinh.yaml` theo mẫu của Vạn Xuân, gồm `tien_to_ma_video`, `thu_muc_video` và `fonts`. Thiếu file này thì lệnh nạp vẫn chạy, nhưng ghi `canh_bao`: không dò được chủ đề đã làm và không chép font.
+2. Nếu kênh có quy tắc riêng, tạo thêm `quy-tac-rieng.yaml`.
+3. Chạy lệnh nạp với `--id <mã-kênh>`.
+
+Kênh mới nằm riêng ở `brand/<mã-kênh>/`, không ảnh hưởng đến Vạn Xuân. Khi yêu cầu video, nói rõ `cho kênh <mã-kênh>`.
 
 ---
 
@@ -216,18 +241,21 @@ Muốn chắc chắn 0 đồng: thêm câu **"chỉ dùng công cụ miễn phí
 
 ---
 
-## 10. Máy Reels (đang lên kế hoạch)
+## 10. Máy Reels (đã chốt quyết định, chưa có code sản xuất)
 
-Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xuất và đăng video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh. Bạn chỉ duyệt trên Google Sheet ở hai chỗ: duyệt chủ đề và duyệt video trước khi đăng. Dự án **chưa có code**, mới có tài liệu:
+Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xuất và đăng video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh. Bạn chỉ duyệt trên Google Sheet ở hai chỗ: duyệt chủ đề và duyệt video trước khi đăng. Dự án **chưa có code sản xuất**, mới có tài liệu và phần sửa `nap_kenh.py`:
 
 - `docs/may-reels/NGUYEN-TAC.md`: nguyên tắc phát triển (code đặt ở đâu, Sheet là nguồn sự thật về duyệt, đăng bài mặc định chạy thử, quy tắc cấm của kênh, bí mật, chi phí).
-- `docs/may-reels/KE-HOACH.md`: sơ đồ luồng, cách chạy không dừng, lý do chọn pipeline `hybrid`, các rủi ro, và **danh sách câu hỏi bạn cần trả lời trước khi bắt đầu code**.
+- `docs/may-reels/KE-HOACH.md`: sơ đồ luồng, cách chạy không dừng, lý do chọn pipeline `hybrid`, các rủi ro, và mục 6 **"Quyết định đã chốt"**. Cuối mục 6 có danh sách việc còn chờ bạn: câu 5, 6, 17 còn để trống.
+
+Khóa và file service account (ví dụ khóa Google Sheet) để trong thư mục `secrets/`, thư mục này đã được gitignore.
 
 **Chạy kiểm thử** (cần làm sau mỗi lần sửa code):
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt   # một lần, để có pytest
-.\.venv\Scripts\python.exe -m pytest -q
+tools_local\py.cmd -m pytest -q                                     # toàn bộ (khoảng 8 phút)
+tools_local\py.cmd -m pytest -q tests/may_reels                     # riêng phần Máy Reels
 ```
 
 ---

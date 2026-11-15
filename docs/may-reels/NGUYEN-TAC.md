@@ -27,10 +27,10 @@ Nếu buộc phải sửa (hoặc thêm file vào thư mục lõi mà code lõi 
 
 ### 1.3. Lưu ý khi viết tool trong `tools/`
 
-- **Import thư viện nặng bên trong hàm, không đặt ở đầu file.** `registry.discover()` import *mọi* module trong `tools/` (`pkgutil.walk_packages`) và không bắt lỗi import. Một publisher có `import googleapiclient` ở đầu file sẽ làm hỏng toàn bộ registry trên máy chưa cài thư viện đó, kéo theo hỏng hàng loạt test (`tests/contracts/test_agent_skill_pointers.py`, `tests/contracts/test_skill_execute_examples.py`...). `export_bundle.py` cũng import `validate_artifact` bên trong `execute()`.
+- **Tool mới import thư viện mạng (và thư viện nặng) bên trong hàm, không đặt ở đầu file.** Thư viện mạng gồm `googleapiclient`, `google.oauth2`, `gspread`, `requests`, `httpx`, SDK của Meta hay TikTok... Chỉ import trong `execute()` hoặc trong hàm gọi mạng. `registry.discover()` import *mọi* module trong `tools/` (`pkgutil.walk_packages`) và không bắt lỗi import. Một publisher có `import googleapiclient` ở đầu file sẽ làm hỏng toàn bộ registry trên máy chưa cài thư viện đó, kéo theo hỏng hàng loạt test (`tests/contracts/test_agent_skill_pointers.py`, `tests/contracts/test_skill_execute_examples.py`...). `export_bundle.py` cũng import `validate_artifact` bên trong `execute()`.
 - `agent_skills` của tool mới chỉ được trỏ tới skill có thật trong `.agents/skills/`. `tests/contracts/test_agent_skill_pointers.py` kiểm tra điều này cho mọi tool registry tìm thấy.
 - Tên lớp viết PascalCase, không có hậu tố `Tool` (`AGENT_GUIDE.md`, mục "Tool Class Naming Convention").
-- Trong mọi file `.md` thuộc `skills/**`, `docs/**` hoặc ở gốc repo: **không viết ví dụ dạng `<tên>.execute({ ... })` với tên tool chưa đăng ký, hoặc với khóa không có trong `input_schema`.** `tests/contracts/test_skill_execute_examples.py` quét mọi chỗ như vậy và báo lỗi.
+- **File `.md` không viết ví dụ gọi tool theo kiểu dấu chấm `execute`** (tên tool, dấu chấm, `execute`, rồi mở ngoặc với một dict). Luật này áp dụng cho mọi file `.md` thuộc `skills/**` và `docs/**`, và các file `.md` ở gốc repo. `tests/contracts/test_skill_execute_examples.py` quét mẫu này và báo lỗi khi tên tool chưa đăng ký hoặc khóa không có trong `input_schema`. Muốn mô tả cách gọi thì viết bằng lời, hoặc liệt kê tên tool và tên tham số trong bảng.
 
 ### 1.4. Kiến trúc của upstream: Python không điều phối
 
@@ -46,7 +46,7 @@ Nếu buộc phải sửa (hoặc thêm file vào thư mục lõi mà code lõi 
 
 - Mỗi tab có hai nhóm cột tách bạch: **cột của người** (Duyệt, Ghi chú người duyệt...) và **cột của máy** (Mã video, Trạng thái, Điểm, Link xem trước, Lỗi...). Máy **không bao giờ ghi** vào cột của người, kể cả để "dọn" hay "sửa định dạng".
 - Danh sách cột của người được khai báo ở một chỗ duy nhất trong code. Hàm ghi Sheet từ chối ghi vào cột có tên trong danh sách đó và có test chứng minh việc từ chối này.
-- Máy chỉ đăng một dòng khi ô Duyệt có đúng giá trị `Duyệt`. Ô trống, `duyệt`, `OK`, `Sửa` hay bất kỳ giá trị nào khác đều là **không đăng**. Việc so khớp chuẩn hóa Unicode NFC và cắt khoảng trắng hai đầu; có phân biệt hoa thường hay không là câu hỏi đang chờ chốt (xem `KE-HOACH.md`).
+- Máy chỉ đăng một dòng khi ô Duyệt có đúng giá trị `Duyệt`. Ô trống, `duyệt`, `OK`, `Sửa` hay bất kỳ giá trị nào khác đều là **không đăng**. Ô Duyệt là dropdown ba giá trị `Duyệt` / `Sửa` / `Bỏ` (`KE-HOACH.md` mục 6, câu 2). Máy so khớp đúng chuỗi `Duyệt`, có phân biệt hoa thường, sau khi chuẩn hóa Unicode NFC và cắt khoảng trắng hai đầu. `Sửa` thì máy đọc cột ghi chú của người rồi làm lại; `Bỏ` thì máy dừng dòng đó. Máy không bao giờ tự đổi giá trị ô này.
 - Đọc lại ô Duyệt **ngay trước khi đăng**, không dùng giá trị đọc từ đầu lượt chạy. Người có thể rút lại duyệt trong lúc máy đang dựng.
 - Trạng thái duyệt không lưu ở chỗ nào khác (không lưu trong checkpoint, không lưu trong file local) như một nguồn thay thế. File local chỉ được ghi lại *bản sao* để kiểm tra về sau.
 - Checkpoint của OpenMontage (`lib/checkpoint.py`) vẫn ghi `human_approved=True` ở các cổng duyệt. Lần ghi đó chỉ được phép khi Sheet đang có `Duyệt` cho đúng dòng ấy, và `metadata` của checkpoint phải ghi mã dòng Sheet cùng giá trị đã đọc.
@@ -88,7 +88,7 @@ Với kênh Vạn Xuân hiện tại, các quy tắc là:
 
 - `nap_kenh.py` đã gộp điều kiện quyền vào cờ `dung_duoc`: `quyen_hinh.da_dong_y` phải bằng `true`, ngày nạp không được muộn hơn `quyen_hinh.ngay` (hoặc cảnh có tên trong `quyen_hinh.bo_sung`), và mã cảnh không nằm trong `quyen_hinh.ngoai_tru`.
 - Lúc chọn cảnh, máy kiểm tra lại: nếu `mat_nguoi: true` thì phải thỏa các điều kiện `quyen_hinh` ở trên, không chỉ tin vào `dung_duoc`.
-- Chỉ cắt trong các đoạn `doan_dung_duoc` (nếu cảnh có khai báo). Phải tôn trọng `rui_ro` (ví dụ `mat-hoc-vien`, `bien-so`) và `can_xu_ly`. Máy tự xử lý được đến đâu (tự cắt khung, tự làm mờ) là câu hỏi đang chờ chốt. Trước khi có câu trả lời, cảnh có `can_xu_ly` mà máy không chứng minh được đã xử lý thì không dùng.
+- Chỉ cắt trong các đoạn `doan_dung_duoc` (nếu cảnh có khai báo). Phải tôn trọng `rui_ro` (ví dụ `mat-hoc-vien`, `bien-so`) và `can_xu_ly`. Đã chốt (`KE-HOACH.md` mục 6, câu 15): máy **được tự cắt khung** theo vùng ghi trong `can_xu_ly`. Máy **không tự làm mờ** mặt người hay biển số; cảnh cần làm mờ thì chỉ dùng đoạn không cần xử lý. Không xác định được đoạn như vậy thì không dùng cảnh đó và ghi vào tab "Cần quay".
 
 ---
 
@@ -108,7 +108,8 @@ Máy ghi yêu cầu vào tab "Cần quay": kênh, mã video, ý cần minh họa
 - Mã kênh truyền vào bằng tham số (`--kenh <id>`) hoặc đọc từ cột Kênh trên Sheet.
 - Cấu hình chạy riêng từng kênh (ví dụ runtime dựng đã chốt, lịch đăng, tài khoản nền tảng) đặt trong file mới ở `brand/<id>/`. Tên file sẽ chốt khi code.
 - Test có một bài kiểm tra quét `may_reels/` để bắt chuỗi `vanxuan`.
-- Code có sẵn của nhánh này đang vi phạm nguyên tắc này: `tools_local/nap_kenh.py` viết cứng tiền tố thư mục video `vx-\d+` trong `doc_chu_de`, viết cứng font `BeVietnamPro-*.ttf` trong `FONT_CAN`, và giả định thư mục video nằm ở `<kênh>/../../videos`. Cần sửa khi làm việc với kênh thứ hai.
+- Cấu hình riêng của kênh nằm trong `brand/<id>/cau-hinh.yaml` (sửa tay, script chỉ đọc). Hiện có `tien_to_ma_video`, `thu_muc_video` (tương đối so với thư mục kênh gốc) và `fonts`. Thiếu khóa nào thì code ghi cảnh báo, không tự đoán giá trị mặc định.
+- `tools_local/nap_kenh.py` đã bỏ các giá trị viết cứng của Vạn Xuân (ngày 2026-11-15). Test `tests/may_reels/test_nap_kenh.py` quét file này để bắt chuỗi `vanxuan`, `vx-` và `BeVietnam`.
 
 ---
 
@@ -116,10 +117,12 @@ Máy ghi yêu cầu vào tab "Cần quay": kênh, mã video, ý cần minh họa
 
 - Không commit khóa API, token OAuth, file service account, cookie, mật khẩu.
 - `.gitignore` hiện đã có `.env`, `.env.local`, `*.env`, `.youtube-token.json`, `gcp-*.json`, `*-service-account.json`, `service-account*.json`, `service_account*.json`.
-- **`.gitignore` chưa có `secrets/`.** Phải thêm trước khi tạo thư mục này. Đây là sửa file của upstream, xem "Điểm chạm upstream".
+- `.gitignore` đã có thêm `secrets/` và `brand/*/_local/` (ngày 2026-11-15). Đây là sửa file của upstream, xem "Điểm chạm upstream".
 - Mọi token và file service account để trong `secrets/` hoặc `.env`. Code đọc đường dẫn từ biến môi trường, không viết cứng đường dẫn.
-- Trước mỗi commit chạy `git status` và xem kỹ danh sách file. Test có một bài kiểm tra `git check-ignore` trả về "bị bỏ qua" cho `.env` và `secrets/`.
-- Lưu ý dữ liệu đã lên repo: `brand/vanxuan/brand.json` đang chứa đường dẫn tuyệt đối có tên người dùng Windows và toàn văn các file `context/*.md` của kênh. Xem mục rủi ro trong `KE-HOACH.md`.
+- Trước mỗi commit chạy `git status` và xem kỹ danh sách file. `tests/may_reels/test_nap_kenh.py` dùng `git check-ignore` để kiểm tra `.env`, `secrets/` và `brand/<id>/_local/` bị bỏ qua.
+- `brand.json` không được chứa đường dẫn tuyệt đối. Chỉ ghi `file_tuong_doi`. Thư mục kênh gốc đọc từ `KENH_GOC_DIR` trong `.env`, vì đây là đường dẫn riêng của từng máy.
+- Toàn văn `context/*.md` của kênh nằm trong `brand/<id>/_local/` (bị gitignore). Code cần nội dung này thì đọc theo trường `context.<tên>.ban_local` của brand.json.
+- Dữ liệu cũ vẫn còn trong lịch sử git: commit `dc52b79` đã đẩy lên GitHub, có đường dẫn tuyệt đối và toàn văn context. **Không viết lại lịch sử git khi chưa hỏi người dùng.**
 
 ---
 
@@ -128,7 +131,7 @@ Máy ghi yêu cầu vào tab "Cần quay": kênh, mã video, ý cần minh họa
 - Thứ tự ưu tiên: công cụ chạy trên máy và miễn phí (FFmpeg, faster-whisper `transcriber`, Remotion, HyperFrames, giọng chạy CPU), sau đó mới đến API miễn phí, cuối cùng là API trả phí. API trả phí chỉ dùng khi người dùng đã đồng ý.
 - Ngân sách theo `config.yaml` mục `budget` và `tools/cost_tracker.py` (theo thứ tự estimate → reserve → reconcile).
 - Mỗi lần chạy máy ghi một dòng chi phí: kênh, mã video, bước, công cụ, số tiền (0 nếu miễn phí), thời gian chạy. Ghi vào file trong dự án và vào tab chi phí trên Sheet. Checkpoint có trường `cost_snapshot`.
-- Nếu máy chạy bằng Claude Code chế độ không tương tác, chi phí token của trợ lý cũng phải được ghi (cách đo đang là câu hỏi chờ chốt).
+- Nếu máy chạy bằng Claude Code chế độ không tương tác, sổ chi phí ghi **số lượt chạy** và **thời gian chạy** của trợ lý (`KE-HOACH.md` mục 6, câu 10), không đo token.
 
 ---
 
@@ -136,9 +139,13 @@ Máy ghi yêu cầu vào tab "Cần quay": kênh, mã video, ý cần minh họa
 
 - Máy chạy Windows 11, PowerShell 5.1. Lệnh trong tài liệu viết cho PowerShell (dùng `;`, không dùng `&&`).
 - Đường dẫn có dấu cách và chữ có dấu tiếng Việt (ví dụ `Thinkpad P15V3`, `Học Viên Nam_Hạng A_ trung cảnh.mp4`). Luôn dùng `pathlib`, đặt đường dẫn trong ngoặc kép khi gọi lệnh, gọi `subprocess` bằng danh sách tham số, không ghép chuỗi lệnh.
-- Mọi script in tiếng Việt phải gọi `sys.stdout.reconfigure(encoding="utf-8")`. Mặc định console là cp1252 và sẽ báo `UnicodeEncodeError` (đã gặp khi đọc brand.json).
+- Chạy Python với **`PYTHONUTF8=1`**. Mặc định console là cp1252 và sẽ báo `UnicodeEncodeError` khi in tiếng Việt (đã gặp khi đọc brand.json). Có hai cách:
+  - Dùng `tools_local\py.cmd`. File này đặt `PYTHONUTF8=1` rồi gọi Python của `.venv`.
+  - Đặt `$env:PYTHONUTF8 = "1"` ở đầu phiên PowerShell.
+
+  Script mới vẫn gọi thêm `sys.stdout.reconfigure(encoding="utf-8")` để không phụ thuộc vào cách được gọi. Tác vụ Task Scheduler phải gọi qua `tools_local\py.cmd`.
 - Đọc và ghi file luôn có `encoding="utf-8"`.
-- Chạy test bằng Python của `.venv`: `.\.venv\Scripts\python.exe -m pytest`. `requirements.txt` không có pytest, phải cài `requirements-dev.txt`.
+- Chạy test bằng Python của `.venv`: `tools_local\py.cmd -m pytest`. `requirements.txt` không có pytest, phải cài `requirements-dev.txt`.
 - **Mỗi prompt phát triển kết thúc bằng ba việc:**
   1. Chạy `pytest` (ít nhất `tests/may_reels/` và các test hợp đồng bị ảnh hưởng) và báo đúng kết quả.
   2. Cập nhật `HUONG-DAN-SU-DUNG.md` nếu có lệnh hoặc cách dùng mới.
@@ -152,8 +159,8 @@ Mọi file của OpenMontage gốc mà Máy Reels sửa, hoặc thư mục lõi 
 
 | File | Loại | Thay đổi | Lý do | Khi merge upstream |
 |---|---|---|---|---|
-| `.gitignore` | Sửa (dự kiến) | Thêm dòng `secrets/` | Giữ file service account và token ngoài repo public | Giữ dòng này nếu upstream sửa `.gitignore` |
-| `pipeline_defs/may-reels.yaml` | Thêm file (dự kiến, chờ duyệt phương án) | Manifest riêng cho chế độ chạy không dừng | `lib/pipeline_loader.py` chỉ đọc manifest trong `pipeline_defs/`, và `lib/checkpoint.py` tìm cổng duyệt qua tên pipeline | Không xung đột trừ khi upstream đổi schema manifest. `tests/contracts/test_pipeline_catalog.py` sẽ tự kiểm tra file này. |
+| `.gitignore` | Sửa (đã làm 2026-11-15) | Thêm 2 dòng ở cuối file: `secrets/` và `brand/*/_local/` | Giữ file service account, token và nội dung riêng của kênh ngoài repo public | Giữ 2 dòng này nếu upstream sửa `.gitignore` (thêm ở cuối file nên ít xung đột) |
+| `pipeline_defs/may-reels.yaml` | Thêm file (đã duyệt phương án 2, chưa viết) | Manifest riêng cho chế độ chạy không dừng | `lib/pipeline_loader.py` chỉ đọc manifest trong `pipeline_defs/`, và `lib/checkpoint.py` tìm cổng duyệt qua tên pipeline | Không xung đột trừ khi upstream đổi schema manifest. `tests/contracts/test_pipeline_catalog.py` sẽ tự kiểm tra file này. |
 | `HUONG-DAN-SU-DUNG.md` | File của nhánh, không phải upstream | — | — | — |
 
-Hiện chưa sửa file nào của upstream. Hai dòng đầu là dự kiến, chỉ làm khi bắt đầu code.
+File upstream duy nhất đã sửa là `.gitignore`. `pipeline_defs/may-reels.yaml` sẽ thêm khi bắt đầu code luồng sản xuất.

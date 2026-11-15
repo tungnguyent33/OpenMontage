@@ -1,0 +1,14 @@
+# Cấu hình riêng của kênh Đào tạo lái xe Vạn Xuân.
+# File này SỬA TAY. tools_local/nap_kenh.py chỉ đọc, không ghi đè.
+# Mọi giá trị riêng của kênh đặt ở đây, không viết cứng trong code.
+
+# Thư mục video đã làm có tên dạng <tien_to_ma_video>-<số>[chữ]-<mã chủ đề>[-thu], ví dụ vx-002b-cau-diem-liet-thu
+tien_to_ma_video: vx
+
+# Thư mục chứa các video đã làm, tính TƯƠNG ĐỐI từ thư mục kênh gốc ($KENH_GOC_DIR/<id>)
+thu_muc_video: ../../videos
+
+# Font cần chép vào brand/<id>/assets/fonts/ (tìm trong <kênh>/fonts/ trước, sau đó font đã cài trên máy)
+fonts:
+  - BeVietnamPro-ExtraBold.ttf
+  - BeVietnamPro-Bold.ttf
