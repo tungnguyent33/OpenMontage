@@ -117,6 +117,9 @@ HANG_CHO = Tab(
         _m("loi"),
         _m("cap_nhat_luc"),
         _m("ghi_chu_may", "thư mục đăng tay (export_bundle), ghi chú của máy"),
+        # Không đặt dropdown: cột người dùng đã tự tạo, máy không áp ràng buộc lên ô người nhập (đọc lỏng 1-10).
+        _n("diem_cua_toi", mo_ta="điểm của người duyệt 1-10; dùng cho lệnh hieu-chinh"),
+        _n("nhan_xet", mo_ta="nhận xét của người duyệt; hieu-chinh đọc để đề xuất sửa rubric"),
     ),
     khoa=("ma_video", "nen_tang"),
     tu_dong_cap_nhat="cap_nhat_luc",

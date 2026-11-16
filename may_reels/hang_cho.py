@@ -127,6 +127,24 @@ def chep_xem_thu(video: Path, ma_video: str, *, phien_ban: str = "", cfg: dict |
     return (f"{ten} — {link}" if link else ten), canh_bao
 
 
+def gon_canh_bao(ds: list[str], so_dong: int = 3, ky_tu: int = 90) -> list[str]:
+    """Cột canh_bao: bỏ trùng, giữ thứ tự (cái quan trọng đặt trước), tối đa so_dong dòng, mỗi dòng tối đa ky_tu."""
+    ra: list[str] = []
+    for x in ds:
+        x = " ".join(str(x).split())
+        if x and x not in ra:
+            ra.append(x if len(x) <= ky_tu else x[:ky_tu - 1].rstrip() + "…")
+    return ra[:so_dong]
+
+
+def cau_hinh_canh_bao(kenh: str, goc: Path | None = None) -> dict:
+    try:
+        from may_reels.cham_diem import doc_rubric
+        return doc_rubric(kenh, goc or GOC).get("canh_bao") or {}
+    except Exception:
+        return {}
+
+
 def lien_ket_video(thu_muc_xuat: Path, video: Path) -> None:
     """export_bundle chép video vào bundle: thay bản chép bằng hard link tới bản gốc (cùng nội dung, không tốn ổ đĩa).
 
@@ -231,6 +249,7 @@ def dua_vao_hang_cho(bang: BangNguon, *, video: Path, kenh: str, ma_video: str, 
     kq.link_xem_thu, cb = chep_xem_thu(video, ma_video, phien_ban=phien_ban, cfg=cau_hinh_xem_thu(kenh, goc))
     kq.canh_bao += cb
     thu_muc_xuat = thu_muc_xuat or (goc / "projects" / "_may_reels" / "xuat" / ma_video)
+    cbc = cau_hinh_canh_bao(kenh, goc)
     dong = []
     for x in nen_tang:
         tags = hashtag_cua(brand, x)
@@ -242,7 +261,9 @@ def dua_vao_hang_cho(bang: BangNguon, *, video: Path, kenh: str, ma_video: str, 
             xuat_hien = str(xuat)
         dong.append({"ma_video": ma_video, "kenh": kenh, "nen_tang": x, "link_xem_thu": kq.link_xem_thu,
                      "caption": caption[x], "hashtag": " ".join(tags), "diem_qa": str(diem_qa),
-                     "canh_bao": "; ".join(kq.canh_bao), "duyet": GIA_TRI_CHO,
+                     "canh_bao": "\n".join(gon_canh_bao(kq.canh_bao, int(cbc.get("so_dong", 3)),
+                                                         int(cbc.get("ky_tu_moi_dong", 90)))),
+                     "duyet": GIA_TRI_CHO,
                      "ghi_chu_may": f"Thư mục đăng tay: {xuat_hien}"})
     ban_ghi = {"ma_video": ma_video, "kenh": kenh, "video": str(video), "sha1": sha, "nen_tang": list(nen_tang),
                "link_xem_thu": kq.link_xem_thu, "tieu_de": tieu_de,

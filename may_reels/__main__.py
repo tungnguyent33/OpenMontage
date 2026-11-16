@@ -12,6 +12,8 @@
     python -m may_reels dang-nhap youtube --kenh <mã>
     python -m may_reels dung-luong [--cache]
     python -m may_reels don-dep [--that]
+    python -m may_reels cham-lai --kenh <mã>
+    python -m may_reels hieu-chinh --kenh <mã>
 
 --thu: chỉ in ra việc sẽ làm, không ghi gì lên Sheet.
 `dang` mặc định là CHẠY THỬ; chỉ --that mới đăng thật (chỉ người dùng được bật).
@@ -170,7 +172,7 @@ def lenh_dung(a) -> int:
     ma = 0
     try:
         kq = Pipeline(a.du_an).chay(a.stage or None)
-        tom.update(diem_qa=kq.diem_qa, canh_bao=kq.canh_bao, thoi_gian=kq.thoi_gian,
+        tom.update(diem_ky_thuat=kq.diem_ky_thuat, canh_bao=kq.canh_bao, thoi_gian=kq.thoi_gian,
                    video=str(kq.video) if kq.video else None)
         c = Path("projects") / a.du_an / "checkpoint_compose.json"
         if c.exists():
@@ -222,6 +224,20 @@ def lenh_don_dep(a) -> int:
     nap_env()
     kq = don_dep(mo_tu_env(), that=a.that)
     return 1 if kq["loi"] else 0
+
+
+def lenh_cham_lai(a) -> int:
+    from may_reels.hieu_chinh import cham_lai
+    from tools_local.nap_kenh import nap_env
+    nap_env()
+    ds = cham_lai(mo_tu_env(), a.kenh)
+    return 0 if all(k["trang_thai"] != "loi" for k in ds) else 1
+
+
+def lenh_hieu_chinh(a) -> int:
+    from may_reels.hieu_chinh import hieu_chinh
+    hieu_chinh(mo_tu_env(), a.kenh)
+    return 0
 
 
 def giu_may_thuc(bat: bool) -> None:
@@ -291,13 +307,21 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--that", action="store_true", help="xóa thật (mặc định chỉ in sẽ xóa gì)")
     p.set_defaults(ham=lenh_don_dep)
 
+    p = sub.add_parser("cham-lai", help="chấm lại video trong Hàng chờ theo rubric (không dựng lại)")
+    p.add_argument("--kenh", required=True)
+    p.set_defaults(ham=lenh_cham_lai)
+
+    p = sub.add_parser("hieu-chinh", help="so điểm máy với diem_cua_toi, đề xuất sửa rubric.yaml (không tự sửa)")
+    p.add_argument("--kenh", required=True)
+    p.set_defaults(ham=lenh_hieu_chinh)
+
     p = sub.add_parser("dang-nhap", help="đăng nhập OAuth Google một lần (mở trình duyệt)")
     p.add_argument("dich_vu", choices=["drive", "youtube"])
     p.add_argument("--kenh")
     p.set_defaults(ham=lenh_dang_nhap)
 
     a = ap.parse_args(argv)
-    dai = a.ham in (lenh_san_xuat, lenh_sua, lenh_thay_canh, lenh_dung)
+    dai = a.ham in (lenh_san_xuat, lenh_sua, lenh_thay_canh, lenh_dung, lenh_cham_lai)
     if dai:
         giu_may_thuc(True)
     try:

@@ -63,6 +63,7 @@ Tài liệu nền cho mọi stage: `skills/creative/short-form.md` (1080×1920, 
 | Tái dùng | `skills/meta/reviewer.md` (tối đa 2 vòng sửa, phân loại critical/suggestion/nitpick). `lib/slideshow_risk.py` `score_slideshow_risk(scenes, edit_decisions, renderer_family, render_runtime)`: điểm từ 0 đến 5, chia mức `strong` < 2, `acceptable` < 3, `revise` < 4, `fail` ≥ 4. Hàm đọc các trường `type`, `description`, `shot_language.shot_size`, `shot_language.camera_movement`, `shot_intent`, `information_role`, `narrative_role`, `hero_moment`, nên scene_plan phải điền đủ các trường này mới chấm được có nghĩa. Schema `schemas/artifacts/final_review.schema.json` bắt buộc 5 nhóm kiểm tra: `technical_probe`, `visual_spotcheck` (cần `frames_sampled` ≥ 4 theo reviewer), `audio_spotcheck`, `promise_preservation`, `subtitle_check`. Tool `visual_qa` (`review`, `probe`, `audio_levels`), `composition_validator`, `audio_probe`, `frame_sampler`. |
 | Viết mới | `may_reels/cham_diem.py`, phần tất định: (1) cụm từ cấm và câu sáo trên lời đọc, chữ trên màn hình và caption; (2) ý luật nào cũng có nguồn; (3) mọi cảnh đều `dung_duoc`, nằm trong `doan_dung_duoc`, thỏa quyền hình; (4) thời lượng, khổ, fps, LUFS, đỉnh âm; (5) chữ nằm trong vùng an toàn; (6) không có tool tạo hình/video AI nào trong `asset_manifest`. Kết quả gồm điểm, lý do, và quyết định qua/làm lại/bỏ, ghi vào cột máy trên Sheet. |
 | Ngưỡng | 75 điểm (mục 6, câu 12). Trượt sau 2 vòng sửa vẫn vào hàng chờ, kèm cảnh báo "Dưới ngưỡng". |
+| Đã làm (2026-11-16) | Xem mục 9. `diem_qa` là điểm rubric nội dung (`brand/<kenh>/rubric.yaml`, `may_reels/cham_diem.py`, skill `skills/may-reels/cham-diem.md`). Điểm kỹ thuật cũ đổi tên thành `diem_ky_thuat` và chỉ là một tiêu chí. |
 
 ### Bước 4: Hàng chờ duyệt
 
@@ -304,3 +305,46 @@ Chạy bằng `tools_local\py.cmd -m pytest -q` (có `PYTHONUTF8=1`):
 - Vẫn hỏng: `test_checkpoint_only_resume_preserves_media_format[webp]`, giống lần trước.
 - Lần này qua: `test_trace_matches_the_actual_terminal_scene_cursor`. Chưa rõ nó qua là nhờ `PYTHONUTF8=1` hay vì test lúc qua lúc hỏng, nên **chưa xác minh**.
 - Số test qua tăng 12 so với lần trước. Trong đó có 9 test mới ở `tests/may_reels/` và 1 test vừa nêu. Chưa đối chiếu nguồn gốc của 2 test còn lại.
+
+---
+
+## 9. Chấm điểm nội dung theo rubric (ngày 2026-11-16)
+
+**Vì sao đổi:** `diem_qa` cũ (`DIEM_TRU` trong `may_reels/dung/kiem_tra.py`) chỉ đo kỹ thuật, nên video có nội dung yếu vẫn được 91. Từ nay:
+
+- **`diem_ky_thuat`:** giữ nguyên công thức cũ, chỉ đổi tên. Không còn mục `canh_tam`, vì cảnh tạm đã được tính trong tiêu chí "Chân thực".
+- **`diem_qa`:** tổng rubric `brand/<kenh>/rubric.yaml` (100 điểm, 8 tiêu chí). Trọng số, ngưỡng, trần và từ khóa đều nằm trong file này, code không viết cứng.
+- **Chia việc:**
+  - Python (`may_reels/cham_diem.py`) đo những gì tất định: nhịp, tỉ lệ thời lượng cảnh thật, phụ đề, thương hiệu, CTA, mốc chữ đầu, độ đứng yên của 3 giây đầu.
+  - Agent (`claude -p`, `skills/may-reels/cham-diem.md`) chấm hook, độ đúng và giá trị, phụ đề, CTA từ **bằng chứng của bản đã render**: khung hook, lưới khung, lời PhoWhisper chép từ âm thanh cuối. Agent không chấm trên kịch bản.
+  - Python áp trần lên điểm agent khi đo được lỗi cứng, rồi áp trần tổng. Kết quả ghi `renders/score.json` (`schemas/may-reels/score.schema.json`).
+- **Chặn cứng** (không vào Hàng chờ, job sang `loi`) khi gặp một trong ba trường hợp, tất cả đều kiểm tra trên bản đã render:
+  - cụm từ cấm hoặc câu sáo đã chốt, trong lời nghe được và chữ trên màn hình, kể cả viết không dấu;
+  - số hoặc số hiệu luật ngoài `y_chinh`/`nguon_doi_chieu`;
+  - tài sản ngoài kho kênh, brand hoặc sơ đồ được phép.
+- **Vòng sửa:** dùng lại vòng phản hồi của `san_xuat.py`, nhưng nội dung phản hồi là lý do trừ điểm nội dung, nặng nhất trước. Tối đa 2 vòng. Vẫn dưới ngưỡng thì cột `canh_bao` ghi "Dưới ngưỡng (điểm/ngưỡng)" và 2 lý do nặng nhất; cột này tối đa 3 dòng.
+- **Hiệu chỉnh:** tab Hàng chờ có thêm hai cột của người là `diem_cua_toi` và `nhan_xet`.
+  - Lệnh `cham-lai` chấm lại video mà không dựng lại.
+  - Lệnh `hieu-chinh` so điểm của máy với điểm của người, rồi đề xuất sửa `rubric.yaml`; lệnh này không tự sửa.
+
+**Quyết định của máy, cần người xác nhận:**
+
+1. **Trần tổng.** Rubric gốc không đủ để hai mẫu hỏng "3 giây đầu là logo" và "80% cảnh tạm" rơi xuống dưới ngưỡng: hook bằng 0 vẫn còn 80 điểm. Vì vậy `rubric.yaml` có thêm mục `tran_tong`: hook dưới 8 điểm, hoặc cảnh thật dưới 40% thời lượng, thì tổng tối đa 70.
+2. **Video bị chặn vẫn được agent chấm,** để người đọc vẫn hiểu video đó ra sao. `dat` = false, và video không vào Hàng chờ.
+3. **Miễn cho số không phải số liệu.** Số đếm 1–10 đứng riêng, cùng số điện thoại, địa chỉ và CTA của kênh, không bị coi là số liệu. Số hiệu luật thì luôn phải có nguồn.
+4. **Hai cột của người không có dropdown,** vì người dùng tự tạo cột. Máy đọc điểm một cách linh hoạt, chấp nhận giá trị từ 1 đến 10.
+
+**Chạy thật ngày 2026-11-16** (`cham-lai`, `hieu-chinh`):
+
+| Video | QA cũ (kỹ thuật) | QA mới | Hook | Đúng | Nhịp | Chân thực | Phụ đề | Thương hiệu | CTA | Kỹ thuật | Chặn |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| vx-005-a1-xe-150cc | — | bỏ qua | | | | | | | | | không có `ke_hoach.json` (dựng trước khi có máy) |
+| vx-006-giao-nhau-khong-bao-hieu | 91 | 76 | 17/20 | 13/15 | 7/10 | 5/15 (43% cảnh thật) | 7/10 | 10/10 | 8/10 | 9,1/10 | Điều 22, khoản 2 |
+| vx-007-vong-xuyen | 87 | 70 (trần tổng) | 18/20 | 12/15 | 7/10 | 5/15 (40% cảnh thật) | 8/10 | 10/10 | 10/10 | 8,7/10 | Điều 22, khoản 2, 3 |
+
+- **Cả hai video bị chặn vì cùng một lý do:** `nguon_doi_chieu` của chủ đề chỉ ghi "Luật 36/2024/QH15 (điều về đi qua nơi giao nhau)", không ghi số điều. Agent đã mở link và trích nguyên văn Điều 22. Có hai cách gỡ, **người dùng chọn**:
+  - ghi rõ điều khoản vào `nguon_doi_chieu` trong `chu-de.md` rồi nạp lại kho;
+  - bật `nguon_luat_da_mo` trong `rubric.yaml`.
+- **Agent tìm ra lỗi thật mà điểm kỹ thuật bỏ sót:** ở vx-006, khoảng giây 20, sơ đồ đè lên thẻ chữ làm chữ bị cụt ("Có xe thì n").
+- **Thời gian mỗi video:** agent khoảng 36 giây (claude báo khoảng 0,45 USD), cộng thời gian PhoWhisper chép lời âm thanh cuối. Lời chép được lưu theo sha1 của video, nên lần chấm lại sau không phải chép nữa.
+- **`hieu-chinh`:** chưa có `diem_cua_toi` nào nên chưa đề xuất. Hai cột này được `sheet init` thêm vào Sheet ngày 2026-11-16, vì trên Sheet thật lúc đó chưa có.

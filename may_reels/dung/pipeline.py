@@ -49,7 +49,7 @@ class LoiQA(RuntimeError):
 class KetQuaDung:
     du_an: Path
     video: Path | None = None
-    diem_qa: int | None = None
+    diem_ky_thuat: int | None = None
     canh_bao: list[str] = field(default_factory=list)
     thoi_gian: dict = field(default_factory=dict)
 
@@ -112,6 +112,15 @@ def chuan_hoa_quyet_dinh(q: dict, decision_id: str) -> dict:
     return {"decision_id": decision_id, "stage": "idea", "category": cat, "subject": subject or "(không ghi)",
             "options_considered": opts, "selected": chon or "(không ghi)", "reason": str(q.get("reason") or ""),
             "user_visible": True, "user_approved": False}
+
+
+def doc_diem_ky_thuat(P: Path) -> int | None:
+    """diem_ky_thuat từ checkpoint compose (checkpoint cũ ghi tên diem_qa)."""
+    f = P / "checkpoint_compose.json"
+    if not f.is_file():
+        return None
+    m = json.loads(f.read_text(encoding="utf-8"))["artifacts"]["final_review"]["metadata"]
+    return m.get("diem_ky_thuat", m.get("diem_qa"))
 
 
 def so_lan_dung_canh(goc: Path, kenh: str, tru: str | None = None) -> dict[str, int]:
@@ -335,18 +344,16 @@ class Pipeline:
         render_s = round(time.monotonic() - t0, 1)
         dung_nhieu = sum(1 for m, n in so_lan_dung_canh(self.goc, self.kenh, self.P.name).items()
                          if n >= 3 and any((d.get("canh") or {}).get("ma") == m for d in self.kh["doan"]))
-        so_canh_tam = sum(1 for d in self.kh["doan"] if (d.get("canh") or {}).get("so_do"))
-        fr, o = kiem(self.P, out, sx=self.sx, kh=self.kh, so_canh_bao_tuong_phan=tuong_phan, canh_dung_nhieu=dung_nhieu,
-                     so_canh_tam=so_canh_tam)
+        fr, o = kiem(self.P, out, sx=self.sx, kh=self.kh, so_canh_bao_tuong_phan=tuong_phan, canh_dung_nhieu=dung_nhieu)
         rr = {"version": "1.0", "outputs": [o], "render_time_seconds": render_s, "render_grammar": "documentary-montage",
-              "verification_notes": [f"diem_qa {fr['metadata']['diem_qa']}", f"trừ {fr['metadata']['tru_diem']}"]}
-        self.kq.video, self.kq.diem_qa = out, fr["metadata"]["diem_qa"]
+              "verification_notes": [f"diem_ky_thuat {fr['metadata']['diem_ky_thuat']}", f"trừ {fr['metadata']['tru_diem']}"]}
+        self.kq.video, self.kq.diem_ky_thuat = out, fr["metadata"]["diem_ky_thuat"]
         if fr["status"] != "pass":
             self._ck("compose", "failed", {"render_report": rr, "final_review": fr}, error="; ".join(fr["issues_found"]))
             raise LoiQA("; ".join(fr["issues_found"]))
         self._ck("compose", "completed", {"render_report": rr, "final_review": fr},
                  review={"reviewer": "may_reels.dung.kiem_tra", "ket_luan": fr["status"],
-                         "diem_qa": fr["metadata"]["diem_qa"]})
+                         "diem_ky_thuat": fr["metadata"]["diem_ky_thuat"]})
         self.don_canh_trung_gian()
 
     def publish(self) -> None:
@@ -377,9 +384,8 @@ class Pipeline:
             getattr(self, s)()
             tg[s] = {"giay": round(time.monotonic() - t, 1), "xong_luc": bay_gio()}
             tg_file.write_text(json.dumps(tg, ensure_ascii=False, indent=1), encoding="utf-8")
-        if self.kq.diem_qa is None and (self.P / "checkpoint_compose.json").exists():
-            c = json.loads((self.P / "checkpoint_compose.json").read_text(encoding="utf-8"))
-            self.kq.diem_qa = c["artifacts"]["final_review"]["metadata"].get("diem_qa")
+        if self.kq.diem_ky_thuat is None and (self.P / "checkpoint_compose.json").exists():
+            self.kq.diem_ky_thuat = doc_diem_ky_thuat(self.P)
             self.kq.video = self.P / "renders/final.mp4"
         self.kq.thoi_gian = tg
         return self.kq

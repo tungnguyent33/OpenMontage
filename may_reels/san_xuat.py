@@ -61,15 +61,19 @@ class KetQuaJob:
 
 
 # ---------------------------------------------------------------- công cụ chạy ngoài
-def goi_agent(prompt: str, *, du_an: Path, goc: Path = GOC, giay: int = GIAY_AGENT) -> dict:
-    """claude -p không tương tác. Trả về JSON kết quả (result, num_turns, duration_ms, is_error...)."""
+def goi_agent(prompt: str, *, du_an: Path, goc: Path = GOC, giay: int = GIAY_AGENT,
+              ghi: tuple[str, ...] = ("ke_hoach.json",), web: bool = True, he_thong: str = LOI_NHAC_HE_THONG) -> dict:
+    """claude -p không tương tác. Chỉ được ghi các file `ghi` (tương đối trong dự án).
+    Trả về JSON kết quả (result, num_turns, duration_ms, is_error...)."""
     claude = shutil.which("claude")
     if not claude:
         raise RuntimeError("Không thấy lệnh claude (Claude Code CLI)")
     rel = du_an.relative_to(goc).as_posix()
+    cong_cu = ["Read", "Glob", "Grep"] + (["WebFetch", "WebSearch"] if web else [])
+    for f in ghi:
+        cong_cu += [f"Write(./{rel}/{f})", f"Edit(./{rel}/{f})"]
     cmd = [claude, "-p", prompt, "--output-format", "json", "--permission-mode", "dontAsk",
-           "--allowed-tools", f"Read Glob Grep WebFetch WebSearch Write(./{rel}/ke_hoach.json) Edit(./{rel}/ke_hoach.json)",
-           "--append-system-prompt", LOI_NHAC_HE_THONG, "--no-session-persistence"]
+           "--allowed-tools", " ".join(cong_cu), "--append-system-prompt", he_thong, "--no-session-persistence"]
     t = time.monotonic()
     try:
         r = subprocess.run(cmd, cwd=goc, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=giay)
@@ -197,9 +201,33 @@ def ghi_can_quay(bang, kenh: str, ma_chu_de: str, ma_video: str, thieu: list[dic
                                    for i, t in enumerate(thieu, start=1)], chi_khi_trong={"tao_luc"})
 
 
+def cham_mac_dinh(ma_video: str, *, goc: Path = GOC, log: Callable[[str], None] = print, tom: dict | None = None):
+    from may_reels.cham_diem import cham_video
+    return cham_video(ma_video, goc=goc, log=log, tom=tom)
+
+
+def nhat_ky_cham(bang, kenh: str, ma_video: str, kc, buoc: str = "cham_diem") -> None:
+    """Một dòng Nhật ký cho mỗi lần chấm (thời gian chạy và lượt agent)."""
+    try:
+        them_nhat_ky(bang, NHAT_KY, [{
+            "thoi_gian": bay_gio_vn(), "kenh": kenh, "ma": ma_video, "buoc": buoc, "che_do": "that",
+            "ket_qua": "loi" if kc.chan else "ok",
+            "chi_tiet": (f"QA {kc.diem_qa}; kỹ thuật {kc.diem_ky_thuat}; agent {kc.giay_agent:.0f}s"
+                         + (f"; CHẶN: {'; '.join(kc.chan)}" if kc.chan else "")
+                         + (f"; trừ: {kc.ly_do_tru[0]}" if kc.ly_do_tru else ""))[:500],
+            "chi_phi_vnd": "0", "thoi_gian_chay_giay": str(kc.giay), "so_luot_tro_ly": str(kc.so_luot_agent)}])
+    except Exception:  # pragma: no cover
+        pass
+
+
+def canh_bao_duoi_nguong(kc, nguong: int) -> list[str]:
+    """'Dưới ngưỡng' + 2 lý do trừ điểm nặng nhất (đứng đầu cột canh_bao)."""
+    return [f"{CANH_BAO_DUOI_NGUONG} ({kc.diem_qa}/{nguong})"] + kc.ly_do_tru[:2]
+
+
 def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GOC,
                  agent: Callable[..., dict] = goi_agent, dung: Callable[..., tuple[int, dict]] = chay_dung,
-                 log: Callable[[str], None] = print) -> KetQuaJob:
+                 cham: Callable | None = None, log: Callable[[str], None] = print) -> KetQuaJob:
     from may_reels.dung.ke_hoach import doc_brand, doc_san_xuat
     from may_reels.hang_cho import dua_vao_hang_cho
     t0 = time.monotonic()
@@ -223,6 +251,7 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
         job = chuyen_trang_thai(job, "dang_san_xuat", ly_do="Sheet: duyet_chu_de = Làm")
     _luu_job(P, job)
     _cap_nhat_y_tuong(bang, kenh, ma, NHAN_TRANG_THAI["dang_san_xuat"])
+    cham = cham or cham_mac_dinh
     nguong = int((sx.get("cham_diem") or {}).get("nguong", 75))
     so_vong = int((sx.get("cham_diem") or {}).get("so_vong_sua", 2))
     tom: dict = {}
@@ -260,14 +289,22 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
                 continue
             if ma_thoat != MA_OK:
                 raise RuntimeError(tom.get("loi", f"dựng lỗi mã {ma_thoat}"))
-            kq.diem_qa = tom.get("diem_qa")
-            kq.canh_bao = list(tom.get("canh_bao") or [])
+            log(f"  [{ma_video}] chấm điểm")
+            kc = cham(ma_video, goc=goc, log=log, tom=tom)
+            kq.so_luot_agent += kc.so_luot_agent
+            kq.giay_agent += kc.giay_agent
+            kq.chi_phi_agent_usd += kc.chi_phi_agent_usd
+            nhat_ky_cham(bang, kenh, ma_video, kc)
+            if kc.chan:  # chặn cứng: không vào Hàng chờ, không vòng sửa
+                raise RuntimeError("Chặn cứng: " + "; ".join(kc.chan))
+            kq.diem_qa = kc.diem_qa
+            kq.canh_bao = list(kc.canh_bao) + list(tom.get("canh_bao") or [])
             if kq.diem_qa is not None and kq.diem_qa < nguong:
                 if vong < so_vong:
-                    phan_hoi = f"Điểm QA {kq.diem_qa} < {nguong}. Bị trừ: {json.dumps(tom.get('tru_diem'), ensure_ascii=False)}"
-                    log(f"  [{ma_video}] {phan_hoi}")
+                    phan_hoi = kc.phan_hoi(nguong)
+                    log(f"  [{ma_video}] {phan_hoi[:300]}")
                     continue
-                kq.canh_bao.append(CANH_BAO_DUOI_NGUONG)
+                kq.canh_bao = canh_bao_duoi_nguong(kc, nguong) + kq.canh_bao
             break
 
         kh = json.loads((P / "ke_hoach.json").read_text(encoding="utf-8"))

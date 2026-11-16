@@ -37,8 +37,8 @@ def test_khai_bao_cot_dung_yeu_cau():
     assert Y_TUONG.lay("duyet_chu_de").lua_chon == ("Chờ", "Làm", "Bỏ")
     assert HANG_CHO.ten_cot == ["ma_video", "kenh", "nen_tang", "link_xem_thu", "caption", "hashtag", "diem_qa",
                                 "canh_bao", "duyet", "ghi_chu_sua", "gio_dang", "trang_thai_dang", "link_bai",
-                                "id_bai", "loi", "cap_nhat_luc", "ghi_chu_may"]
-    assert HANG_CHO.cot_nguoi == ["duyet", "ghi_chu_sua", "gio_dang"]
+                                "id_bai", "loi", "cap_nhat_luc", "ghi_chu_may", "diem_cua_toi", "nhan_xet"]
+    assert HANG_CHO.cot_nguoi == ["duyet", "ghi_chu_sua", "gio_dang", "diem_cua_toi", "nhan_xet"]
     assert HANG_CHO.lay("duyet").lua_chon == ("Chờ duyệt", "Duyệt", "Sửa", "Bỏ")
     assert HANG_CHO.khoa == ("ma_video", "nen_tang")
     for t in TAT_CA:

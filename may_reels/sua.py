@@ -25,13 +25,15 @@ from typing import Callable
 
 from may_reels.cot_sheet import CAN_QUAY, HANG_CHO, NHAT_KY
 from may_reels.job import chuyen_trang_thai
-from may_reels.san_xuat import GOC, MA_OK, SKILL, _luu_job, _yeu_cau, chay_dung, goi_agent
+from may_reels.san_xuat import (GOC, MA_OK, SKILL, _luu_job, _yeu_cau, canh_bao_duoi_nguong, cham_mac_dinh, chay_dung,
+                                goi_agent, nhat_ky_cham)
 from may_reels.sheet import BangNguon, bay_gio_vn, chuan, doc_dong, ghi_theo_khoa, them_nhat_ky
 
 TAT_CA_STAGE = ["idea", "script", "scene_plan", "assets", "edit", "compose", "publish"]
 
 
-def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: Path, agent, dung, log) -> dict:
+def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: Path, agent, dung, log,
+             cham=None) -> dict:
     """che_do: 'sua' hoặc 'thay_canh'. Trả về {trang_thai, loi, dung_lai, doi}."""
     from may_reels.dung.ke_hoach import doc_brand, doc_san_xuat
     from may_reels.hang_cho import dua_vao_hang_cho
@@ -70,11 +72,16 @@ def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: 
             _luu_job(P, job)
             raise RuntimeError(f"dựng lại lỗi ({ma_thoat}): {tom.get('loi', '')}")
     nhan = "Đã sửa theo ghi chú" if che_do == "sua" else "Đã thay cảnh tạm bằng cảnh thật"
-    canh_bao = list(tom.get("canh_bao") or []) + [f"{nhan} lần {n} ({bay_gio_vn()})"]
-    diem = tom.get("diem_qa")
-    if diem is None and (P / "checkpoint_compose.json").is_file():
-        c = json.loads((P / "checkpoint_compose.json").read_text(encoding="utf-8"))
-        diem = c["artifacts"]["final_review"]["metadata"].get("diem_qa")
+    kc = (cham or cham_mac_dinh)(ma_video, goc=goc, log=log, tom=tom)
+    nhat_ky_cham(bang, kenh, ma_video, kc)
+    if kc.chan:
+        job = chuyen_trang_thai(job, "loi", loi=("Chặn cứng: " + "; ".join(kc.chan))[:500])
+        _luu_job(P, job)
+        raise RuntimeError("Chặn cứng: " + "; ".join(kc.chan))
+    diem = kc.diem_qa
+    nguong = int((sx.get("cham_diem") or {}).get("nguong", 75))
+    canh_bao = ((canh_bao_duoi_nguong(kc, nguong) if diem is not None and diem < nguong else [])
+                + list(kc.canh_bao) + list(tom.get("canh_bao") or []) + [f"{nhan} lần {n} ({bay_gio_vn()})"])
     hq = dua_vao_hang_cho(bang, video=P / "renders" / "final.mp4", kenh=kenh, ma_video=ma_video, tieu_de=moi["tieu_de"],
                           caption=moi["caption"], nen_tang=job["nen_tang_dich"], brand=brand,
                           diem_qa=str(diem if diem is not None else ""), canh_bao=canh_bao, thu_muc_xuat=P / "exports",
@@ -100,7 +107,8 @@ def _nhat_ky(bang, buoc: str, kq: dict) -> None:
 
 
 def sua(bang: BangNguon, *, goc: Path = GOC, agent: Callable[..., dict] = goi_agent,
-        dung: Callable[..., tuple[int, dict]] = chay_dung, log: Callable[[str], None] = print) -> list[dict]:
+        dung: Callable[..., tuple[int, dict]] = chay_dung, log: Callable[[str], None] = print,
+        cham: Callable | None = None) -> list[dict]:
     nhom: dict[str, list[dict]] = {}
     for d in doc_dong(bang, HANG_CHO):
         if chuan(d.get("duyet")) == "Sửa":
@@ -113,7 +121,7 @@ def sua(bang: BangNguon, *, goc: Path = GOC, agent: Callable[..., dict] = goi_ag
         try:
             if not ghi_chu:
                 raise RuntimeError("chọn Sửa nhưng ghi_chu_sua trống")
-            kq = _lam_lai(bang, ma_video, ghi_chu, che_do="sua", goc=goc, agent=agent, dung=dung, log=log)
+            kq = _lam_lai(bang, ma_video, ghi_chu, che_do="sua", goc=goc, agent=agent, dung=dung, log=log, cham=cham)
         except Exception as e:
             kq = {"ma_video": ma_video, "trang_thai": "loi", "loi": f"{type(e).__name__}: {e}"[:500], "dung_lai": False}
             try:
@@ -131,7 +139,8 @@ def sua(bang: BangNguon, *, goc: Path = GOC, agent: Callable[..., dict] = goi_ag
 
 
 def thay_canh(bang: BangNguon, *, goc: Path = GOC, agent: Callable[..., dict] = goi_agent,
-              dung: Callable[..., tuple[int, dict]] = chay_dung, log: Callable[[str], None] = print) -> list[dict]:
+              dung: Callable[..., tuple[int, dict]] = chay_dung, log: Callable[[str], None] = print,
+              cham: Callable | None = None) -> list[dict]:
     nhom: dict[str, list[dict]] = {}
     for d in doc_dong(bang, CAN_QUAY):
         if chuan(d.get("trang_thai_quay")) == "Đã quay" and not chuan(d.get("trang_thai_nap")) and d.get("ma_video"):
@@ -144,7 +153,8 @@ def thay_canh(bang: BangNguon, *, goc: Path = GOC, agent: Callable[..., dict] = 
                    "\n".join(f"- {d.get('ma_yeu_cau')}: {d.get('mo_ta_canh', '')}" +
                              (f" (ghi chú người: {d['ghi_chu_nguoi']})" if d.get("ghi_chu_nguoi") else "") for d in dong))
         try:
-            kq = _lam_lai(bang, ma_video, ghi_chu, che_do="thay_canh", goc=goc, agent=agent, dung=dung, log=log)
+            kq = _lam_lai(bang, ma_video, ghi_chu, che_do="thay_canh", goc=goc, agent=agent, dung=dung, log=log,
+                          cham=cham)
             nap = (f"đã thay vào {ma_video} ({bay_gio_vn()})" if kq["trang_thai"] == "cho_duyet"
                    else "chưa thấy cảnh mới khớp ý trong kho (đã chạy nap_kenh.py chưa?)")
         except Exception as e:

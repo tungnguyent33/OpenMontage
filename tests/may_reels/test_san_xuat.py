@@ -243,7 +243,7 @@ def test_san_xuat_lo_vong_sua_va_job_hong_khong_keo_job_khac(nha_may):
     ds = san_xuat(bang, "kenhthu", 3, goc=goc, agent=agent_gia(goi), dung=dung_gia(kb), log=lambda s: None)
     assert [k.ma_video for k in ds] == ["kt-005-cd-a", "kt-006-cd-b"]  # cd-c chưa chọn Làm
     a, b = ds
-    assert a.trang_thai == "cho_duyet" and a.diem_qa == 72 and "Dưới ngưỡng" in a.canh_bao and a.vong == 2
+    assert a.trang_thai == "cho_duyet" and a.diem_qa == 72 and a.canh_bao[0] == "Dưới ngưỡng (72/75)" and a.vong == 2
     assert a.so_luot_agent == 3 and "hook" in goi[1][2]["phan_hoi"] and "Điểm QA 70" in goi[2][2]["phan_hoi"]
     assert b.trang_thai == "loi" and "render" in b.loi
     hang = S.doc_dong(bang, HANG_CHO)
@@ -254,7 +254,7 @@ def test_san_xuat_lo_vong_sua_va_job_hong_khong_keo_job_khac(nha_may):
     assert tt == {"cd-a": "chờ duyệt", "cd-b": "lỗi", "cd-c": "ý tưởng"}
     job = json.loads((goc / "projects/kt-005-cd-a/reel_job.json").read_text(encoding="utf-8"))
     assert job["trang_thai"] == "cho_duyet"
-    nk = S.doc_dong(bang, NHAT_KY)
+    nk = [d for d in S.doc_dong(bang, NHAT_KY) if d["buoc"] == "san_xuat"]
     assert [(d["ma"], d["ket_qua"], d["so_luot_tro_ly"]) for d in nk] == [("kt-005-cd-a", "ok", "3"), ("kt-006-cd-b", "loi", "1")]
     # chạy lại: không sản xuất lại chủ đề đã có job
     assert san_xuat(bang, "kenhthu", 3, goc=goc, agent=agent_gia(goi), dung=dung_gia(kb), log=lambda s: None) == []

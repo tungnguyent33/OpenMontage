@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "may-reels/score.schema.json",
+  "title": "Máy Reels: điểm nội dung một video đã render (projects/<ma_video>/renders/score.json)",
+  "description": "Do may_reels/cham_diem.py ghi sau khi gộp điểm agent (skills/may-reels/cham-diem.md) với số đo tất định theo brand/<kenh>/rubric.yaml. diem_qa = tổng các tiêu chí (sau trần tổng); null khi bị chặn cứng.",
+  "type": "object",
+  "required": ["version", "ma_video", "kenh", "sha1_video", "cham_luc", "diem_qa", "nguong", "dat", "diem_ky_thuat",
+               "tieu_chi", "tran_tong", "chan_cung", "canh_bao", "ly_do_tru"],
+  "properties": {
+    "version": {"const": "1.0"},
+    "ma_video": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+    "kenh": {"type": "string", "minLength": 1},
+    "sha1_video": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "cham_luc": {"type": "string"},
+    "rubric_phien_ban": {"type": ["integer", "string", "null"]},
+    "diem_qa": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+    "nguong": {"type": "integer", "minimum": 0, "maximum": 100},
+    "dat": {"type": "boolean"},
+    "diem_ky_thuat": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+    "tieu_chi": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ma", "ten", "toi_da", "diem", "ly_do", "nguon"],
+        "properties": {
+          "ma": {"type": "string"},
+          "ten": {"type": "string"},
+          "toi_da": {"type": "number", "minimum": 0},
+          "diem": {"type": "number", "minimum": 0},
+          "ly_do": {"type": "string", "minLength": 1},
+          "nguon": {"enum": ["may", "agent"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "tran_tong": {
+      "type": "array",
+      "items": {"type": "object", "required": ["toi_da", "ly_do"],
+                "properties": {"toi_da": {"type": "number"}, "ly_do": {"type": "string"}}}
+    },
+    "chan_cung": {"type": "array", "items": {"type": "string"}},
+    "canh_bao": {"type": "array", "items": {"type": "string"}},
+    "ly_do_tru": {"type": "array", "items": {"type": "string"}},
+    "do_dac": {"type": "object"},
+    "agent": {"type": "object"},
+    "giay": {"type": "number"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,105 @@
+# Rubric chấm nội dung video của kênh. SỬA TAY. Code (may_reels/cham_diem.py) không viết cứng trọng số hay ngưỡng nào:
+# mọi con số dùng để chấm nằm trong file này. Tổng trọng số = 100 = diem_qa.
+# Ngưỡng vào Hàng chờ không cảnh báo vẫn là san-xuat.yaml cham_diem.nguong.
+#
+# nguon: may = Python đo tất định trên bản đã render; agent = agent chấm từ bằng chứng (skills/may-reels/cham-diem.md),
+#        Python vẫn áp trần (tran) lên điểm agent khi đo được lỗi cứng.
+# Hiệu chỉnh: python -m may_reels hieu-chinh --kenh <mã> so điểm máy với diem_cua_toi và ĐỀ XUẤT sửa file này.
+
+phien_ban: 1
+
+tieu_chi:
+  hook:
+    ten: "Hook 0-3 giây"
+    trong_so: 20
+    nguon: agent
+    mo_ta: "Có câu hỏi, mâu thuẫn hoặc con số; chữ trên màn hình trong 0,5 giây đầu; khung đầu không phải logo hay màn hình trống."
+    tran:
+      chu_muon_hon_giay: 0.5        # chữ đầu tiên xuất hiện muộn hơn mốc này ...
+      khi_chu_muon: 10              # ... thì hook tối đa 10
+      dung_yen_nguong: 2.0          # chênh lệch điểm ảnh trung bình (0-255) giữa các khung 0 / 0,5 / 1,5 / 3 giây dưới mức này = đứng yên
+      khi_dung_yen: 4               # 3 giây đầu đứng yên (logo, màn hình trống) thì hook tối đa 4
+  dung_gia_tri:
+    ten: "Đúng và có giá trị"
+    trong_so: 15
+    nguon: agent
+    mo_ta: "Trả lời đúng câu hỏi của chủ đề, khớp y_chinh và nguon_doi_chieu, người xem học được một điều cụ thể."
+  nhip:
+    ten: "Nhịp"
+    trong_so: 10
+    nguon: may
+    mo_ta: "Không đoạn nào quá 4 giây không đổi hình hoặc không có nhấn (cắt cảnh, thẻ chữ, từ khóa tô màu trong phụ đề)."
+    giay_toi_da: 4.0
+    tru_moi_lan_vuot: 3             # mỗi khoảng trống dài hơn giay_toi_da trừ 3 điểm
+  chan_thuc:
+    ten: "Chân thực"
+    trong_so: 15
+    nguon: may
+    mo_ta: "Tỉ lệ thời lượng cảnh quay thật (video và ảnh của kho kênh) trên tổng thời lượng phần thân video, không theo số cảnh."
+    ti_le_du_diem: 0.90             # từ tỉ lệ này trở lên: đủ điểm; dưới thì tỉ lệ thuận
+    ti_le_toi_thieu: 0.60           # dưới mức này ...
+    khi_duoi_toi_thieu: 5           # ... thì tối đa 5 điểm, kèm canh_bao bên dưới
+    canh_bao: "Nhiều cảnh tạm"
+  phu_de:
+    ten: "Phụ đề đọc được"
+    trong_so: 10
+    nguon: agent
+    mo_ta: "Đúng dấu, tối đa 2 dòng, nằm trong vùng an toàn 900x1400, đủ tương phản."
+    so_dong_toi_da: 2
+    ky_tu_moi_dong: 19              # cỡ chữ 58px trong khung 660px của phụ đề: khoảng 19 ký tự mỗi dòng
+    vung_an_toan: {x0: 90, y0: 260, x1: 990, y1: 1660}   # 900x1400 căn giữa khung 1080x1920
+    tuong_phan_toi_thieu: 4.5
+    khi_vi_pham: 5                  # đo được vượt số dòng / ra ngoài vùng an toàn / thiếu tương phản: tối đa 5
+  thuong_hieu:
+    ten: "Thương hiệu"
+    trong_so: 10
+    nguon: may
+    mo_ta: "Màu, font, logo, màn kết có hotline và địa chỉ đúng brand.json. Mỗi mục đạt được 1/4 số điểm."
+  cta:
+    ten: "CTA"
+    trong_so: 10
+    nguon: agent
+    mo_ta: "Một lời kêu gọi duy nhất, rõ việc cần làm."
+    khi_khong_nguyen_van: 5         # đoạn cta không phải nguyên văn một câu trong brand.json cta: tối đa 5
+    khi_nhieu_cta: 5                # nghe/thấy từ 2 câu CTA khác nhau trở lên: tối đa 5
+  ky_thuat:
+    ten: "Kỹ thuật"
+    trong_so: 10
+    nguon: may
+    mo_ta: "Quy đổi tuyến tính từ diem_ky_thuat (0-100, may_reels/dung/kiem_tra.py DIEM_TRU)."
+
+# Trần TỔNG điểm: lỗi nặng đến mức không thể "bù" bằng tiêu chí khác. Mỗi luật: điều kiện trên một tiêu chí hoặc số đo.
+tran_tong:
+  - {tieu_chi: hook, diem_duoi: 8, toi_da: 70, ly_do: "Hook hỏng: 3 giây đầu không giữ được người xem"}
+  - {do: ti_le_canh_that, duoi: 0.40, toi_da: 70, ly_do: "Phần lớn thời lượng là cảnh tạm"}
+
+# Chặn cứng (Python, trên bản đã render). Vi phạm thì KHÔNG vào Hàng chờ, job sang loi.
+chan_cung:
+  cum_tu: [cum_tu_cam, cum_tu_cam_du_an, cau_sao_da_chot]   # các danh sách trong brand.json cam
+  # Con số và số hiệu văn bản luật nghe/thấy trong video phải có trong các nguồn sau:
+  #   y_chinh, nguon_doi_chieu: của chủ đề trong brand.json chu_de
+  #   lien_he, cta: số điện thoại, địa chỉ, câu CTA của kênh (không phải số liệu nội dung)
+  #   chu_de: chính câu hỏi của chủ đề (ví dụ "xe 150cc")
+  #   nguon_luat_da_mo (CHƯA BẬT): nguồn trong ke_hoach.json có đủ link, ngày mở, trích nguyên văn. Bật nếu muốn cho
+  #     phép "Điều 22" khi nguon_doi_chieu chỉ ghi "Luật 36/2024/QH15 (điều về ...)". Ngày 2026-11-16 cả vx-006 và
+  #     vx-007 bị chặn vì lý do này.
+  nguon_so_cho_phep: [y_chinh, nguon_doi_chieu, chu_de, lien_he, cta]
+  so_dem_toi_da: 10               # số đếm nhỏ đứng riêng (1..10: "3 điều", "2 xe") không cần nguồn; số hiệu luật thì luôn cần
+  so_do_cho_phep: [giao_nhau, vong_xuyen, the_chu]
+  url_ngoai_cho_phep: ["https://cdn.jsdelivr.net/npm/gsap@"]
+
+# Cột canh_bao trên Hàng chờ: tối đa bấy nhiêu dòng, mỗi dòng tối đa bấy nhiêu ký tự.
+canh_bao:
+  so_dong: 3
+  ky_tu_moi_dong: 90
+
+# hieu-chinh: từ khóa trong nhan_xet của người duyệt gợi ý tiêu chí nào (không dấu, chữ thường cũng khớp).
+tu_khoa_nhan_xet:
+  hook: [hook, "mở đầu", "đầu video", "3 giây", "nhạt", "lướt"]
+  dung_gia_tri: [sai, "không đúng", "giá trị", "luật", nguồn, "thông tin"]
+  nhip: [nhịp, chậm, "lê thê", "dài dòng", "đơn điệu"]
+  chan_thuc: ["cảnh tạm", "sơ đồ", "cảnh thật", "giả"]
+  phu_de: ["phụ đề", chữ, "khó đọc", "che"]
+  thuong_hieu: [logo, màu, font, "thương hiệu", hotline, "địa chỉ"]
+  cta: [cta, "kêu gọi", zalo, "bình luận"]
+  ky_thuat: [tiếng, "âm lượng", mờ, giật, "đen"]

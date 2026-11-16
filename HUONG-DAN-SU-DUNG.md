@@ -309,6 +309,35 @@ tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng
   tools_local\py.cmd -m may_reels san-xuat --kenh vanxuan --ca-cho-quay  # dựng lại cả chủ đề đang "chờ quay" bằng cảnh tạm
   ```
 - **Máy ngủ:** trong lúc `san-xuat`, `sua`, `thay-canh`, `dung` chạy, máy được giữ không tự ngủ (Windows `SetThreadExecutionState`), nhưng **gập máy thì vẫn ngủ** và lô sẽ dừng theo. Giới hạn thời gian `MAY_REELS_GIAY_DUNG` tính cả lúc máy ngủ, nên job đang chạy sẽ bị đánh dấu lỗi. Chạy lại job lỗi bằng `san-xuat --kenh vanxuan --ca-loi`.
+- **Điểm QA trên Sheet (`diem_qa`) là điểm nội dung theo rubric** `brand/<kênh>/rubric.yaml` (tổng 100). Mọi trọng số và ngưỡng nằm trong file đó:
+
+  | Tiêu chí | Điểm | Ai chấm |
+  |---|---|---|
+  | Hook 0–3 giây | 20 | agent; máy áp trần nếu chữ muộn hơn 0,5 giây hoặc 3 giây đầu đứng yên |
+  | Đúng và có giá trị | 15 | agent |
+  | Nhịp: không quá 4 giây không đổi hình hoặc không nhấn | 10 | máy |
+  | Chân thực: tỉ lệ thời lượng cảnh quay thật; dưới 60% thì tối đa 5 điểm, cảnh báo "Nhiều cảnh tạm" | 15 | máy |
+  | Phụ đề đọc được | 10 | agent; máy áp trần nếu quá 2 dòng, ra ngoài vùng an toàn hoặc thiếu tương phản |
+  | Thương hiệu: màu, font, logo, màn kết | 10 | máy |
+  | CTA | 10 | agent; máy áp trần nếu CTA không nguyên văn hoặc có nhiều CTA |
+  | Kỹ thuật: quy đổi từ `diem_ky_thuat` (ffprobe, LUFS, khung đen, phụ đề) | 10 | máy |
+
+  - Agent chấm bằng skill `skills/may-reels/cham-diem.md`, **trên video đã render**: khung hook ở 0 / 0,5 / 1,5 / 3 giây, lưới khung, lời PhoWhisper nghe được từ âm thanh cuối. Kết quả ghi ở `projects/<mã>/renders/score.json`, mỗi tiêu chí có điểm và một câu lý do.
+  - **Trần tổng:** hook dưới 8 điểm, hoặc cảnh thật dưới 40% thời lượng, thì tổng tối đa 70.
+  - **Chặn cứng:** máy không đưa video vào Hàng chờ (job sang `loi`) nếu gặp một trong ba trường hợp sau:
+    - nghe thấy hoặc nhìn thấy cụm từ cấm hay câu sáo đã chốt, kể cả khi viết không dấu;
+    - có con số hoặc số hiệu luật không nằm trong `y_chinh`/`nguon_doi_chieu` của chủ đề (số điện thoại, địa chỉ, CTA của kênh và số đếm 1–10 được miễn);
+    - có tài sản không thuộc kho kênh hoặc brand.
+  - Chặn số hiệu luật rất chặt. Nếu `nguon_doi_chieu` chỉ ghi "Luật 36/2024/QH15 (điều về …)" thì một video nói "Điều 22" sẽ bị chặn. Có hai cách gỡ: ghi rõ điều khoản vào `nguon_doi_chieu` của chủ đề, hoặc thêm `nguon_luat_da_mo` vào `rubric.yaml` mục `chan_cung.nguon_so_cho_phep` để cho phép nguồn agent đã mở và trích nguyên văn.
+  - **Dưới ngưỡng** (`san-xuat.yaml` mục `cham_diem.nguong`): máy gửi lý do trừ điểm cho agent sửa kế hoạch, tối đa 2 vòng. Vẫn dưới ngưỡng thì video vào Hàng chờ, cột `canh_bao` ghi "Dưới ngưỡng (điểm/ngưỡng)" và 2 lý do nặng nhất. Cột `canh_bao` có tối đa 3 dòng.
+  - **Hiệu chỉnh theo bạn:** ghi `diem_cua_toi` (1–10) và `nhan_xet` trên tab Hàng chờ. Đây là cột của bạn, máy không ghi vào. Chưa có hai cột này thì chạy `sheet init`: lệnh này thêm cột còn thiếu và không tạo trùng.
+
+  ```powershell
+  tools_local\py.cmd -m may_reels cham-lai --kenh vanxuan     # chấm lại mọi video trong Hàng chờ, không dựng lại
+  tools_local\py.cmd -m may_reels hieu-chinh --kenh vanxuan   # so điểm máy với điểm của bạn, đề xuất sửa rubric.yaml
+  ```
+
+  `hieu-chinh` **chỉ đề xuất**, không sửa `rubric.yaml`. Báo cáo lưu ở `projects/_may_reels/hieu-chinh/<kênh>-<ngày>.md`.
 - **Bản xem thử trên Drive chỉ để duyệt.** Máy chép lên `MAY_REELS_XEM_THU_DIR` một bản nhẹ (720×1280, CRF 28, tiếng AAC 96k, cấu hình ở `san-xuat.yaml` mục `xem_thu`). **Đăng tay thì lấy file trong thư mục `exports/`** của dự án (đường dẫn ở cột `ghi_chu_may`), đó là bản đủ chất lượng. Khi `sua` tạo bản `-v<n>` mới, máy xóa bản xem thử cũ của cùng mã video trong thư mục Drive.
 - **Dung lượng ổ đĩa:**
   - Bản cuối nén một lần ngay trong `hyperframes render` (`san-xuat.yaml` mục `xuat`: CRF 20, tối đa 12 Mb/s). Bước chuẩn hóa tiếng không nén lại hình. Thử với vx-006: dung lượng từ 42 MB xuống 19 MB, SSIM 0,9925, điểm QA không đổi.
