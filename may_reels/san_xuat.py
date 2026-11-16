@@ -121,7 +121,8 @@ def _jobs(goc: Path) -> dict[str, dict]:
     return out
 
 
-def chon_chu_de(bang: BangNguon, kenh: str, so_luong: int, goc: Path = GOC, ca_cho_quay: bool = False) -> list[dict]:
+def chon_chu_de(bang: BangNguon, kenh: str, so_luong: int, goc: Path = GOC, ca_cho_quay: bool = False,
+                ca_loi: bool = False) -> list[dict]:
     """Chủ đề "Làm" chưa sản xuất. ca_cho_quay: thêm chủ đề có job đang cho_quay (dựng lại với cảnh tạm)."""
     jobs = _jobs(goc)
     out = []
@@ -130,7 +131,8 @@ def chon_chu_de(bang: BangNguon, kenh: str, so_luong: int, goc: Path = GOC, ca_c
             continue
         j = jobs.get(r.get("ma"))
         if j:
-            if not (ca_cho_quay and j.get("trang_thai") == "cho_quay"):
+            lam_lai = ({"cho_quay"} if ca_cho_quay else set()) | ({"loi"} if ca_loi else set())
+            if j.get("trang_thai") not in lam_lai:
                 continue
             r = {**r, "_ma_video": j["ma_video"]}
         elif chuan(r.get("trang_thai_san_xuat")) not in DA_SAN_XUAT:
@@ -209,9 +211,9 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
     P = goc / "projects" / ma_video
     P.mkdir(parents=True, exist_ok=True)
     phan_hoi = None
-    if (P / "reel_job.json").is_file():  # job cũ đang cho_quay: dựng lại, đoạn thiếu cảnh dùng cảnh tạm
+    if (P / "reel_job.json").is_file():  # job cũ (cho_quay hoặc loi): dựng lại, đoạn thiếu cảnh dùng cảnh tạm
         job = json.loads((P / "reel_job.json").read_text(encoding="utf-8"))
-        job = chuyen_trang_thai(job, "dang_san_xuat", ly_do="Dựng lại với cảnh tạm (sơ đồ) cho đoạn thiếu cảnh")
+        job = chuyen_trang_thai(job, "dang_san_xuat", ly_do=f"Dựng lại từ trạng thái {job['trang_thai']}")
         phan_hoi = ("Lần trước thiếu cảnh thật nên chưa dựng. Giữ thieu_canh, và cho mỗi đoạn trong thieu_canh dùng "
                     "cảnh tạm canh.so_do (xem skill mục Chọn cảnh). Kiểm tra lại kho: nếu nay đã có cảnh thật khớp ý thì dùng cảnh thật.")
     else:
@@ -309,8 +311,8 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
 
 
 def san_xuat(bang: BangNguon, kenh: str, so_luong: int, *, goc: Path = GOC, log: Callable[[str], None] = print,
-             ca_cho_quay: bool = False, **kw) -> list[KetQuaJob]:
-    ds = chon_chu_de(bang, kenh, so_luong, goc, ca_cho_quay)
+             ca_cho_quay: bool = False, ca_loi: bool = False, **kw) -> list[KetQuaJob]:
+    ds = chon_chu_de(bang, kenh, so_luong, goc, ca_cho_quay, ca_loi)
     if not ds:
         log("Không có chủ đề nào đã chọn 'Làm' mà chưa sản xuất.")
         return []

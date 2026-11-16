@@ -68,6 +68,52 @@ def doc_cong_sheet(kenh: str, ma_chu_de: str) -> dict:
     return {"tab": Y_TUONG.ten, "khoa": {"kenh": kenh, "ma": ma_chu_de}, "duyet_chu_de": d["duyet_chu_de"], "doc_luc": bay_gio()}
 
 
+def loi_hyperframes(out: str, toi_da: int = 1500) -> str:
+    """Rút các dòng lỗi (✗ ... và dòng Fix ngay sau) khỏi log HyperFrames, bỏ dòng tiến độ."""
+    dong = out.splitlines()
+    chon = []
+    for i, d in enumerate(dong):
+        if "✗" in d or "Error" in d or "error:" in d.lower():
+            chon.append(d.strip())
+            if i + 1 < len(dong) and "Fix:" in dong[i + 1]:
+                chon.append(dong[i + 1].strip())
+    return (" | ".join(chon) or out.strip()[-toi_da:])[:toi_da]
+
+
+def chuan_hoa_quyet_dinh(q: dict, decision_id: str) -> dict:
+    """Quyết định agent tự ghi (dạng tự do) -> mục decision_log hợp schemas/artifacts/decision_log.schema.json."""
+    import json as _json
+    import re as _re
+    hop_le = set(_json.loads((GOC / "schemas/artifacts/decision_log.schema.json").read_text(encoding="utf-8"))
+                 ["properties"]["decisions"]["items"]["properties"]["category"]["enum"])
+    cat = q.get("category") or ""
+    subject = str(q.get("subject") or "")
+    if cat not in hop_le:
+        subject = f"[{cat}] {subject}" if cat else subject
+        cat = "concept_selection"
+    chon = str(q.get("selected") or "")
+
+    def slug(t: str) -> str:
+        return _re.sub(r"[^a-z0-9]+", "-", t.lower())[:40].strip("-") or "lua-chon"
+    opts = []
+    for o in q.get("options_considered") or []:
+        if isinstance(o, dict):
+            nhan = str(o.get("label") or o.get("option_id") or o.get("ten") or "")
+            opts.append({"option_id": str(o.get("option_id") or slug(nhan)), "label": nhan,
+                         "score": float(o["score"]) if isinstance(o.get("score"), (int, float)) and 0 <= o["score"] <= 1
+                         else (1.0 if nhan == chon else 0.5), "reason": str(o.get("reason") or "")}
+                        | ({"rejected_because": str(o["rejected_because"])} if o.get("rejected_because") else {}))
+        else:
+            nhan = str(o)
+            opts.append({"option_id": slug(nhan), "label": nhan, "score": 1.0 if nhan == chon or nhan in chon else 0.5,
+                         "reason": ""})
+    if not opts:
+        opts = [{"option_id": slug(chon), "label": chon, "score": 1.0, "reason": str(q.get("reason") or "")}]
+    return {"decision_id": decision_id, "stage": "idea", "category": cat, "subject": subject or "(không ghi)",
+            "options_considered": opts, "selected": chon or "(không ghi)", "reason": str(q.get("reason") or ""),
+            "user_visible": True, "user_approved": False}
+
+
 def so_lan_dung_canh(goc: Path, kenh: str, tru: str | None = None) -> dict[str, int]:
     """Đếm số video trước đã dùng mỗi cảnh (đọc projects/*/ke_hoach.json của cùng kênh)."""
     dem: dict[str, int] = {}
@@ -148,10 +194,7 @@ class Pipeline:
              "selected": "khong", "reason": "Đã chốt theo cấu hình kênh", "user_visible": True, "user_approved": True},
         ]}
         for i, q in enumerate(self.kh.get("quyet_dinh") or [], start=4):
-            dl["decisions"].append({"decision_id": f"d-{i:03d}", "stage": "idea", "category": q["category"],
-                                    "subject": q["subject"], "options_considered": q.get("options_considered") or [],
-                                    "selected": q["selected"], "reason": q["reason"], "user_visible": True,
-                                    "user_approved": False})
+            dl["decisions"].append(chuan_hoa_quyet_dinh(q, f"d-{i:03d}"))
         self._ck("idea", "completed", {"brief": brief, "decision_log": dl}, human_approval_required=True,
                  human_approved=True, metadata={"duyet_tu_sheet": the_sheet})
 
@@ -253,14 +296,14 @@ class Pipeline:
         r = subprocess.run(cli + ["check"], cwd=self.P / "hf", capture_output=True, text=True, encoding="utf-8",
                            errors="replace", shell=True)
         if r.returncode != 0:
-            raise RuntimeError(f"hyperframes check lỗi: {(r.stdout + r.stderr)[-2000:]}")
+            raise RuntimeError(f"hyperframes check lỗi: {loi_hyperframes(r.stdout + r.stderr)}")
         tuong_phan = len(re.findall(r"✗ #\S+ [\d.]+:1", r.stdout))
         tho, out = self.P / "renders/final_tho.mp4", self.P / "renders/final.mp4"
         out.parent.mkdir(exist_ok=True)
         r = subprocess.run(cli + ["render", "-o", str(tho), "--quiet"], cwd=self.P / "hf", capture_output=True, text=True,
                            encoding="utf-8", errors="replace", shell=True)
         if r.returncode != 0 or not tho.is_file():
-            raise RuntimeError(f"hyperframes render lỗi: {(r.stdout + r.stderr)[-2000:]}")
+            raise RuntimeError(f"hyperframes render lỗi: {loi_hyperframes(r.stdout + r.stderr)}")
         a = self.sx.get("am_thanh") or {}
         am_thanh.chuan_hoa_mp4(tho, out, float(a.get("lufs", -14)), float(a.get("dinh_dbtp", -1.0)))
         tho.unlink()

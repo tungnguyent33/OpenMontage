@@ -187,7 +187,7 @@ def lenh_dung(a) -> int:
 
 def lenh_san_xuat(a) -> int:
     from may_reels.san_xuat import san_xuat
-    ds = san_xuat(mo_tu_env(), a.kenh, a.so_luong, ca_cho_quay=a.ca_cho_quay)
+    ds = san_xuat(mo_tu_env(), a.kenh, a.so_luong, ca_cho_quay=a.ca_cho_quay, ca_loi=a.ca_loi)
     for k in ds:
         print(f"{k.ma_video}: {k.trang_thai} | QA {k.diem_qa} | {k.giay:.0f}s (agent {k.giay_agent:.0f}s, "
               f"{k.so_luot_agent} lượt, vòng sửa {k.vong}) | {'; '.join(k.canh_bao)} {k.loi}")
@@ -204,6 +204,19 @@ def lenh_sua(a) -> int:
     from may_reels.sua import sua
     ds = sua(mo_tu_env())
     return 0 if all(k["trang_thai"] != "loi" for k in ds) else 1
+
+
+def giu_may_thuc(bat: bool) -> None:
+    """Windows: không cho máy tự ngủ khi đang sản xuất (SetThreadExecutionState). Gập máy vẫn ngủ."""
+    import os
+    if os.name != "nt":
+        return
+    try:
+        import ctypes
+        ES_CONTINUOUS, ES_SYSTEM_REQUIRED = 0x80000000, 0x00000001
+        ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS | (ES_SYSTEM_REQUIRED if bat else 0))
+    except Exception:  # pragma: no cover
+        pass
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -243,6 +256,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--so-luong", type=int, default=3)
     p.add_argument("--ca-cho-quay", action="store_true",
                    help="dựng lại cả chủ đề đang chờ quay, dùng cảnh tạm (sơ đồ) cho đoạn thiếu cảnh")
+    p.add_argument("--ca-loi", action="store_true", help="dựng lại cả chủ đề có job đang lỗi")
     p.set_defaults(ham=lenh_san_xuat)
 
     p = sub.add_parser("sua", help="sửa và dựng lại các video được chọn Sửa trên Hàng chờ")
@@ -257,11 +271,17 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(ham=lenh_dang_nhap)
 
     a = ap.parse_args(argv)
+    dai = a.ham in (lenh_san_xuat, lenh_sua, lenh_thay_canh, lenh_dung)
+    if dai:
+        giu_may_thuc(True)
     try:
         return a.ham(a)
     except (LoiSheet, FileNotFoundError, ValueError, RuntimeError) as e:
         print(f"LỖI: {e}", file=sys.stderr)
         return 2
+    finally:
+        if dai:
+            giu_may_thuc(False)
 
 
 if __name__ == "__main__":

@@ -465,3 +465,27 @@ def test_thay_canh_khong_co_canh_moi_thi_giu_so_do(nha_may):
                    dung=dung_gia({}), log=lambda s: None)
     assert kq[0]["trang_thai"] == "khong_doi" and not kq[0]["dung_lai"]
     assert "chưa thấy cảnh mới" in S.doc_dong(bang, CAN_QUAY)[0]["trang_thai_nap"]
+
+
+def test_chuan_hoa_quyet_dinh_cua_agent_hop_schema():
+    import jsonschema
+    from may_reels.dung.pipeline import chuan_hoa_quyet_dinh
+    sch = json.loads((REPO / "schemas/artifacts/decision_log.schema.json").read_text(encoding="utf-8"))
+    qd = [{"category": "nguon_luat", "subject": "Nơi trích", "options_considered": ["vbpl.vn", "chinhphu.vn"],
+           "selected": "vbpl.vn", "reason": "đọc được"},
+          {"category": "voice_selection", "subject": "x", "selected": "y", "reason": "z"},
+          {"category": "concept_selection", "subject": "a", "options_considered": [{"label": "A", "score": 7}],
+           "selected": "A", "reason": "r"}]
+    dl = {"version": "1.0", "project_id": "p", "decisions": [chuan_hoa_quyet_dinh(q, f"d-{i}") for i, q in enumerate(qd)]}
+    jsonschema.validate(dl, sch)
+    assert dl["decisions"][0]["category"] == "concept_selection" and dl["decisions"][0]["subject"].startswith("[nguon_luat]")
+    assert dl["decisions"][0]["options_considered"][0]["score"] == 1.0
+
+
+def test_loi_hyperframes_chi_lay_dong_loi():
+    from may_reels.dung.pipeline import loi_hyperframes
+    log = "\n".join(["[hyperframes] check: overlap 1/23"] * 50 + [
+        '  ✗ t=20.491s text_occluded #s5-xe1 "2" — Text is hidden beneath an opaque element.',
+        "        Fix: Give the text its own zone", "  1 error(s)"] + ["[hyperframes] check: craft 2/269"] * 50)
+    r = loi_hyperframes(log)
+    assert "text_occluded" in r and "Fix:" in r and "overlap" not in r

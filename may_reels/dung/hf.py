@@ -107,9 +107,10 @@ class Dung:
                          '<rect x="-16" y="-58" width="14" height="10" rx="3" fill="#D7263D"/>'
                          '<rect x="2" y="-58" width="14" height="10" rx="3" fill="#1E5BD8"/>')
         huy_hieu = (f'<g><circle cx="0" cy="-88" r="28" fill="{T}" stroke="{N}" stroke-width="4"/>'
-                    f'<text x="0" y="-78" text-anchor="middle" font-family="BVP" font-weight="800" font-size="34" '
+                    f'<text x="0" y="-78" data-layout-allow-occlusion text-anchor="middle" font-family="BVP" font-weight="800" font-size="34" '
                     f'fill="{N}">{so}</text></g>') if so else ""
-        return f'<g id="{xid}"><g id="{xid}-q">{than}</g>{huy_hieu}</g>'
+        # Xe có thể chạy vào dưới thẻ chữ: chồng lớp có chủ ý (thẻ chữ luôn ở trên sơ đồ).
+        return f'<g id="{xid}" data-layout-allow-occlusion><g id="{xid}-q">{than}</g>{huy_hieu}</g>'
 
     def _nen_duong(self, sd: dict) -> str:
         CX, CY, H2 = self.CX, self.CY, self.NUA
@@ -210,6 +211,7 @@ class Dung:
                   f'display:flex;align-items:center;justify-content:center;height:260px;text-align:center">{chu}</div></foreignObject>')
             js = [f'tl.fromTo("#{sid}-sd",{{opacity:0,scale:0.96}},{{opacity:1,scale:1,duration:0.4,ease:"expo.out",transformOrigin:"50% 50%"}},0.1);']
         media = (f'<svg id="{sid}-sd" class="clip" data-start="0" data-duration="{D}" data-track-index="0" '
+                 f'data-layout-allow-occlusion data-layout-allow-overflow '
                  f'viewBox="0 0 {W} {H}" width="{W}" height="{H}" style="position:absolute;left:0;top:0;'
                  f'background:linear-gradient(180deg,{self.NAVY},#16467F)">{ve}</svg>')
         return media, js

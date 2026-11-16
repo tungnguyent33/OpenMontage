@@ -308,6 +308,7 @@ tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng
   tools_local\py.cmd -m may_reels thay-canh                              # thay sơ đồ bằng cảnh thật, dựng lại, cập nhật Hàng chờ
   tools_local\py.cmd -m may_reels san-xuat --kenh vanxuan --ca-cho-quay  # dựng lại cả chủ đề đang "chờ quay" bằng cảnh tạm
   ```
+- **Máy ngủ:** trong lúc `san-xuat`, `sua`, `thay-canh`, `dung` chạy, máy được giữ không tự ngủ (Windows `SetThreadExecutionState`), nhưng **gập máy thì vẫn ngủ** và lô sẽ dừng theo. Giới hạn thời gian `MAY_REELS_GIAY_DUNG` tính cả lúc máy ngủ, nên job đang chạy sẽ bị đánh dấu lỗi. Chạy lại job lỗi bằng `san-xuat --kenh vanxuan --ca-loi`.
 - **Dung lượng ổ đĩa:** mỗi video khoảng 150 MB, cộng khoảng 120 MB file tạm của HyperFrames trong `hf/`. Bản đóng gói đăng tay dùng hard link nên không tốn thêm chỗ. HyperFrames từ chối render khi ổ còn dưới khoảng 1 GB.
 
 **Đăng bài** (tạm hoãn; làm theo `CAI-DAT-DANG-BAI.md` trước):
