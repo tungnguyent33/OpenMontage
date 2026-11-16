@@ -10,6 +10,8 @@
     python -m may_reels dang [--that]
     python -m may_reels dang-nhap drive
     python -m may_reels dang-nhap youtube --kenh <mã>
+    python -m may_reels dung-luong [--cache]
+    python -m may_reels don-dep [--that]
 
 --thu: chỉ in ra việc sẽ làm, không ghi gì lên Sheet.
 `dang` mặc định là CHẠY THỬ; chỉ --that mới đăng thật (chỉ người dùng được bật).
@@ -206,6 +208,22 @@ def lenh_sua(a) -> int:
     return 0 if all(k["trang_thai"] != "loi" for k in ds) else 1
 
 
+def lenh_dung_luong(a) -> int:
+    from may_reels.dung_luong import bao_cao
+    from tools_local.nap_kenh import nap_env
+    nap_env()
+    bao_cao(cache=a.cache)
+    return 0
+
+
+def lenh_don_dep(a) -> int:
+    from may_reels.don_dep import don_dep
+    from tools_local.nap_kenh import nap_env
+    nap_env()
+    kq = don_dep(mo_tu_env(), that=a.that)
+    return 1 if kq["loi"] else 0
+
+
 def giu_may_thuc(bat: bool) -> None:
     """Windows: không cho máy tự ngủ khi đang sản xuất (SetThreadExecutionState). Gập máy vẫn ngủ."""
     import os
@@ -264,6 +282,14 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("thay-canh", help="thay cảnh tạm bằng cảnh thật khi Cần quay ghi 'Đã quay'")
     p.set_defaults(ham=lenh_thay_canh)
+
+    p = sub.add_parser("dung-luong", help="báo dung lượng media theo dự án và theo loại (chỉ đọc)")
+    p.add_argument("--cache", action="store_true", help="báo thêm cache dùng chung (model, npm/npx); không xóa")
+    p.set_defaults(ham=lenh_dung_luong)
+
+    p = sub.add_parser("don-dep", help="dọn media theo trạng thái duyệt trên Hàng chờ (mặc định chạy thử)")
+    p.add_argument("--that", action="store_true", help="xóa thật (mặc định chỉ in sẽ xóa gì)")
+    p.set_defaults(ham=lenh_don_dep)
 
     p = sub.add_parser("dang-nhap", help="đăng nhập OAuth Google một lần (mở trình duyệt)")
     p.add_argument("dich_vu", choices=["drive", "youtube"])

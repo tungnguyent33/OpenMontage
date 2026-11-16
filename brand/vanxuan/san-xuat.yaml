@@ -28,6 +28,26 @@ am_thanh:
   lufs: -14
   dinh_dbtp: -1.0
 
+# Nén bản cuối. Đặt thẳng vào `hyperframes render` (--crf, --max-bitrate, --buffer-size) để không nén hai lần;
+# bước chuẩn hóa tiếng sau render giữ nguyên hình (-c:v copy). Mặc định của HyperFrames là CRF 16 (rất nặng).
+# Thử trên vx-006 (2026-11-16): CRF 20 -> 42,0 MB còn 19,2 MB, SSIM 0,9925 so với bản CRF 16, điểm QA không đổi.
+xuat:
+  crf: 20
+  max_bitrate: 12M
+  buffer_size: 24M
+  preset: slow                  # chỉ dùng nếu phải nén lại bằng FFmpeg; HyperFrames 0.9.46 không có tùy chọn preset
+
+# Bản xem thử chép lên thư mục Drive (MAY_REELS_XEM_THU_DIR): bản nhẹ chỉ để duyệt. Bản đăng ở exports/ trên máy.
+xem_thu:
+  rong: 720
+  cao: 1280
+  crf: 28
+  am_thanh_kbps: 96
+
+# Lệnh `python -m may_reels don-dep`
+don_dep:
+  giu_sau_duyet_ngay: 30        # video đã duyệt quá số ngày này: chỉ giữ renders/final.mp4 và các file json
+
 phu_de:
   bat: true
   kieu: tung-chu                # hiện theo từng chữ theo mốc PhoWhisper; từ khóa (số, mã hạng bằng) màu cam

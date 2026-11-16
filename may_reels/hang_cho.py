@@ -1,6 +1,8 @@
 """Đưa video vào tab Hàng chờ để người duyệt.
 
-- Bản xem thử: chép vào MAY_REELS_XEM_THU_DIR (thư mục đồng bộ của Google Drive for desktop), tên file = mã video.
+- Bản xem thử: bản NHẸ (san-xuat.yaml xem_thu: 720x1280, CRF 28, AAC 96k) chép vào MAY_REELS_XEM_THU_DIR (thư mục
+  đồng bộ của Google Drive for desktop), tên file = mã video (+ -v<n> khi sửa); bản cũ của cùng mã bị xóa.
+  Bản trên Drive chỉ để duyệt. Bản đăng (chất lượng đầy đủ) ở thư mục exports/ trên máy.
   Không dùng Drive API, không dùng service account. link_xem_thu = tên file (+ link thư mục MAY_REELS_XEM_THU_LINK nếu có).
   Thiếu MAY_REELS_XEM_THU_DIR: link_xem_thu = đường dẫn file trên máy, kèm cảnh báo.
 - Mỗi nền tảng một dòng: link_xem_thu, caption, hashtag, diem_qa, canh_bao, duyet = "Chờ duyệt" (ngoại lệ khoi_tao,
@@ -70,18 +72,59 @@ def _bien(ten: str) -> str:
     return os.environ.get(ten, "").strip().strip('"').strip("'")
 
 
-def chep_xem_thu(video: Path, ma_video: str, *, phien_ban: str = "") -> tuple[str, list[str]]:
-    """Chép bản xem thử vào thư mục đồng bộ Drive. Trả về (giá trị link_xem_thu, cảnh báo)."""
+XEM_THU_MAC_DINH = {"rong": 720, "cao": 1280, "crf": 28, "am_thanh_kbps": 96}
+
+
+def cau_hinh_xem_thu(kenh: str, goc: Path | None = None) -> dict:
+    """san-xuat.yaml mục xem_thu; kênh chưa có file (video đưa vào bằng hang-cho them) thì dùng mặc định."""
+    try:
+        from may_reels.dung.ke_hoach import doc_san_xuat
+        return {**XEM_THU_MAC_DINH, **(doc_san_xuat(kenh, goc).get("xem_thu") or {})}
+    except (FileNotFoundError, ImportError):
+        return dict(XEM_THU_MAC_DINH)
+
+
+def nen_xem_thu(src: Path, dst: Path, cfg: dict) -> None:
+    """Bản nhẹ chỉ để duyệt: 720x1280, CRF 28, AAC 96k. Bản đăng giữ nguyên trên máy (exports/)."""
+    import subprocess
+    w, h = int(cfg["rong"]), int(cfg["cao"])
+    subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", str(src), "-vf",
+                    f"scale={w}:{h}:force_original_aspect_ratio=decrease:flags=lanczos,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2,"
+                    "format=yuv420p", "-c:v", "libx264", "-crf", str(int(cfg["crf"])), "-preset", "medium",
+                    "-c:a", "aac", "-b:a", f"{int(cfg['am_thanh_kbps'])}k", "-movflags", "+faststart", str(dst)],
+                   check=True)
+
+
+def ban_xem_thu_cu(thu_muc: Path, ma_video: str, giu: str) -> list[Path]:
+    """Các bản xem thử khác của cùng mã video: <ma>.mp4 hoặc <ma>-v<n>.mp4 (không bắt nhầm mã dài hơn)."""
+    mau = re.compile(re.escape(ma_video) + r"(-v\d+)?\.mp4", re.IGNORECASE)
+    return [f for f in thu_muc.iterdir() if f.is_file() and f.name != giu and mau.fullmatch(f.name)]
+
+
+def chep_xem_thu(video: Path, ma_video: str, *, phien_ban: str = "", cfg: dict | None = None) -> tuple[str, list[str]]:
+    """Nén bản xem thử nhẹ vào thư mục đồng bộ Drive, xóa bản cũ của cùng mã. Trả về (link_xem_thu, cảnh báo)."""
     d = _bien(BIEN_XEM_THU_DIR)
     if not d:
         return str(video), [f"Chưa đặt {BIEN_XEM_THU_DIR}: link_xem_thu là đường dẫn trên máy"]
     thu_muc = Path(d)
     if not thu_muc.is_dir():
         return str(video), [f"{BIEN_XEM_THU_DIR} không tồn tại ({thu_muc}): link_xem_thu là đường dẫn trên máy"]
-    ten = f"{ma_video}{phien_ban}{video.suffix or '.mp4'}"
-    shutil.copyfile(video, thu_muc / ten)
+    ten = f"{ma_video}{phien_ban}.mp4"
+    # Nén ra file tạm cạnh video gốc rồi mới chép vào Drive: Drive không đồng bộ một file đang ghi dở.
+    tam = video.with_name(f".xem-thu-{ma_video}.mp4")
+    try:
+        nen_xem_thu(video, tam, cfg or dict(XEM_THU_MAC_DINH))
+        shutil.copyfile(tam, thu_muc / ten)
+    finally:
+        tam.unlink(missing_ok=True)
+    canh_bao = []
+    for f in ban_xem_thu_cu(thu_muc, ma_video, ten):
+        try:
+            f.unlink()
+        except OSError as e:
+            canh_bao.append(f"Không xóa được bản xem thử cũ {f.name}: {e}")
     link = _bien(BIEN_XEM_THU_LINK)
-    return (f"{ten} — {link}" if link else ten), []
+    return (f"{ten} — {link}" if link else ten), canh_bao
 
 
 def lien_ket_video(thu_muc_xuat: Path, video: Path) -> None:
@@ -185,7 +228,7 @@ def dua_vao_hang_cho(bang: BangNguon, *, video: Path, kenh: str, ma_video: str, 
         kq.them, kq.cap_nhat, kq.giu_nguyen = len(kgt.them), len(kgt.cap_nhat), len(kgt.giu_nguyen)
         return kq
 
-    kq.link_xem_thu, cb = chep_xem_thu(video, ma_video, phien_ban=phien_ban)
+    kq.link_xem_thu, cb = chep_xem_thu(video, ma_video, phien_ban=phien_ban, cfg=cau_hinh_xem_thu(kenh, goc))
     kq.canh_bao += cb
     thu_muc_xuat = thu_muc_xuat or (goc / "projects" / "_may_reels" / "xuat" / ma_video)
     dong = []

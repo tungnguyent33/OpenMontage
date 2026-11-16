@@ -211,7 +211,6 @@ class Pipeline:
 
     def assets(self) -> None:
         from may_reels.dung import am_thanh, canh
-        from tools_local.nap_kenh import nap_env, thu_muc_kenh
         g = self.sx.get("giong") or {}
         py = os.environ.get(BIEN_PY_GIONG, "python")
         r = subprocess.run([py, "-m", "may_reels.dung.giong_chay", str(self.P), "--giong", g.get("ten", "Hải Đăng"),
@@ -228,14 +227,7 @@ class Pipeline:
         except canh.LoiThieuCanh as e:
             raise LoiThieuCanhDung([self._thieu(e.doan, e.ma, e.ly_do)]) from e
         (self.P / "cat_canh.json").write_text(json.dumps(cat, ensure_ascii=False, indent=1), encoding="utf-8")
-        nap_env()
-        goc_kenh = thu_muc_kenh(self.kenh)
-        if not goc_kenh or not goc_kenh.is_dir():
-            raise RuntimeError("Chưa đặt KENH_GOC_DIR trong .env hoặc thư mục kênh không tồn tại")
-        try:
-            canh.chuan_bi(cat, self.brand, self.sx, self.P, goc_kenh)
-        except canh.LoiThieuCanh as e:
-            raise LoiThieuCanhDung([self._thieu(e.doan, e.ma, e.ly_do)]) from e
+        self._cat_canh(cat)
         a = self.sx.get("am_thanh") or {}
         am = am_thanh.chuan_hoa_wav(self.P / "assets/audio/giong_tho.wav", self.P / "hf/assets/audio/vo.wav",
                                    float(a.get("lufs", -14)), float(a.get("dinh_dbtp", -1.0)))
@@ -264,6 +256,38 @@ class Pipeline:
                                                              "metadata": {"do_am": am, "tong_chi_phi_usd": 0}}},
                  cost_snapshot={"total_spent_usd": 0})
 
+    def _cat_canh(self, cat: list[dict]) -> None:
+        """Cắt cảnh từ kho kênh (chỉ đọc) vào hf/assets/video|img."""
+        from may_reels.dung import canh
+        from tools_local.nap_kenh import nap_env, thu_muc_kenh
+        nap_env()
+        goc_kenh = thu_muc_kenh(self.kenh)
+        if not goc_kenh or not goc_kenh.is_dir():
+            raise RuntimeError("Chưa đặt KENH_GOC_DIR trong .env hoặc thư mục kênh không tồn tại")
+        try:
+            canh.chuan_bi(cat, self.brand, self.sx, self.P, goc_kenh)
+        except canh.LoiThieuCanh as e:
+            raise LoiThieuCanhDung([self._thieu(e.doan, e.ma, e.ly_do)]) from e
+
+    def dam_bao_canh(self, cat: list[dict]) -> list[str]:
+        """Cảnh trung gian bị dọn sau compose (hoặc mất) thì cắt lại trước khi dựng. Trả về id đã cắt lại."""
+        from may_reels.dung import canh
+        thieu = canh.thieu_file(cat, self.P)
+        if thieu:
+            self.log(f"  cắt lại cảnh trung gian đã dọn: {thieu}")
+            self._cat_canh(cat)
+        return thieu
+
+    def don_canh_trung_gian(self) -> int:
+        """Sau compose đạt: xóa hf/assets/video/*.mp4 (cắt lại được từ kho). Giữ assets/audio/_da_dat và review/."""
+        n = 0
+        for f in (self.P / "hf" / "assets" / "video").glob("*.mp4"):
+            n += f.stat().st_size
+            f.unlink()
+        if n:
+            self.log(f"  dọn cảnh trung gian: {n / 2**20:.1f} MB")
+        return n
+
     def _thieu(self, doan: str, ma: str, ly_do: str) -> dict:
         d = next(x for x in self.kh["doan"] if x["id"] == doan)
         return {"doan": doan, "y_can_canh": d["loi"], "mo_ta_canh": (d.get("canh") or {}).get("mo_ta", ""),
@@ -289,6 +313,7 @@ class Pipeline:
         from may_reels.dung.kiem_tra import kiem
         t0 = time.monotonic()
         cat = json.loads((self.P / "cat_canh.json").read_text(encoding="utf-8"))
+        self.dam_bao_canh(cat)
         moc = json.loads((self.P / "assets/audio/moc_giong.json").read_text(encoding="utf-8"))
         tu = json.loads((self.P / "assets/audio/tu_phu_de.json").read_text(encoding="utf-8"))
         Dung(self.P, self.kh, self.brand, self.sx, cat, tu, moc, self.goc).viet()
@@ -300,7 +325,7 @@ class Pipeline:
         tuong_phan = len(re.findall(r"✗ #\S+ [\d.]+:1", r.stdout))
         tho, out = self.P / "renders/final_tho.mp4", self.P / "renders/final.mp4"
         out.parent.mkdir(exist_ok=True)
-        r = subprocess.run(cli + ["render", "-o", str(tho), "--quiet"], cwd=self.P / "hf", capture_output=True, text=True,
+        r = subprocess.run(cli + ["render", "-o", str(tho), "--quiet"] + am_thanh.tuy_chon_render(self.sx), cwd=self.P / "hf", capture_output=True, text=True,
                            encoding="utf-8", errors="replace", shell=True)
         if r.returncode != 0 or not tho.is_file():
             raise RuntimeError(f"hyperframes render lỗi: {loi_hyperframes(r.stdout + r.stderr)}")
@@ -322,6 +347,7 @@ class Pipeline:
         self._ck("compose", "completed", {"render_report": rr, "final_review": fr},
                  review={"reviewer": "may_reels.dung.kiem_tra", "ket_luan": fr["status"],
                          "diem_qa": fr["metadata"]["diem_qa"]})
+        self.don_canh_trung_gian()
 
     def publish(self) -> None:
         from tools.publishers.export_bundle import ExportBundle

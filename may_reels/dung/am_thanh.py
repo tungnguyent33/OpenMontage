@@ -31,6 +31,13 @@ def chuan_hoa_wav(src: Path, dst: Path, lufs: float = -14.0, dinh: float = -1.0)
     return do(dst)
 
 
+def tuy_chon_render(sx: dict) -> list[str]:
+    """Tham số nén cho `hyperframes render`, từ san-xuat.yaml mục xuat. Nén một lần ở đây; chuan_hoa_mp4 giữ hình."""
+    x = sx.get("xuat") or {}
+    return ["--crf", str(int(x.get("crf", 20))), "--max-bitrate", str(x.get("max_bitrate", "12M")),
+            "--buffer-size", str(x.get("buffer_size", "24M"))]
+
+
 def chuan_hoa_mp4(src: Path, dst: Path, lufs: float = -14.0, dinh: float = -1.0) -> dict:
     """Giữ nguyên hình (copy), chỉ chuẩn hóa tiếng. HyperFrames trộn lại tiếng và làm to hơn đầu vào."""
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", str(src), "-c:v", "copy", "-af", _bo_loc(src, lufs, dinh),

@@ -309,7 +309,23 @@ tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng
   tools_local\py.cmd -m may_reels san-xuat --kenh vanxuan --ca-cho-quay  # dựng lại cả chủ đề đang "chờ quay" bằng cảnh tạm
   ```
 - **Máy ngủ:** trong lúc `san-xuat`, `sua`, `thay-canh`, `dung` chạy, máy được giữ không tự ngủ (Windows `SetThreadExecutionState`), nhưng **gập máy thì vẫn ngủ** và lô sẽ dừng theo. Giới hạn thời gian `MAY_REELS_GIAY_DUNG` tính cả lúc máy ngủ, nên job đang chạy sẽ bị đánh dấu lỗi. Chạy lại job lỗi bằng `san-xuat --kenh vanxuan --ca-loi`.
-- **Dung lượng ổ đĩa:** mỗi video khoảng 150 MB, cộng khoảng 120 MB file tạm của HyperFrames trong `hf/`. Bản đóng gói đăng tay dùng hard link nên không tốn thêm chỗ. HyperFrames từ chối render khi ổ còn dưới khoảng 1 GB.
+- **Bản xem thử trên Drive chỉ để duyệt.** Máy chép lên `MAY_REELS_XEM_THU_DIR` một bản nhẹ (720×1280, CRF 28, tiếng AAC 96k, cấu hình ở `san-xuat.yaml` mục `xem_thu`). **Đăng tay thì lấy file trong thư mục `exports/`** của dự án (đường dẫn ở cột `ghi_chu_may`), đó là bản đủ chất lượng. Khi `sua` tạo bản `-v<n>` mới, máy xóa bản xem thử cũ của cùng mã video trong thư mục Drive.
+- **Dung lượng ổ đĩa:**
+  - Bản cuối nén một lần ngay trong `hyperframes render` (`san-xuat.yaml` mục `xuat`: CRF 20, tối đa 12 Mb/s). Bước chuẩn hóa tiếng không nén lại hình. Thử với vx-006: dung lượng từ 42 MB xuống 19 MB, SSIM 0,9925, điểm QA không đổi.
+  - Cảnh trung gian `hf/assets/video/*.mp4` (CRF 18) bị xóa sau khi compose đạt. `sua`, `thay-canh` và `dung --stage compose` tự cắt lại từ kho kênh khi thiếu. Cache giọng `assets/audio/_da_dat/` và ảnh kiểm tra `review/` được giữ.
+  - Bản đóng gói đăng tay dùng hard link nên không tốn thêm chỗ. HyperFrames từ chối render khi ổ còn dưới khoảng 1 GB.
+
+  ```powershell
+  tools_local\py.cmd -m may_reels dung-luong            # dung lượng theo dự án và theo loại, cộng thư mục xem thử
+  tools_local\py.cmd -m may_reels dung-luong --cache    # thêm cache dùng chung (model, npm/npx) và cách dọn; không xóa
+  tools_local\py.cmd -m may_reels don-dep               # CHẠY THỬ: in sẽ xóa gì, giải phóng bao nhiêu MB
+  tools_local\py.cmd -m may_reels don-dep --that        # xóa thật, ghi một dòng Nhật ký
+  ```
+
+  `don-dep` đọc tab Hàng chờ:
+  - Mã video có **mọi** nền tảng chọn **Bỏ**: xóa toàn bộ media của dự án (cả `final.mp4`, cache giọng, `review/`) và bản xem thử trên Drive. Giữ `ke_hoach.json`, checkpoint, điểm và mọi file `.json`. Nếu sau đó đổi ý thì chạy `sua`: máy sinh lại giọng nên lâu hơn.
+  - Mã video mà mọi nền tảng đã có quyết định (Duyệt/Bỏ, ít nhất một Duyệt), và lần cuối máy cập nhật dòng (`cap_nhat_luc`, thường là lúc đăng) đã quá 30 ngày (`san-xuat.yaml` mục `don_dep.giu_sau_duyet_ngay`): chỉ giữ `renders/final.mp4` và file `.json`.
+  - Không đụng mã còn dòng "Chờ duyệt", "Sửa" hoặc ô trống, dự án không có dòng nào trên Hàng chờ, và thư mục kênh gốc (`KENH_GOC_DIR`). File chữ nhỏ (`.html`, `.txt`) được giữ.
 
 **Đăng bài** (tạm hoãn; làm theo `CAI-DAT-DANG-BAI.md` trước):
 

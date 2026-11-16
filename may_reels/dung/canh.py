@@ -12,6 +12,7 @@ import subprocess
 from pathlib import Path
 
 LEAD = 0.15
+CRF = 18  # cảnh trung gian: HyperFrames còn nén lại lần nữa, 18 đủ sạch mà nhẹ hơn 16
 VF = ("scale={w}:{h}:force_original_aspect_ratio=increase:flags=lanczos,crop={w}:{h},unsharp=5:5:0.6,"
       "fps={fps},format=yuv420p")
 
@@ -70,6 +71,20 @@ def tinh_cat(ke_hoach: dict, brand: dict, sx: dict, moc: dict) -> list[dict]:
     return ra
 
 
+def thieu_file(cat: list[dict], du_an: Path) -> list[str]:
+    """Id các cảnh video/ảnh cần file trong hf/assets mà file không còn (vd. đã dọn sau compose)."""
+    ra = []
+    for c in cat:
+        if c.get("so_do"):
+            continue
+        if c["anh"]:
+            if not list((du_an / "hf" / "assets" / "img").glob(c["id"] + ".*")):
+                ra.append(c["id"])
+        elif not (du_an / "hf" / "assets" / "video" / f"{c['id']}.mp4").is_file():
+            ra.append(c["id"])
+    return ra
+
+
 def chuan_bi(cat: list[dict], brand: dict, sx: dict, du_an: Path, goc_kenh: Path) -> None:
     kh = sx.get("khung_hinh") or {}
     w, h, fps = int(kh.get("rong", 1080)), int(kh.get("cao", 1920)), int(kh.get("fps", 30))
@@ -87,5 +102,5 @@ def chuan_bi(cat: list[dict], brand: dict, sx: dict, du_an: Path, goc_kenh: Path
             shutil.copyfile(src, idir / f"{c['id']}{src.suffix.lower() or '.jpg'}")
             continue
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", str(c["in"]), "-i", str(src), "-t", str(c["dai"]), "-an",
-                        "-vf", VF.format(w=w, h=h, fps=fps), "-c:v", "libx264", "-crf", "16", "-preset", "medium",
+                        "-vf", VF.format(w=w, h=h, fps=fps), "-c:v", "libx264", "-crf", str(CRF), "-preset", "medium",
                         str(vdir / f"{c['id']}.mp4")], check=True)
