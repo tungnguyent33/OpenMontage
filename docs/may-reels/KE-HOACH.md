@@ -220,6 +220,11 @@ Người dùng trả lời ngày 2026-11-15. Số câu giữ đúng thứ tự c
 
 13. Trước mắt chỉ dùng **12 chủ đề chưa làm** trong `chu-de.md`. Việc máy tự đề xuất chủ đề mới để sang giai đoạn sau.
 14. Với mỗi nguồn luật, lưu vào dự án: link, ngày mở, và điều khoản được dẫn. **Người duyệt chủ đề** chịu trách nhiệm xác nhận điều khoản đúng.
+    **Cập nhật 2026-11-16:**
+    - Người duyệt chủ đề tự tra văn bản, rồi ghi `nguon_doi_chieu` trong `chu-de.md` của kênh **đến số khoản**. Ví dụ: "Luật 36/2024/QH15, Điều 22, khoản 2, 3".
+    - Chặn cứng chỉ cho phép đúng các điều, khoản đã ghi. Cách ghi liệt kê "khoản 2, 3" hoặc "khoản 2 và 3" được hiểu là cả hai khoản.
+    - `nguon_luat_da_mo` trong `rubric.yaml` **giữ tắt**: máy không tự tin vào nguồn agent mở.
+    - Đã áp dụng cho `giao-nhau-khong-bao-hieu` (Điều 22 khoản 2) và `vong-xuyen` (Điều 22 khoản 2, 3). Người dùng xác nhận trực tiếp với văn bản luật.
 15. Máy **được tự cắt khung** theo vùng ghi trong `can_xu_ly`. Máy **không tự làm mờ** mặt người và biển số. Cảnh cần làm mờ thì chỉ dùng đoạn không cần xử lý.
 16. **Chưa dùng nhạc nền.**
 17. Dùng giọng VieNeu "Hải Đăng" làm tool chính thức hay chờ người dùng kiểm tra giấy phép: bản trả lời ban đầu còn để trống. **Cập nhật 2026-11-15:** người dùng chốt giọng VieNeu "Hải Đăng" trong `brand/vanxuan/san-xuat.yaml`. Máy gọi VieNeu qua `may_reels/giong.py`, không qua tool trong `tools/audio/`. Giấy phép thương mại của VieNeu vẫn **chưa xác minh**.
@@ -347,4 +352,7 @@ Chạy bằng `tools_local\py.cmd -m pytest -q` (có `PYTHONUTF8=1`):
   - bật `nguon_luat_da_mo` trong `rubric.yaml`.
 - **Agent tìm ra lỗi thật mà điểm kỹ thuật bỏ sót:** ở vx-006, khoảng giây 20, sơ đồ đè lên thẻ chữ làm chữ bị cụt ("Có xe thì n").
 - **Thời gian mỗi video:** agent khoảng 36 giây (claude báo khoảng 0,45 USD), cộng thời gian PhoWhisper chép lời âm thanh cuối. Lời chép được lưu theo sha1 của video, nên lần chấm lại sau không phải chép nữa.
+- **Sau khi sửa `nguon_doi_chieu`** (cùng ngày, xem mục 6 câu 14), chạy lại `cham-lai`:
+  - **Kết quả:** vx-006 và vx-007 hết bị chặn. vx-006 được 72, vx-007 được 70 (trần tổng vì cảnh tạm). Cả hai vẫn dưới ngưỡng 75; lý do nặng nhất là "Chân thực", với 43% và 40% cảnh thật.
+  - **Điểm agent của vx-006 dao động giữa các lần chấm** (76 → 79 → 72). Lần cuối, agent cho "Đúng" 7/15 vì cho rằng sơ đồ ở giây 20,2 vẽ sai thứ tự xe. Điều này **chưa xác minh**: người cần xem khung đó. Độ dao động khoảng ±7 điểm cho thấy nên dùng `hieu-chinh` khi đã có `diem_cua_toi`, trước khi tin điểm sát ngưỡng.
 - **`hieu-chinh`:** chưa có `diem_cua_toi` nào nên chưa đề xuất. Hai cột này được `sheet init` thêm vào Sheet ngày 2026-11-16, vì trên Sheet thật lúc đó chưa có.

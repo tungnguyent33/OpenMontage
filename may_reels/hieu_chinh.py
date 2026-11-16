@@ -68,9 +68,13 @@ def cham_lai(bang: BangNguon, kenh: str, *, goc: Path = GOC, cham: Callable | No
             cb = (canh_bao_duoi_nguong(kc, nguong) if kc.diem_qa < nguong else []) + list(kc.canh_bao)
         cb = gon_canh_bao(cb + _canh_bao_cu(dong), int(cbc.get("so_dong", 3)), int(cbc.get("ky_tu_moi_dong", 90)))
         cu = {d.get("diem_qa") for d in dong}
+        def _loi(d: dict) -> dict:
+            if kc.chan:
+                return {"loi": ("Chặn cứng: " + "; ".join(kc.chan))[:500]}
+            # Hết bị chặn: xóa thông báo chặn cũ, giữ nguyên lỗi khác (vd. lỗi sửa/đăng).
+            return {"loi": ""} if (d.get("loi") or "").startswith("Chặn cứng:") else {}
         ghi = [{"ma_video": ma, "nen_tang": d["nen_tang"], "diem_qa": "" if kc.diem_qa is None else str(kc.diem_qa),
-                "canh_bao": "\n".join(cb)} | ({"loi": ("Chặn cứng: " + "; ".join(kc.chan))[:500]} if kc.chan else {})
-               for d in dong]
+                "canh_bao": "\n".join(cb)} | _loi(d) for d in dong]
         ghi_theo_khoa(bang, HANG_CHO, ghi)
         log(f"{ma}: QA {', '.join(sorted(x for x in cu if x)) or '-'} -> {kc.diem_qa}"
             + (f" | CHẶN: {'; '.join(kc.chan)}" if kc.chan else ""))

@@ -294,6 +294,7 @@ def do_cta(kh: dict, brand: dict, van_ban: str) -> dict:
 
 # ---------------------------------------------------------------- chặn cứng
 _LUAT = re.compile(r"\b(dieu|khoan|diem|chuong)\s+(\d+)\b")
+_LUAT_DS = re.compile(r"\b(dieu|khoan|diem|chuong)\s+(\d+(?:\s*(?:,|va)\s*\d+\b)*)")
 _SO_HIEU = re.compile(r"\b(\d+/\d{4}(?:/[a-z0-9-]+)?|qcvn\s*\d+\s*:\s*\d{4})\b")
 _SO = re.compile(r"\d+(?:[.,]\d+)*")
 
@@ -317,9 +318,11 @@ def _nguon_cho_phep(chu_de: dict, brand: dict, rb: dict, kh: dict | None = None)
 def so_khong_nguon(van_ban: str, cho_phep: str, so_dem_toi_da: int) -> list[str]:
     """Số hiệu luật (Điều/khoản/điểm N, N/YYYY, QCVN N:YYYY) và con số không có trong văn bản cho phép."""
     vb = bo_dau(van_ban)
+    # Nguồn cho phép có thể liệt kê: "khoản 2, 3" / "khoản 2 và 3" = khoản 2 và khoản 3.
+    luat_cp = {(m.group(1), so) for m in _LUAT_DS.finditer(cho_phep) for so in re.findall(r"\d+", m.group(2))}
     ra = []
     for m in _LUAT.finditer(vb):
-        if not re.search(rf"\b{m.group(1)}\s+{m.group(2)}\b", cho_phep):
+        if (m.group(1), m.group(2)) not in luat_cp:
             ra.append(f"{m.group(1)} {m.group(2)}")
     for m in _SO_HIEU.finditer(vb):
         so = re.sub(r"\s+", "", m.group(1))

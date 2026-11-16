@@ -202,6 +202,10 @@ def test_so_khong_nguon():
     vb = "Theo Luật 36/2024/QH15, Điều 22 khoản 2: nhớ 3 điều. Gọi 0823 279 999. Phạt 800.000 đồng. QCVN 41:2024"
     assert C.so_khong_nguon(vb, cho_phep, 10) == ["800.000", "dieu 22", "khoan 2"]
     assert C.so_khong_nguon("Điều 11", cho_phep, 10) == []
+    ds = C.bo_dau("Luật 36/2024/QH15, Điều 22, khoản 2, 3")
+    assert C.so_khong_nguon("Khoản 3 Điều 22; khoản 2 Điều 22", ds, 10) == []
+    assert C.so_khong_nguon("khoản 4", ds, 10) == ["khoan 4"]
+    assert C.so_khong_nguon("khoản 3", C.bo_dau("Điều 22 khoản 2 và 3"), 10) == []
 
 
 def test_tai_san_ngoai_kho_va_url_ngoai(tmp_path):
@@ -349,6 +353,16 @@ def test_cham_lai_cap_nhat_diem_va_canh_bao(nha_may, monkeypatch):  # noqa: F811
     b = rows[("kt-002-cd-b", "fb_reels")]
     assert b["canh_bao"].startswith("CHẶN: ") and "dieu 22" in b["loi"] and b["duyet"] == "Chờ duyệt"
     assert len([d for d in S.doc_dong(bang, NHAT_KY) if d["buoc"] == "cham_lai"]) == 2
+    # nguồn đã sửa, chấm lại: hết chặn thì xóa thông báo chặn cũ; lỗi khác giữ nguyên
+    S.ghi_theo_khoa(bang, HANG_CHO, [{"ma_video": "kt-001-cd-a", "nen_tang": "fb_reels", "loi": "đăng lỗi 500"}])
+
+    def het_chan(ma, *, goc, log=None, tom=None):
+        from may_reels.cham_diem import KetQuaCham
+        return KetQuaCham(ma, diem_qa=80)
+    cham_lai(bang, "kenhthu", goc=goc, cham=het_chan, log=lambda s: None)
+    rows = {(d["ma_video"], d["nen_tang"]): d for d in S.doc_dong(bang, HANG_CHO)}
+    assert rows[("kt-002-cd-b", "fb_reels")]["loi"] == "" and not rows[("kt-002-cd-b", "fb_reels")]["canh_bao"].startswith("CHẶN")
+    assert rows[("kt-001-cd-a", "fb_reels")]["loi"] == "đăng lỗi 500"
 
 
 def test_phan_tich_lech_va_hieu_chinh_chi_de_xuat(nha_may):  # noqa: F811
