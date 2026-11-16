@@ -14,6 +14,8 @@
     python -m may_reels don-dep [--that]
     python -m may_reels cham-lai --kenh <mã>
     python -m may_reels hieu-chinh --kenh <mã>
+    python -m may_reels nguon-luat --kenh <mã> [--ma ...] [--thu]
+    python -m may_reels nguon-luat ap-dung --kenh <mã> [--thu]
 
 --thu: chỉ in ra việc sẽ làm, không ghi gì lên Sheet.
 `dang` mặc định là CHẠY THỬ; chỉ --that mới đăng thật (chỉ người dùng được bật).
@@ -240,6 +242,22 @@ def lenh_hieu_chinh(a) -> int:
     return 0
 
 
+def lenh_nguon_luat(a) -> int:
+    from may_reels.nguon_luat import ap_dung, tra_nguon
+    from tools_local.nap_kenh import nap_env
+    nap_env()
+    bang = mo_tu_env()
+    if a.viec == "ap-dung":
+        ap_dung(bang, a.kenh, thu=a.thu)
+        return 0
+    ds = tra_nguon(bang, a.kenh, chi_ma=a.ma, thu=a.thu)
+    if ds and not a.thu:
+        print(f"Tổng: {len(ds)} chủ đề, đề xuất {sum(1 for d in ds if d.nguon_de_xuat)}, "
+              f"claude báo {sum(d.chi_phi_usd for d in ds):.2f} USD. Xác nhận ở cột xac_nhan_nguon (tab Ý tưởng), "
+              f"rồi chạy: nguon-luat ap-dung --kenh {a.kenh}")
+    return 1 if any(d.loi for d in ds) else 0
+
+
 def giu_may_thuc(bat: bool) -> None:
     """Windows: không cho máy tự ngủ khi đang sản xuất (SetThreadExecutionState). Gập máy vẫn ngủ."""
     import os
@@ -315,13 +333,20 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--kenh", required=True)
     p.set_defaults(ham=lenh_hieu_chinh)
 
+    p = sub.add_parser("nguon-luat", help="máy đề xuất điều khoản luật cho chủ đề; ap-dung chép nguồn đã xác nhận")
+    p.add_argument("viec", nargs="?", choices=["ap-dung"], help="ap-dung: chép đề xuất có xac_nhan_nguon = Đúng")
+    p.add_argument("--kenh", required=True)
+    p.add_argument("--ma", nargs="+", help="chỉ tra các mã chủ đề này")
+    p.add_argument("--thu", action="store_true", help="chỉ in việc sẽ làm")
+    p.set_defaults(ham=lenh_nguon_luat)
+
     p = sub.add_parser("dang-nhap", help="đăng nhập OAuth Google một lần (mở trình duyệt)")
     p.add_argument("dich_vu", choices=["drive", "youtube"])
     p.add_argument("--kenh")
     p.set_defaults(ham=lenh_dang_nhap)
 
     a = ap.parse_args(argv)
-    dai = a.ham in (lenh_san_xuat, lenh_sua, lenh_thay_canh, lenh_dung, lenh_cham_lai)
+    dai = a.ham in (lenh_san_xuat, lenh_sua, lenh_thay_canh, lenh_dung, lenh_cham_lai, lenh_nguon_luat)
     if dai:
         giu_may_thuc(True)
     try:

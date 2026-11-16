@@ -225,6 +225,18 @@ Người dùng trả lời ngày 2026-11-15. Số câu giữ đúng thứ tự c
     - Chặn cứng chỉ cho phép đúng các điều, khoản đã ghi. Cách ghi liệt kê "khoản 2, 3" hoặc "khoản 2 và 3" được hiểu là cả hai khoản.
     - `nguon_luat_da_mo` trong `rubric.yaml` **giữ tắt**: máy không tự tin vào nguồn agent mở.
     - Đã áp dụng cho `giao-nhau-khong-bao-hieu` (Điều 22 khoản 2) và `vong-xuyen` (Điều 22 khoản 2, 3). Người dùng xác nhận trực tiếp với văn bản luật.
+
+    **Cập nhật 2026-11-16 (sau đó): máy đề xuất, người xác nhận.**
+    - Người duyệt không phải tự tra văn bản. Lệnh `nguon-luat` cho agent (`skills/may-reels/tra-nguon-luat.md`) mở văn bản chính thức, kiểm tra hiệu lực, rồi ghi lên tab Ý tưởng các cột của máy: `nguon_de_xuat`, `trich_nguyen_van`, `link_nguon`, `ngay_tra`, `ghi_chu_may`.
+    - Người chọn `xac_nhan_nguon` (Đúng/Sai). **Người vẫn là bước quyết định.**
+    - `nguon-luat ap-dung` chỉ chép những đề xuất được chọn "Đúng" vào `chu-de.md`, sao lưu trước khi sửa.
+    - `nguon_luat_da_mo` **vẫn tắt**.
+    - **"Tới mức khoản"** (`may_reels/nguon_luat.py`, hàm `du_muc_khoan`):
+      - Mỗi lần nhắc "Điều N" phải kèm khoản, điểm hoặc mục.
+      - QCVN phải có mục, phụ lục, Điều, hoặc số hiệu biển/vạch.
+      - Phần không phải văn bản pháp luật (ví dụ `context/business.md`) không xét.
+      - Vì vậy `a1-xe-150cc` ("Điều 57 khoản 1 điểm a và Điều 89") cũng thuộc diện phải tra, do Điều 89 chưa có khoản.
+    - `san-xuat` từ chối chủ đề chưa đạt mức trên và ghi lý do vào `ghi_chu_may`. Ngoại lệ: chủ đề ghi "Không cần nguồn luật".
 15. Máy **được tự cắt khung** theo vùng ghi trong `can_xu_ly`. Máy **không tự làm mờ** mặt người và biển số. Cảnh cần làm mờ thì chỉ dùng đoạn không cần xử lý.
 16. **Chưa dùng nhạc nền.**
 17. Dùng giọng VieNeu "Hải Đăng" làm tool chính thức hay chờ người dùng kiểm tra giấy phép: bản trả lời ban đầu còn để trống. **Cập nhật 2026-11-15:** người dùng chốt giọng VieNeu "Hải Đăng" trong `brand/vanxuan/san-xuat.yaml`. Máy gọi VieNeu qua `may_reels/giong.py`, không qua tool trong `tools/audio/`. Giấy phép thương mại của VieNeu vẫn **chưa xác minh**.

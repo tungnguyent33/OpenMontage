@@ -125,9 +125,18 @@ def _jobs(goc: Path) -> dict[str, dict]:
     return out
 
 
+LY_DO_THIEU_NGUON = ("Chưa sản xuất: nguon_doi_chieu chưa tới mức khoản (QCVN: mục/phụ lục/số hiệu). "
+                     "Chạy `nguon-luat`, chọn xac_nhan_nguon = Đúng, rồi `nguon-luat ap-dung`.")
+
+
 def chon_chu_de(bang: BangNguon, kenh: str, so_luong: int, goc: Path = GOC, ca_cho_quay: bool = False,
-                ca_loi: bool = False) -> list[dict]:
-    """Chủ đề "Làm" chưa sản xuất. ca_cho_quay: thêm chủ đề có job đang cho_quay (dựng lại với cảnh tạm)."""
+                ca_loi: bool = False, tu_choi: list | None = None) -> list[dict]:
+    """Chủ đề "Làm" chưa sản xuất. ca_cho_quay: thêm chủ đề có job đang cho_quay (dựng lại với cảnh tạm).
+    Chủ đề có nội dung luật mà nguon_doi_chieu (brand.json, từ chu-de.md) chưa tới mức khoản thì bị từ chối:
+    thêm vào `tu_choi`, không chiếm chỗ. "Không cần nguồn luật" thì bỏ qua kiểm tra này."""
+    from may_reels.dung.ke_hoach import doc_brand
+    from may_reels.nguon_luat import du_muc_khoan
+    cd_brand = {c.get("ma"): c for c in doc_brand(kenh, goc).get("chu_de") or []}
     jobs = _jobs(goc)
     out = []
     for r in doc_dong(bang, Y_TUONG):
@@ -140,6 +149,11 @@ def chon_chu_de(bang: BangNguon, kenh: str, so_luong: int, goc: Path = GOC, ca_c
                 continue
             r = {**r, "_ma_video": j["ma_video"]}
         elif chuan(r.get("trang_thai_san_xuat")) not in DA_SAN_XUAT:
+            continue
+        nguon = (cd_brand.get(r.get("ma")) or {}).get("nguon_doi_chieu") or r.get("nguon_doi_chieu") or ""
+        if not du_muc_khoan(nguon):
+            if tu_choi is not None:
+                tu_choi.append({**r, "_nguon": nguon})
             continue
         out.append(r)
         if len(out) >= so_luong:
@@ -349,7 +363,12 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
 
 def san_xuat(bang: BangNguon, kenh: str, so_luong: int, *, goc: Path = GOC, log: Callable[[str], None] = print,
              ca_cho_quay: bool = False, ca_loi: bool = False, **kw) -> list[KetQuaJob]:
-    ds = chon_chu_de(bang, kenh, so_luong, goc, ca_cho_quay, ca_loi)
+    tu_choi: list[dict] = []
+    ds = chon_chu_de(bang, kenh, so_luong, goc, ca_cho_quay, ca_loi, tu_choi=tu_choi)
+    for r in tu_choi:
+        log(f"Từ chối {r['ma']}: nguồn {r['_nguon']!r} chưa tới mức khoản")
+    if tu_choi:
+        ghi_theo_khoa(bang, Y_TUONG, [{"kenh": kenh, "ma": r["ma"], "ghi_chu_may": LY_DO_THIEU_NGUON} for r in tu_choi])
     if not ds:
         log("Không có chủ đề nào đã chọn 'Làm' mà chưa sản xuất.")
         return []

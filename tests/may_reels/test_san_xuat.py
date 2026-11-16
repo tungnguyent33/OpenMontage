@@ -33,8 +33,10 @@ BRAND = {
     "hashtags": {"facebook": ["#fb"], "youtube": ["#yt"], "tiktok": ["#tt"]},
     "cam": {"cum_tu_cam": ["bao đỗ"], "cum_tu_cam_du_an": ["tỉ lệ đỗ"]},
     "quyen_hinh": {"da_dong_y": True},
-    "chu_de": [{"ma": "cd-a", "tru_cot": "1 phút luật mới", "dinh_dang": "hoi-dap", "chu_de": "A?", "y_chinh": "x"},
-               {"ma": "cd-b", "tru_cot": "1 phút luật mới", "dinh_dang": "hoi-dap", "chu_de": "B?", "y_chinh": "y"}],
+    "chu_de": [{"ma": "cd-a", "tru_cot": "1 phút luật mới", "dinh_dang": "hoi-dap", "chu_de": "A?", "y_chinh": "x",
+                "nguon_doi_chieu": "Luật Thử 1/2024, Điều 1, khoản 2"},
+               {"ma": "cd-b", "tru_cot": "1 phút luật mới", "dinh_dang": "hoi-dap", "chu_de": "B?", "y_chinh": "y",
+                "nguon_doi_chieu": "Luật Thử 1/2024, Điều 1, khoản 3"}],
     "kho_canh": [
         {"ma": f"v{i}", "dung_duoc": True, "loai_file": "video", "doan_dung_duoc": [[0.0, 30.0]], "file_tuong_doi": f"v{i}.mp4",
          "the": ["san-tap"], "mat_nguoi": False, "thoi_luong": 30} for i in range(1, 7)

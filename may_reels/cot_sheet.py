@@ -91,6 +91,13 @@ Y_TUONG = Tab(
         _m("diem"),
         _n("duyet_chu_de", ("Chờ", "Làm", "Bỏ"), "cổng A: chỉ 'Làm' mới được sản xuất; ô trống = Chờ"),
         _m("trang_thai_san_xuat"),
+        # Nguồn luật máy đề xuất (lệnh nguon-luat); người xác nhận, máy mới chép vào chu-de.md (nguon-luat ap-dung).
+        _m("nguon_de_xuat", "văn bản, điều, khoản, điểm; QCVN: mục, phụ lục, số hiệu biển/vạch"),
+        _m("trich_nguyen_van", "đoạn trích nguyên văn ngắn (khoảng 60 chữ)"),
+        _m("link_nguon", "link văn bản chính thức agent đã mở"),
+        _m("ngay_tra"),
+        _m("ghi_chu_may", "lý do không đề xuất, mâu thuẫn với y_chinh, hiệu lực, lý do chưa sản xuất"),
+        _n("xac_nhan_nguon", ("Đúng", "Sai"), "người xác nhận nguon_de_xuat; Đúng = cho áp dụng vào chu-de.md"),
     ),
     # Một Sheet cho mọi kênh: mã chủ đề chỉ duy nhất trong một kênh, nên khóa gồm cả kênh.
     khoa=("kenh", "ma"),

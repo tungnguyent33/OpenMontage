@@ -32,8 +32,10 @@ def cot(tab_gia, ten):
 def test_khai_bao_cot_dung_yeu_cau():
     assert [t.ten for t in TAT_CA] == ["Ý tưởng", "Hàng chờ", "Cần quay", "Số liệu", "Nhật ký"]
     assert Y_TUONG.ten_cot == ["ma", "kenh", "tru_cot", "dinh_dang", "chu_de", "hook_de_xuat",
-                               "nguon_doi_chieu", "diem", "duyet_chu_de", "trang_thai_san_xuat"]
-    assert Y_TUONG.cot_nguoi == ["duyet_chu_de"]
+                               "nguon_doi_chieu", "diem", "duyet_chu_de", "trang_thai_san_xuat", "nguon_de_xuat",
+                               "trich_nguyen_van", "link_nguon", "ngay_tra", "ghi_chu_may", "xac_nhan_nguon"]
+    assert Y_TUONG.cot_nguoi == ["duyet_chu_de", "xac_nhan_nguon"]
+    assert Y_TUONG.lay("xac_nhan_nguon").lua_chon == ("Đúng", "Sai")
     assert Y_TUONG.lay("duyet_chu_de").lua_chon == ("Chờ", "Làm", "Bỏ")
     assert HANG_CHO.ten_cot == ["ma_video", "kenh", "nen_tang", "link_xem_thu", "caption", "hashtag", "diem_qa",
                                 "canh_bao", "duyet", "ghi_chu_sua", "gio_dang", "trang_thai_dang", "link_bai",

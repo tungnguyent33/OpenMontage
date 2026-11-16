@@ -279,6 +279,25 @@ Cấu hình một lần:
   - trần chi phí 0 USD;
   - khung nhịp cho từng trụ cột nội dung.
 
+**Nguồn luật: máy tra, bạn xác nhận.** `san-xuat` từ chối chủ đề có nội dung luật mà `nguon_doi_chieu` chưa ghi tới mức khoản. Với QCVN, mức cần đạt là mục, phụ lục hoặc số hiệu biển/vạch. Mỗi lần nhắc một Điều đều phải có khoản. Lý do từ chối ghi ở cột `ghi_chu_may` của tab Ý tưởng. Chủ đề ghi "Không cần nguồn luật" thì không bị kiểm tra.
+
+```powershell
+tools_local\py.cmd -m may_reels nguon-luat --kenh vanxuan            # agent tra điều khoản cho chủ đề còn thiếu
+tools_local\py.cmd -m may_reels nguon-luat ap-dung --kenh vanxuan    # chép nguồn bạn đã xác nhận "Đúng" vào chu-de.md
+```
+
+1. `nguon-luat` gọi agent (`skills/may-reels/tra-nguon-luat.md`). Agent mở văn bản chính thức, ưu tiên `chinhphu.vn` và `vbpl.vn`, kiểm tra hiệu lực, rồi ghi lên tab Ý tưởng:
+   - `nguon_de_xuat` (văn bản, điều, khoản, điểm);
+   - `trich_nguyen_van`;
+   - `link_nguon`;
+   - `ngay_tra`.
+
+   Không tìm được điều khoản khớp thì ô đề xuất để trống, lý do ghi ở `ghi_chu_may`. Nếu `y_chinh` mâu thuẫn với văn bản, `ghi_chu_may` ghi "MÂU THUẪN y_chinh", và máy không tự sửa `y_chinh`. Chủ đề đã có giá trị ở `xac_nhan_nguon` thì không bị tra đè.
+2. Bạn đọc đoạn trích và mở link, rồi chọn `xac_nhan_nguon` = **Đúng** hoặc **Sai**. Máy không bao giờ tự áp dụng đề xuất chưa được xác nhận.
+3. `nguon-luat ap-dung` xử lý từng dòng theo xác nhận:
+   - **Đúng:** máy sao lưu `chu-de.md` trong thư mục kênh gốc thành `chu-de.md.bak-<giờ>`, chỉ đổi ô nguồn của dòng đó, rồi chạy `nap_kenh.py` và `sheet nap-chu-de`.
+   - **Sai:** máy giữ nguyên và in nhắc. Bạn sửa `y_chinh` trong `chu-de.md`, xóa ô `xac_nhan_nguon`, rồi chạy lại `nguon-luat`.
+
 ```powershell
 tools_local\py.cmd -m may_reels san-xuat --kenh vanxuan --so-luong 3   # các chủ đề đã chọn "Làm" -> Hàng chờ
 tools_local\py.cmd -m may_reels sua                                     # dựng lại các dòng chọn "Sửa" theo ghi_chu_sua
