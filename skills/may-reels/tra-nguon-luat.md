@@ -15,7 +15,16 @@ Skill cho agent chạy không tương tác (`claude -p`), do lệnh `python -m m
 ## Cách làm
 
 1. **Xác định câu cần căn cứ.** Từ `chu_de` và `y_chinh`, viết ra câu khẳng định mà video sẽ nói. Ví dụ: "Ở nơi giao nhau không có báo hiệu, nhường xe đi đến từ bên phải." Đây là câu cần tìm điều khoản.
-2. **Mở bản văn bản chính thức bằng WebFetch.** Ưu tiên theo thứ tự:
+2. **Mở bản văn bản chính thức bằng WebFetch.**
+
+   **Văn bản đã được sửa đổi thì ưu tiên văn bản hợp nhất chính thức** (ký hiệu `<số>/VBHN-<cơ quan>`, ví dụ `55/VBHN-VPQH`), vì bản này đã gộp mọi lần sửa đổi và có chú thích ghi rõ khoản nào bị sửa, theo luật nào, hiệu lực từ ngày nào. Chỉ dùng bản hợp nhất do cơ quan nhà nước đăng, ví dụ trên `datafiles.chinhphu.vn`, `vanban.chinhphu.vn` hoặc `quochoi.vn`. Bản hợp nhất do trang thương mại tự làm không được tính.
+
+   Đã biết:
+   - Luật Trật tự, an toàn giao thông đường bộ 36/2024/QH15 có văn bản hợp nhất `55/VBHN-VPQH` ngày 23/3/2026. Bản này đã hợp nhất Luật 118/2025/QH15. Link: `https://datafiles.chinhphu.vn/cpp/files/vbpq/2026/3/55-vbhn-vpqh.pdf`. Mọi đề xuất dẫn Luật 36/2024/QH15 đều ghi link này vào `link_nguon`.
+   - Trích dẫn và số điều, khoản vẫn ghi theo Luật 36/2024/QH15, vì bản hợp nhất giữ nguyên số điều. Nếu chú thích của bản hợp nhất cho thấy khoản đó đã bị sửa, ghi vào `hieu_luc` là luật nào sửa và hiệu lực từ ngày nào, rồi trích câu chữ **đã sửa**.
+   - Không đọc được chữ trong bản hợp nhất thì nói rõ trong `hieu_luc` là "chưa đối chiếu bản hợp nhất". Không suy ra "không bị sửa" từ trang thương mại.
+
+   Khi không có văn bản hợp nhất chính thức, ưu tiên theo thứ tự:
    1. Cổng thông tin điện tử Chính phủ (`chinhphu.vn`, `vanban.chinhphu.vn`, `congbao.chinhphu.vn`);
    2. Cơ sở dữ liệu quốc gia về văn bản pháp luật (`vbpl.vn`);
    3. Trang của cơ quan ban hành, ví dụ `quochoi.vn` hoặc trang bộ `*.gov.vn`.
