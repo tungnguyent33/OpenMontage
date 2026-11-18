@@ -17,7 +17,8 @@ Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/
 Đọc `projects/<ma_video>/yeu_cau.json` (máy tạo sẵn). File này có:
 - `ma_video`, `kenh`, `chu_de` (một dòng `chu_de[]` của `brand.json`: `ma`, `tru_cot`, `dinh_dang`, `chu_de`, `y_chinh`, `nguon_doi_chieu`);
 - `khung_nhip`: khóa trong `san-xuat.yaml`;
-- `so_lan_dung_canh`: số video trước đã dùng mỗi cảnh;
+- `so_lan_dung_canh`: số video trước (đã dựng xong) đã dùng mỗi cảnh;
+- `ngay_dung_canh_gan_nhat`: ngày gần nhất mỗi cảnh được dùng (`YYYY-MM-DD`). Cảnh không có trong hai mục này là cảnh chưa dùng;
 - `phan_hoi`: lỗi kiểm tra hoặc điểm QA của vòng trước. Có mục này nghĩa là đang ở vòng sửa: sửa đúng các lỗi được nêu.
 - `ghi_chu_sua`: chỉ có khi chạy bằng lệnh `sua`. Ý kiến của người duyệt, phải làm theo.
 
@@ -52,7 +53,11 @@ Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/
   - Máy **không tự làm mờ** mặt người và biển số (`canh.tu_lam_mo: false`). Cảnh cần làm mờ thì chỉ dùng đoạn không cần xử lý.
   - Cảnh có `mat_nguoi: true` chỉ dùng được khi `quyen_hinh.da_dong_y`.
 - **Một cảnh không dùng quá một lần trong cùng video.** Ngoại lệ duy nhất: cảnh có thẻ trong `canh.lap_duoc_neu_the` (cảnh nói trước máy).
-- **Ưu tiên cảnh ít dùng.** Xem `so_lan_dung_canh` trong `yeu_cau.json`. Cảnh đã dùng từ 3 lần trở lên bị trừ điểm QA.
+- **Ưu tiên cảnh ít dùng, rồi cảnh lâu chưa dùng.** Xem `so_lan_dung_canh` và `ngay_dung_canh_gan_nhat` trong `yeu_cau.json`.
+  - Giữa các cảnh khớp ý ngang nhau: chọn cảnh chưa dùng, rồi cảnh có `so_lan_dung_canh` thấp hơn, rồi cảnh có ngày dùng gần nhất xa hơn.
+  - Tránh cảnh đã dùng trong 7 ngày gần nhất khi có cảnh khác khớp ý. Người xem lướt nhiều video liền nhau nên dễ nhận ra cảnh lặp.
+  - Cảnh đã dùng từ 3 lần trở lên bị trừ điểm QA.
+  - Ý nào chỉ còn cảnh đã dùng nhiều lần mà không khớp hẳn thì ghi vào `thieu_canh` như mục dưới, đừng cố dùng lại.
 - Cảnh phải khớp ý của đoạn (xem `mo_ta`, `the`, `dia_diem`). Ghi lý do chọn vào `canh.ly_do_chon`.
 - **Thiếu cảnh thật cho một ý:** không lấp bằng cảnh kho không khớp.
   1. Ghi một mục vào `thieu_canh` (`doan`, `y_can_canh`, `mo_ta_canh`, `goi_y_quay`, `ly_do`). Máy ghi mục này vào tab "Cần quay".

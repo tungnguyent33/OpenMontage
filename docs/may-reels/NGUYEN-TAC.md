@@ -111,6 +111,9 @@ Với kênh Vạn Xuân hiện tại, các quy tắc là:
 **Cảnh có mặt người.** Chỉ dùng khi `quyen_hinh` của kênh cho phép:
 
 - `nap_kenh.py` đã gộp điều kiện quyền vào cờ `dung_duoc`: `quyen_hinh.da_dong_y` phải bằng `true`, ngày nạp không được muộn hơn `quyen_hinh.ngay` (hoặc cảnh có tên trong `quyen_hinh.bo_sung`), và mã cảnh không nằm trong `quyen_hinh.ngoai_tru`.
+  - **Cập nhật 2026-11-17** (người dùng chốt): điều kiện ngày và `bo_sung` **chỉ áp cho cảnh có mặt người** (`mat_nguoi: true`, hoặc chưa có nhãn `mat_nguoi`, coi như có). Cảnh mới không có mặt người dùng được ngay. 24 cảnh cũ không đổi kết quả.
+  - Ngày nạp lấy từ `ngay_nap` trong `index.json` (do `kho nap` ghi) trước, rồi mới suy từ mtime. File quay từ trước mà mới chép vào kho vẫn giữ mtime cũ: nếu tin mtime thì cảnh có mặt người sẽ lọt vào phạm vi `quyen_hinh` cũ.
+  - Cảnh mới có mặt người được liệt kê ở tab **Quyền hình** (cột người `xac_nhan_quyen`: `Chờ` / `Đồng ý` / `Không`). Chỉ khi người chọn `Đồng ý`, lệnh `kho nap` mới thêm mã cảnh vào `quyen_hinh.bo_sung` của `channel.yaml` (sao lưu trước, giữ nguyên chú thích, kiểm bằng `yaml.safe_load` rằng không phần nào khác đổi). Trong thư mục kênh gốc, máy chỉ ghi vào `canh-quay/_kho/`, `quyen_hinh.bo_sung` của `channel.yaml` (lệnh này) và ô nguồn, ô ý chính của `chu-de.md` (`nguon-luat ap-dung` hoặc khi người yêu cầu). Hai file sau chỉ được ghi khi người đã xác nhận.
 - Lúc chọn cảnh, máy kiểm tra lại: nếu `mat_nguoi: true` thì phải thỏa các điều kiện `quyen_hinh` ở trên, không chỉ tin vào `dung_duoc`.
 - Chỉ cắt trong các đoạn `doan_dung_duoc` (nếu cảnh có khai báo). Phải tôn trọng `rui_ro` (ví dụ `mat-hoc-vien`, `bien-so`) và `can_xu_ly`. Đã chốt (`KE-HOACH.md` mục 6, câu 15): máy **được tự cắt khung** theo vùng ghi trong `can_xu_ly`. Máy **không tự làm mờ** mặt người hay biển số; cảnh cần làm mờ thì chỉ dùng đoạn không cần xử lý. Không xác định được đoạn như vậy thì không dùng cảnh đó và ghi vào tab "Cần quay".
 
@@ -133,6 +136,8 @@ Kho cảnh có thể không có cảnh khớp một ý: không đủ cảnh, sai
    3. Nền tảng nào đã "Duyệt"/"Bỏ" thì máy không thay video, vì lời duyệt đó dành cho bản cũ.
 5. Trạng thái `cho_quay` chỉ còn dùng khi không dựng được cả cảnh tạm, ví dụ cảnh kho đã chọn không đủ độ dài.
    - Chạy `san-xuat --ca-cho-quay` để dựng lại các chủ đề này với cảnh tạm.
+   - **Cập nhật 2026-11-17:** `kho nap` tự trả job `cho_quay` về hàng sản xuất khi mọi dòng Cần quay của job là "Đã quay" (hoặc được một dòng gợi ý gộp vào qua `gop_yeu_cau` đánh dấu "Đã quay") và có file nạp sau thời điểm tạo yêu cầu. Job vẫn ở `cho_quay` (máy không ghi trạng thái "đang sản xuất" khi chưa sản xuất), chỉ được gắn `metadata.san_sang_san_xuat_lai`. `san-xuat` lần sau lấy job này không cần `--ca-cho-quay` và bỏ cờ trước khi dựng.
+6. **Máy chủ động nói cần quay gì** (`kho thieu`, 2026-11-17): agent đề xuất danh sách quay gộp theo buổi; Python kiểm rồi mới ghi tab Cần quay (mã `<kenh>:goi-y:<mã cảnh>`). Máy không ghi đè dòng người đã chọn "Đã quay"/"Không quay" và không xóa dòng gợi ý cũ.
 
 Điều này khớp với luật "No Unilateral Substitutions" và "Escalate Blockers Explicitly" trong `AGENT_GUIDE.md`.
 

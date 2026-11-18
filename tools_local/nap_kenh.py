@@ -216,7 +216,9 @@ def doc_kho(kenh: Path, index: dict, nhan: dict, qh: dict, nguon_cam: dict | Non
         ma = meta["ma"]
         n = nhan.get(ma, {})
         p = kenh / rel
-        nn = ngay_nap(meta.get("dau", ""))
+        # Ngày nạp thật (do `python -m may_reels kho nap` ghi) đứng trước ngày suy từ mtime: file quay từ trước nhưng
+        # mới chép vào kho vẫn giữ mtime cũ, nếu tin mtime thì cảnh mới sẽ lọt vào phạm vi quyen_hinh cũ.
+        nn = meta.get("ngay_nap") or ngay_nap(meta.get("dau", ""))
         ly_do = []
         if not n:
             ly_do.append("chưa gắn nhãn trong nhan.json")
@@ -226,9 +228,13 @@ def doc_kho(kenh: Path, index: dict, nhan: dict, qh: dict, nguon_cam: dict | Non
             ly_do.append("quyen_hinh.ngoai_tru")
         if n.get("nguon") in nguon_cam:
             ly_do.append(f"{nguon_cam[n['nguon']]}: yêu cầu dự án không dùng")
-        trong_pham_vi = bool(qh.get("da_dong_y")) and ((nn is not None and nn <= han) or ma in bo_sung)
+        # quyen_hinh chỉ áp cho cảnh có mặt người. Chưa rõ (thiếu nhãn mat_nguoi) thì coi như có, cho an toàn.
+        can_quyen = n.get("mat_nguoi") is not False
+        trong_pham_vi = (not can_quyen) or (
+            bool(qh.get("da_dong_y")) and ((nn is not None and nn <= han) or ma in bo_sung))
         if not trong_pham_vi:
-            ly_do.append(f"ngoài phạm vi quyen_hinh (nạp {nn}, hạn {han})")
+            ly_do.append(f"có mặt người, chờ xác nhận quyền hình (nạp {nn}, hạn quyen_hinh {han}, "
+                         "chưa có trong quyen_hinh.bo_sung)")
         if not p.exists():
             ly_do.append("file không tồn tại")
         out.append({

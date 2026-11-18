@@ -124,20 +124,10 @@ def doc_diem_ky_thuat(P: Path) -> int | None:
 
 
 def so_lan_dung_canh(goc: Path, kenh: str, tru: str | None = None) -> dict[str, int]:
-    """Đếm số video trước đã dùng mỗi cảnh (đọc projects/*/ke_hoach.json của cùng kênh)."""
-    dem: dict[str, int] = {}
-    for f in (goc / "projects").glob("*/ke_hoach.json"):
-        if tru and f.parent.name == tru:
-            continue
-        try:
-            kh = json.loads(f.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            continue
-        if kh.get("kenh") != kenh:
-            continue
-        for m in {d["canh"].get("ma") for d in kh.get("doan", []) if d.get("canh") and d["canh"].get("ma")}:
-            dem[m] = dem.get(m, 0) + 1
-    return dem
+    """Số video trước đã dùng mỗi cảnh. Cùng cách đếm với index.json (may_reels.kho.thong_ke_dung_canh): chỉ tính
+    video đã dựng xong, không tính kế hoạch của job lỗi hay đang chờ quay."""
+    from may_reels.kho import thong_ke_dung_canh
+    return {m: t["so_lan"] for m, t in thong_ke_dung_canh(goc, kenh, tru).items()}
 
 
 class Pipeline:

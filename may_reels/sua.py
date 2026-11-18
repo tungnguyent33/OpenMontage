@@ -25,8 +25,8 @@ from typing import Callable
 
 from may_reels.cot_sheet import CAN_QUAY, HANG_CHO, NHAT_KY
 from may_reels.job import chuyen_trang_thai
-from may_reels.san_xuat import (GOC, MA_OK, SKILL, _luu_job, _yeu_cau, canh_bao_duoi_nguong, cham_mac_dinh, chay_dung,
-                                goi_agent, nhat_ky_cham)
+from may_reels.san_xuat import (GOC, MA_OK, SKILL, _luu_job, _yeu_cau, canh_bao_duoi_nguong, cap_nhat_su_dung_an_toan,
+                                cham_mac_dinh, chay_dung, goi_agent, nhat_ky_cham)
 from may_reels.sheet import BangNguon, bay_gio_vn, chuan, doc_dong, ghi_theo_khoa, them_nhat_ky
 
 TAT_CA_STAGE = ["idea", "script", "scene_plan", "assets", "edit", "compose", "publish"]
@@ -93,6 +93,7 @@ def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: 
     job = chuyen_trang_thai(job, "cho_duyet", ly_do=f"{nhan} lần {n}")
     _luu_job(P, job)
     kq["trang_thai"] = "cho_duyet"
+    cap_nhat_su_dung_an_toan(kenh, goc, log)
     return kq
 
 

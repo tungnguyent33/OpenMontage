@@ -10,7 +10,7 @@ import pytest
 
 from may_reels import sheet as S
 from may_reels.chu_de import nap_chu_de
-from may_reels.cot_sheet import HANG_CHO, NHAT_KY, TAT_CA, Y_TUONG, NGUOI
+from may_reels.cot_sheet import CAN_QUAY, HANG_CHO, NHAT_KY, QUYEN_HINH, TAT_CA, Y_TUONG, NGUOI
 from tests.may_reels.sheet_gia import BangGia
 
 REPO = Path(__file__).resolve().parents[2]
@@ -30,7 +30,16 @@ def cot(tab_gia, ten):
 
 # ---------------------------------------------------------------- cấu trúc cột
 def test_khai_bao_cot_dung_yeu_cau():
-    assert [t.ten for t in TAT_CA] == ["Ý tưởng", "Hàng chờ", "Cần quay", "Số liệu", "Nhật ký"]
+    assert [t.ten for t in TAT_CA] == ["Ý tưởng", "Hàng chờ", "Cần quay", "Số liệu", "Nhật ký", "Quyền hình"]
+    # Quyền hình: người xác nhận, máy chỉ ghi lại đã áp dụng hay chưa.
+    assert QUYEN_HINH.cot_nguoi == ["xac_nhan_quyen", "ghi_chu_nguoi"]
+    assert QUYEN_HINH.lay("xac_nhan_quyen").lua_chon == ("Chờ", "Đồng ý", "Không")
+    assert QUYEN_HINH.khoa == ("kenh", "ma_canh")
+    # Cột gợi ý quay nối vào CUỐI tab Cần quay: cột cũ giữ nguyên thứ tự.
+    assert CAN_QUAY.ten_cot[:12] == ["ma_yeu_cau", "kenh", "ma_chu_de", "ma_video", "y_can_canh", "mo_ta_canh",
+                                     "goi_y_quay", "ly_do", "tao_luc", "trang_thai_quay", "ghi_chu_nguoi",
+                                     "trang_thai_nap"]
+    assert CAN_QUAY.cot_nguoi == ["trang_thai_quay", "ghi_chu_nguoi"]
     assert Y_TUONG.ten_cot == ["ma", "kenh", "tru_cot", "dinh_dang", "chu_de", "hook_de_xuat",
                                "nguon_doi_chieu", "diem", "duyet_chu_de", "trang_thai_san_xuat", "nguon_de_xuat",
                                "trich_nguyen_van", "link_nguon", "ngay_tra", "ghi_chu_may", "xac_nhan_nguon"]
@@ -94,7 +103,7 @@ def test_init_them_cot_thieu_vao_cuoi_khong_dung_cot_va_du_lieu_cua_nguoi():
 def test_init_che_do_thu_khong_ghi():
     b = BangGia()
     kq = S.khoi_tao(b, thu=True)
-    assert len(kq.tab_tao_moi) == 5 and b.tabs == [] and b.yeu_cau_dinh_dang == []
+    assert len(kq.tab_tao_moi) == len(TAT_CA) == 6 and b.tabs == [] and b.yeu_cau_dinh_dang == []
 
 
 # ---------------------------------------------------------------- ghi theo khóa

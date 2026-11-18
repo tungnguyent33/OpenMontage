@@ -258,6 +258,27 @@ def lenh_nguon_luat(a) -> int:
     return 1 if any(d.loi for d in ds) else 0
 
 
+def lenh_kho_nap(a) -> int:
+    from may_reels.kho import nap
+    kq = nap(mo_tu_env(), a.kenh, thu=a.thu)
+    print(f"Mới phân tích {len(kq.moi)}, gắn nhãn {len(kq.nhan)}, chờ xác nhận quyền hình {len(kq.cho_quyen)} "
+          f"(tab Quyền hình), vừa đồng ý {len(kq.dong_y)}, trả về hàng sản xuất {len(kq.tra_ve)} {kq.tra_ve} | "
+          f"agent {kq.so_luot_agent} lượt, {kq.giay_agent:.0f}s")
+    for loi in kq.loi:
+        print(f"  ! {loi}")
+    if kq.tra_ve:
+        print(f"Chạy: python -m may_reels san-xuat --kenh {a.kenh}  (job đủ cảnh tự được lấy)")
+    return 1 if kq.loi else 0
+
+
+def lenh_kho_thieu(a) -> int:
+    from may_reels.goi_y_quay import thieu
+    from tools_local.nap_kenh import nap_env
+    nap_env()
+    kq = thieu(mo_tu_env(), a.kenh, ca_chua_duyet=a.ca_chua_duyet, thu=a.thu)
+    return 1 if kq["loi"] else 0
+
+
 def giu_may_thuc(bat: bool) -> None:
     """Windows: không cho máy tự ngủ khi đang sản xuất (SetThreadExecutionState). Gập máy vẫn ngủ."""
     import os
@@ -340,13 +361,25 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--thu", action="store_true", help="chỉ in việc sẽ làm")
     p.set_defaults(ham=lenh_nguon_luat)
 
+    kho = sub.add_parser("kho", help="kho cảnh của kênh").add_subparsers(dest="lenh", required=True)
+    p = kho.add_parser("nap", help="nạp file trong canh-quay/moi-quay: phân tích, chép lời, gắn nhãn, nap_kenh.py")
+    p.add_argument("--kenh", required=True)
+    p.add_argument("--thu", action="store_true", help="chỉ in file sẽ nạp, không phân tích, không ghi")
+    p.set_defaults(ham=lenh_kho_nap)
+    p = kho.add_parser("thieu", help="đối chiếu chủ đề đã duyệt với kho, ghi danh sách quay theo buổi vào tab Cần quay")
+    p.add_argument("--kenh", required=True)
+    p.add_argument("--ca-chua-duyet", action="store_true", help="gợi ý cả cho chủ đề chưa chọn Làm/Bỏ")
+    p.add_argument("--thu", action="store_true", help="chỉ in danh sách, không ghi Sheet")
+    p.set_defaults(ham=lenh_kho_thieu)
+
     p = sub.add_parser("dang-nhap", help="đăng nhập OAuth Google một lần (mở trình duyệt)")
     p.add_argument("dich_vu", choices=["drive", "youtube"])
     p.add_argument("--kenh")
     p.set_defaults(ham=lenh_dang_nhap)
 
     a = ap.parse_args(argv)
-    dai = a.ham in (lenh_san_xuat, lenh_sua, lenh_thay_canh, lenh_dung, lenh_cham_lai, lenh_nguon_luat)
+    dai = a.ham in (lenh_san_xuat, lenh_sua, lenh_thay_canh, lenh_dung, lenh_cham_lai, lenh_nguon_luat, lenh_kho_nap,
+                    lenh_kho_thieu)
     if dai:
         giu_may_thuc(True)
     try:

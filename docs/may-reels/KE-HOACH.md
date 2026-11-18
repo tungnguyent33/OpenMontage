@@ -368,3 +368,47 @@ Chạy bằng `tools_local\py.cmd -m pytest -q` (có `PYTHONUTF8=1`):
   - **Kết quả:** vx-006 và vx-007 hết bị chặn. vx-006 được 72, vx-007 được 70 (trần tổng vì cảnh tạm). Cả hai vẫn dưới ngưỡng 75; lý do nặng nhất là "Chân thực", với 43% và 40% cảnh thật.
   - **Điểm agent của vx-006 dao động giữa các lần chấm** (76 → 79 → 72). Lần cuối, agent cho "Đúng" 7/15 vì cho rằng sơ đồ ở giây 20,2 vẽ sai thứ tự xe. Điều này **chưa xác minh**: người cần xem khung đó. Độ dao động khoảng ±7 điểm cho thấy nên dùng `hieu-chinh` khi đã có `diem_cua_toi`, trước khi tin điểm sát ngưỡng.
 - **`hieu-chinh`:** chưa có `diem_cua_toi` nào nên chưa đề xuất. Hai cột này được `sheet init` thêm vào Sheet ngày 2026-11-16, vì trên Sheet thật lúc đó chưa có.
+
+---
+
+## 10. Kho cảnh tự nạp và máy gợi ý cần quay (ngày 2026-11-17)
+
+**Mục tiêu:** quay xong thả file vào một thư mục là máy tự phân tích, gắn nhãn, đưa vào kho; và máy chủ động nói cần quay gì.
+
+**Đã làm:**
+- `python -m may_reels kho nap --kenh <mã>` (`may_reels/kho.py`): quét `canh-quay/moi-quay/` của thư mục kênh gốc. File chưa có trong `canh-quay/_kho/index.json` được:
+  - đo thông số và tách cảnh bằng `audio_probe`, `scene_detect`, `frame_sampler`, ghép thành lưới `khung.jpg` có in mốc giây;
+  - chép lời bằng tool `transcriber` (`may_reels/kho_chep_loi.py`, chạy bằng `MAY_REELS_PY_GIONG`);
+  - gắn nhãn bằng agent (`skills/may-reels/gan-nhan-canh.md`), Python kiểm nhãn rồi mới thêm vào `nhan.json`.
+- **Định dạng bản ghi giữ nguyên** như `scripts/nap_canh_quay.py` và subagent `phan-loai-canh` của bộ kit kênh. Mã cảnh tính bằng cùng thuật toán; test kiểm rằng mã của cảnh cũ trong kho thật không đổi. Chỉ thêm khóa vào bản ghi `index.json`: `ngay_nap`, `nap_luc`, `nap_boi`, `so_lan_dung`, `ngay_dung_gan_nhat`. Chạy thử phân tích trên clip thật `Học Viên Nam_Hạng A_ trung cảnh.mp4`: mọi thông số khớp bản ghi cũ, mất 1,5 giây. Agent gắn nhãn clip đó sát nhãn cũ (cùng đoạn dùng được 0–11 giây, cùng rủi ro mặt học viên và biển số); khác ở `loai` (THAO thay vì BROLL).
+- **Quyền hình** (người dùng chốt 2026-11-17): `nap_kenh.py` chỉ áp điều kiện ngày và `bo_sung` của `quyen_hinh` cho cảnh có mặt người; cảnh không có mặt người dùng được ngay. Cảnh có mặt người lên tab **Quyền hình**; người chọn "Đồng ý" thì lần `kho nap` sau chép vào `quyen_hinh.bo_sung` của `channel.yaml`. `brand.json` của Vạn Xuân không đổi sau khi sửa (24 cảnh cũ giữ nguyên kết quả).
+- **Số lần dùng cảnh:** `so_lan_dung`, `ngay_dung_gan_nhat` ghi vào `index.json` sau mỗi video vào Hàng chờ (`san-xuat`, `sua`, `thay-canh`) và sau mỗi `kho nap`. Đếm lại từ `projects/*/ke_hoach.json` mỗi lần, chỉ tính video đã dựng xong, nên không đếm trùng. `so_lan_dung_canh` (dùng cho cảnh báo và QA) đổi sang cùng cách đếm: trước đây đếm cả kế hoạch của job lỗi hay đang chờ quay. Agent sản xuất (`san-xuat-khong-hoi.md`) nhận thêm `ngay_dung_canh_gan_nhat`. Lần chạy đầu: 8/24 cảnh đã dùng, nhiều nhất `hoc-vien-tap-xe-a-ga` 3 lần.
+- **Job chờ quay tự quay về sản xuất:** xem `NGUYEN-TAC.md` mục 5.
+- `python -m may_reels kho thieu --kenh <mã>` (`may_reels/goi_y_quay.py`, `skills/may-reels/goi-y-quay.md`): danh sách quay gộp theo buổi vào tab Cần quay và bản văn bản để gửi Zalo. Chạy thử thật (`--thu`) với 2 chủ đề đã duyệt và 6 yêu cầu đang mở: 10 cảnh, 3 buổi (đường thật, sân tập, thầy nói trước máy), qua bước kiểm ngay lần đầu.
+- Sheet: thêm tab Quyền hình và 9 cột vào cuối tab Cần quay (`sheet init` đã chạy trên Sheet thật).
+
+**Phát hiện khi làm:**
+- `lib/source_media_review.review_source_media` không dùng nguyên được cho kho: hàm ghi khung hình vào ngay thư mục chứa file gốc (`.source_review_frames_<tên>`), tức thư mục mới quay; và hàm đọc khóa `text` mà `transcriber` không trả về, nên phần tóm tắt lời nói luôn rỗng. `kho nap` gọi thẳng các tool mà hàm này dùng. Không sửa file upstream.
+- `audio_probe` không đo phần hình. Kích thước khung (có tính cờ xoay của điện thoại) đo bằng ffprobe như `source_media_review` và `nap_canh_quay.py`.
+- GPU của máy không dùng được cho faster-whisper: thiếu `cublas64_12.dll` (CUDA 12). `transcriber` tự chuyển sang CPU int8, nên chép lời model lớn chậm.
+- Hugging Face không tạo được symlink trong cache trên Windows này (`WinError 1314`), nên tải model mới bị dở (`faster-whisper-large-v3` trong cache thiếu `model.bin`). Model dùng để so sánh được tải vào thư mục thường `~/.cache/whisper-local/`.
+
+**Có cần PhoWhisper không: CHƯA kết luận.** Thử trên 2 clip thật có tiếng trong kho (`Nhieu_hoc_vien_nu_Cancanh.mp4`, `Video quay demo/snaptik...mp4`), cả ba model đều chạy qua tool `transcriber` bằng CPU. Lần chạy bị hệ thống dừng vì máy thiếu bộ nhớ, và chưa chạy lại.
+
+| Clip 1 (khoảng 2,5 giây có lời) | Thời gian | Kết quả |
+|---|---|---|
+| `base` (mặc định của transcriber) | 2,3 giây | "Đi theo đi lúc quen là chết hả hình? Đúng rồi" (sai từ) |
+| `large-v3` | khoảng 25 phút (chạy cùng lúc với test) | "Đi thế không đến lúc quen là chết hết" |
+| PhoWhisper-large | chưa chạy | — |
+| Bản chép cũ trong kho (script của bộ kit) | — | "đi thế đến lúc quen là chết đấy…", kèm một câu bịa ở đoạn lặng |
+
+- Clip 2 chưa có kết quả.
+- Mặc định tạm thời là PhoWhisper (`MAY_REELS_MODEL_CHEP_LOI` để đổi), vì máy đã dùng nó để nghe lại giọng đọc và nó chạy offline. Nhưng chưa có số liệu chứng minh nó tốt hơn trên cảnh quay thật.
+- Model lớn chạy CPU tốn khoảng 3 GB bộ nhớ: `kho nap` với nhiều video có tiếng có thể chậm, hoặc gặp thiếu bộ nhớ khi chạy cùng việc khác.
+- Muốn chạy lại phép so sánh: cài thư viện CUDA 12 (cuBLAS, cuDNN) để chạy GPU, hoặc chạy vào lúc máy rảnh.
+
+**Sống chung với script cũ của bộ kit:** `scripts/nap_canh_quay.py` quét cả `canh-quay/moi-quay/`. Nếu script cũ lập index trước, `kho nap` nhận các file đó về (ghi `ngay_nap` thật, gắn nhãn) chứ không bỏ qua; cảnh đã nạp bằng `kho nap` thì script cũ giữ nguyên vì `dau` không đổi. Hướng dẫn `canh-quay/DOC-TOI.md` trong thư mục kênh gốc vẫn chỉ tới script cũ: máy không sửa file đó.
+
+**Việc còn lại / chưa làm:**
+- `KHO.md` (bảng tóm tắt cho người đọc, do subagent `phan-loai-canh` viết) **chưa được** `kho nap` cập nhật.
+- Mục 6 của yêu cầu (đường dẫn tuyệt đối trong `brand.json`) đã xử lý từ 2026-11-15 (mục 5.1): `brand.json` không còn đường dẫn tuyệt đối, thư mục kênh gốc khai báo một lần bằng `KENH_GOC_DIR` trong `.env`. Lần này không đổi gì thêm. Còn lại: lịch sử git (commit `dc52b79`) vẫn chứa bản cũ.

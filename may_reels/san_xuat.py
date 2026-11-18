@@ -145,7 +145,9 @@ def chon_chu_de(bang: BangNguon, kenh: str, so_luong: int, goc: Path = GOC, ca_c
         j = jobs.get(r.get("ma"))
         if j:
             lam_lai = ({"cho_quay"} if ca_cho_quay else set()) | ({"loi"} if ca_loi else set())
-            if j.get("trang_thai") not in lam_lai:
+            # `kho nap` đánh dấu job chờ quay đã đủ cảnh quay và nạp: tự vào hàng sản xuất, không cần --ca-cho-quay.
+            du_canh = j.get("trang_thai") == "cho_quay" and (j.get("metadata") or {}).get("san_sang_san_xuat_lai")
+            if j.get("trang_thai") not in lam_lai and not du_canh:
                 continue
             r = {**r, "_ma_video": j["ma_video"]}
         elif chuan(r.get("trang_thai_san_xuat")) not in DA_SAN_XUAT:
@@ -180,12 +182,14 @@ def so_tiep_theo(kenh: str, goc: Path = GOC) -> tuple[str, int]:
 # ---------------------------------------------------------------- một job
 def _yeu_cau(P: Path, job: dict, chu_de: dict, brand: dict, sx: dict, phan_hoi: str | None, ghi_chu_sua: str | None,
              goc: Path) -> None:
-    from may_reels.dung.pipeline import so_lan_dung_canh
+    from may_reels.kho import thong_ke_dung_canh
+    tk = thong_ke_dung_canh(goc, job["kenh"], job["ma_video"])
     khung = next((k for k, v in (sx.get("khung_nhip") or {}).items() if v.get("tru_cot") == chu_de.get("tru_cot")),
                  next(iter(sx.get("khung_nhip") or {"": None})))
     yc = {"ma_video": job["ma_video"], "kenh": job["kenh"], "khung_nhip": khung,
           "chu_de": {k: chu_de.get(k) for k in ("ma", "tru_cot", "dinh_dang", "chu_de", "y_chinh", "nguon_doi_chieu")},
-          "so_lan_dung_canh": so_lan_dung_canh(goc, job["kenh"], job["ma_video"]),
+          "so_lan_dung_canh": {m: t["so_lan"] for m, t in tk.items()},
+          "ngay_dung_canh_gan_nhat": {m: t["ngay_gan_nhat"] for m, t in tk.items() if t["ngay_gan_nhat"]},
           "ngay_hom_nay": datetime.now(TZ_VN).date().isoformat()}
     if phan_hoi:
         yc["phan_hoi"] = phan_hoi
@@ -213,6 +217,17 @@ def ghi_can_quay(bang, kenh: str, ma_chu_de: str, ma_video: str, thieu: list[dic
                                     "mo_ta_canh": t.get("mo_ta_canh", ""), "goi_y_quay": t.get("goi_y_quay", ""),
                                     "ly_do": t.get("ly_do", ""), "tao_luc": luc}
                                    for i, t in enumerate(thieu, start=1)], chi_khi_trong={"tao_luc"})
+
+
+def cap_nhat_su_dung_an_toan(kenh: str, goc: Path, log: Callable[[str], None] = print) -> None:
+    """Sau mỗi video vào Hàng chờ: ghi so_lan_dung, ngay_dung_gan_nhat vào index.json của kho. Lỗi không làm hỏng job."""
+    try:
+        from may_reels.kho import cap_nhat_su_dung
+        n = cap_nhat_su_dung(kenh, goc)
+        if n:
+            log(f"  kho cảnh: cập nhật số lần dùng của {n} cảnh")
+    except Exception as e:  # pragma: no cover
+        log(f"  ! không cập nhật được số lần dùng cảnh: {e}")
 
 
 def cham_mac_dinh(ma_video: str, *, goc: Path = GOC, log: Callable[[str], None] = print, tom: dict | None = None):
@@ -255,6 +270,8 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
     phan_hoi = None
     if (P / "reel_job.json").is_file():  # job cũ (cho_quay hoặc loi): dựng lại, đoạn thiếu cảnh dùng cảnh tạm
         job = json.loads((P / "reel_job.json").read_text(encoding="utf-8"))
+        # Bỏ cờ "đủ cảnh" trước khi dựng: nếu lại thiếu cảnh và về cho_quay, job không tự vào hàng sản xuất lần nữa.
+        (job.get("metadata") or {}).pop("san_sang_san_xuat_lai", None)
         job = chuyen_trang_thai(job, "dang_san_xuat", ly_do=f"Dựng lại từ trạng thái {job['trang_thai']}")
         phan_hoi = ("Lần trước thiếu cảnh thật nên chưa dựng. Giữ thieu_canh, và cho mỗi đoạn trong thieu_canh dùng "
                     "cảnh tạm canh.so_do (xem skill mục Chọn cảnh). Kiểm tra lại kho: nếu nay đã có cảnh thật khớp ý thì dùng cảnh thật.")
@@ -337,6 +354,7 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
         _luu_job(P, job)
         _cap_nhat_y_tuong(bang, kenh, ma, NHAN_TRANG_THAI["cho_duyet"], kq.diem_qa)
         kq.trang_thai = "cho_duyet"
+        cap_nhat_su_dung_an_toan(kenh, goc, log)
         return kq
     except Exception as e:  # job hỏng: ghi lỗi, không ném ra ngoài
         kq.trang_thai, kq.loi = "loi", f"{type(e).__name__}: {e}"[:800]

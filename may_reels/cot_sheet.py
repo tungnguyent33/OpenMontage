@@ -147,10 +147,41 @@ CAN_QUAY = Tab(
         _m("tao_luc"),
         _n("trang_thai_quay", ("Chưa quay", "Đã quay", "Không quay"), "ô trống = Chưa quay"),
         _n("ghi_chu_nguoi"),
-        _m("trang_thai_nap", "máy ghi khi cảnh mới đã vào kho (nap_kenh.py)"),
+        _m("trang_thai_nap", "máy ghi khi cảnh mới đã vào kho (kho nap)"),
+        # Danh sách quay gộp theo buổi (lệnh `kho thieu`): ma_yeu_cau = <kenh>:goi-y:<mã cảnh>, ma_chu_de = các chủ đề
+        # cảnh phục vụ (cách nhau dấu phẩy). Thêm sau cột cũ: sheet init chỉ nối cột thiếu vào cuối, không đổi chỗ.
+        _m("buoi", "buổi quay gộp: địa điểm + thời điểm"),
+        _m("loai_canh", "NOI / BROLL / THAO"),
+        _m("goc_may"),
+        _m("thoi_luong", "giây"),
+        _m("loi_thoai", "lời cần nói nếu là cảnh nói trước máy"),
+        _m("luu_y", "ánh sáng, tiếng ồn"),
+        _m("xin_phep", "người lên hình cần đồng ý gì"),
+        _m("gop_yeu_cau", "các ma_yeu_cau của video đang chờ mà cảnh này đáp ứng"),
+        _m("uu_tien", "1 = quay trước"),
     ),
     khoa=("ma_yeu_cau",),
     mo_ta="Ý thiếu cảnh thật. Máy không lấp bằng cảnh khác.",
+)
+
+QUYEN_HINH = Tab(
+    "Quyền hình",
+    (
+        _m("ma_canh", "mã cảnh trong kho (canh-quay/_kho/index.json)"),
+        _m("kenh"),
+        _m("file", "đường dẫn tính từ thư mục kênh gốc"),
+        _m("khung_hinh", "lưới khung hình để xem lại: canh-quay/_kho/<ma_canh>/khung.jpg"),
+        _m("mo_ta"),
+        _m("rui_ro", "mat-hoc-vien, bien-so, ten-nguoi, giay-to, nguoi-ngoai"),
+        _m("can_xu_ly"),
+        _m("tao_luc"),
+        _n("xac_nhan_quyen", ("Chờ", "Đồng ý", "Không"),
+           "Đồng ý = người trong hình đã đồng ý lên hình; ô trống = Chờ"),
+        _n("ghi_chu_nguoi"),
+        _m("trang_thai_ap_dung", "máy ghi khi đã chép xác nhận vào quyen_hinh.bo_sung của channel.yaml"),
+    ),
+    khoa=("kenh", "ma_canh"),
+    mo_ta="Cảnh mới có mặt người: chưa được dùng cho tới khi người chọn Đồng ý.",
 )
 
 SO_LIEU = Tab(
@@ -191,7 +222,7 @@ NHAT_KY = Tab(
     mo_ta="Sổ chạy và chi phí. Chỉ thêm dòng.",
 )
 
-TAT_CA: tuple[Tab, ...] = (Y_TUONG, HANG_CHO, CAN_QUAY, SO_LIEU, NHAT_KY)
+TAT_CA: tuple[Tab, ...] = (Y_TUONG, HANG_CHO, CAN_QUAY, SO_LIEU, NHAT_KY, QUYEN_HINH)
 
 
 def tab_theo_ten(ten: str) -> Tab:

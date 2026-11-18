@@ -319,11 +319,11 @@ tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng
 - **Thiếu cảnh thật:** máy dùng **cảnh tạm** là sơ đồ động (ngã tư, vòng xuyến, chữ lớn), vẽ bằng code, không AI, không stock. Video vẫn vào Hàng chờ kèm cảnh báo "Có cảnh tạm", và tab **Cần quay** vẫn ghi yêu cầu quay.
 - **Thay cảnh tạm bằng cảnh thật:**
   1. Quay xong thì chọn **Đã quay** ở cột `trang_thai_quay` trên tab Cần quay.
-  2. Nạp lại kho cảnh.
+  2. Chép file vào `canh-quay/moi-quay/` rồi nạp kho cảnh (xem mục "Kho cảnh" bên dưới).
   3. Chạy lệnh thay cảnh:
 
   ```powershell
-  tools_local\py.cmd tools_local/nap_kenh.py --id vanxuan
+  tools_local\py.cmd -m may_reels kho nap --kenh vanxuan
   tools_local\py.cmd -m may_reels thay-canh                              # thay sơ đồ bằng cảnh thật, dựng lại, cập nhật Hàng chờ
   tools_local\py.cmd -m may_reels san-xuat --kenh vanxuan --ca-cho-quay  # dựng lại cả chủ đề đang "chờ quay" bằng cảnh tạm
   ```
@@ -374,6 +374,46 @@ tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng
   - Mã video có **mọi** nền tảng chọn **Bỏ**: xóa toàn bộ media của dự án (cả `final.mp4`, cache giọng, `review/`) và bản xem thử trên Drive. Giữ `ke_hoach.json`, checkpoint, điểm và mọi file `.json`. Nếu sau đó đổi ý thì chạy `sua`: máy sinh lại giọng nên lâu hơn.
   - Mã video mà mọi nền tảng đã có quyết định (Duyệt/Bỏ, ít nhất một Duyệt), và lần cuối máy cập nhật dòng (`cap_nhat_luc`, thường là lúc đăng) đã quá 30 ngày (`san-xuat.yaml` mục `don_dep.giu_sau_duyet_ngay`): chỉ giữ `renders/final.mp4` và file `.json`.
   - Không đụng mã còn dòng "Chờ duyệt", "Sửa" hoặc ô trống, dự án không có dòng nào trên Hàng chờ, và thư mục kênh gốc (`KENH_GOC_DIR`). File chữ nhỏ (`.html`, `.txt`) được giữ.
+
+**Kho cảnh: quay xong thả file vào, máy tự nạp**
+
+1. Chép video và ảnh vừa quay vào `<thư mục kênh gốc>/canh-quay/moi-quay/`. Được tạo thư mục con theo ngày, giữ nguyên tên file gốc. File nằm yên tại chỗ sau khi nạp, đừng đổi tên hay chuyển đi.
+2. Chạy:
+
+   ```powershell
+   tools_local\py.cmd -m may_reels kho nap --kenh vanxuan --thu   # xem trước file nào sẽ được nạp
+   tools_local\py.cmd -m may_reels kho nap --kenh vanxuan         # nạp thật
+   ```
+
+   Với mỗi file chưa có trong `canh-quay/_kho/index.json`, máy:
+   - đo thông số (kích thước, hướng dọc/ngang, fps, thời lượng, độ to), tách cảnh và trích khung hình bằng các tool `audio_probe`, `scene_detect`, `frame_sampler`;
+   - nếu có tiếng thì chép lời tiếng Việt (PhoWhisper qua tool `transcriber`, chạy bằng Python ở `MAY_REELS_PY_GIONG`);
+   - cho agent xem lưới khung hình để ghi nhãn: mô tả, địa điểm, cỡ cảnh, thẻ, đoạn dùng được (từ giây nào đến giây nào), chất lượng, rủi ro (mặt học viên, biển số, tên người, giấy tờ), cách xử lý. Python kiểm nhãn trước khi đưa vào kho; nhãn sai thì ghi lỗi, lần chạy sau tự gắn lại;
+   - ghi vào `index.json` và `nhan.json` theo đúng định dạng cũ của kho, rồi chạy `nap_kenh.py` để sinh lại `brand.json`.
+
+   Mỗi file mất vài giây để phân tích, cộng thời gian chép lời (chạy bằng CPU vì GPU thiếu thư viện CUDA) và khoảng 1–2 phút cho agent gắn nhãn.
+3. **Quyền hình.**
+   - Cảnh **không có mặt người** dùng được ngay.
+   - Cảnh **có mặt người** (agent thấy mặt, hoặc ghi rủi ro mặt học viên/người ngoài) chưa được dùng. Máy liệt kê cảnh đó ở tab **Quyền hình** trên Sheet, kèm đường dẫn lưới khung hình `canh-quay/_kho/<mã>/khung.jpg` để bạn xem lại.
+   - Khi người trong hình đã đồng ý, chọn `xac_nhan_quyen` = **Đồng ý**. Lần `kho nap` sau, máy chép xác nhận vào `quyen_hinh.bo_sung` của `channel.yaml` (sao lưu `channel.yaml.bak-<giờ>` trước), rồi cảnh mới dùng được. Chọn **Không** thì cảnh không bao giờ được dùng.
+4. **Số lần dùng cảnh.** Sau mỗi video vào Hàng chờ (kể cả sau `sua`, `thay-canh`), máy ghi `so_lan_dung` và `ngay_dung_gan_nhat` vào từng cảnh trong `index.json`. Agent sản xuất nhận hai số này và ưu tiên cảnh ít dùng, lâu chưa dùng. Chỉ tính video đã dựng xong; dựng lại hay sửa không làm đếm trùng.
+5. **Job chờ quay tự quay về sản xuất.** Một job đang "chờ quay" sẽ tự vào hàng sản xuất ở lần `san-xuat` kế tiếp, không cần `--ca-cho-quay`, khi đủ hai điều kiện:
+   - mọi dòng của job ở tab Cần quay là **Đã quay** (hoặc được một dòng gợi ý quay gộp vào, xem bước 6, đánh dấu Đã quay);
+   - `kho nap` đã nạp ít nhất một file sau khi yêu cầu được tạo.
+
+   Máy ghi `trang_thai_nap` của các dòng đó. Video đã dựng bằng cảnh tạm (đang chờ duyệt) thì vẫn dùng `thay-canh` như trước.
+6. **Máy nói cần quay gì:**
+
+   ```powershell
+   tools_local\py.cmd -m may_reels kho thieu --kenh vanxuan --thu             # xem danh sách, không ghi Sheet
+   tools_local\py.cmd -m may_reels kho thieu --kenh vanxuan                   # ghi tab Cần quay + bản gửi Zalo
+   tools_local\py.cmd -m may_reels kho thieu --kenh vanxuan --ca-chua-duyet   # gợi ý cả cho chủ đề chưa chọn Làm/Bỏ
+   ```
+
+   Agent (`skills/may-reels/goi-y-quay.md`) đối chiếu chủ đề đã chọn **Làm**, thư viện định dạng (`khung_nhip` trong `san-xuat.yaml`) và các yêu cầu đang mở với kho, rồi viết danh sách quay **gộp theo buổi**. Mỗi cảnh có mô tả, góc máy, cầm dọc, thời lượng, lời thoại (cảnh nói trước máy), lưu ý ánh sáng và tiếng ồn, lưu ý xin phép người lên hình, và phục vụ những chủ đề nào. Cảnh dùng lại được cho nhiều video được xếp lên trước.
+   - Danh sách ghi vào tab Cần quay với mã `vanxuan:goi-y:<mã cảnh>`. Dòng bạn đã chọn Đã quay/Không quay thì không bị ghi đè. Gợi ý cũ không còn trong lần chạy mới thì ghi lý do, không xóa dòng.
+   - Bản văn bản gọn để dán Zalo cho người quay: `projects/_may_reels/kho/vanxuan/goi-y-quay-<ngày>.txt`.
+   - Chạy `sheet init` một lần nếu tab Cần quay chưa có các cột mới (`buoi`, `loai_canh`, `goc_may`, `thoi_luong`, `loi_thoai`, `luu_y`, `xin_phep`, `gop_yeu_cau`, `uu_tien`) hoặc chưa có tab Quyền hình.
 
 **Đăng bài** (tạm hoãn; làm theo `CAI-DAT-DANG-BAI.md` trước):
 
