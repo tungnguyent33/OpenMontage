@@ -2,7 +2,10 @@
 
 Mọi phần tử có thời gian được ghi thẳng vào HTML (sửa được trong HyperFrames Studio).
 Màu, font, logo, liên hệ lấy từ brand.json; chữ cạnh logo lấy từ san-xuat.yaml man_ket.logo_chu.
-Vùng an toàn chung TikTok/Reels/Shorts: x 120..888, y 288..1248; dưới y 840 TikTok chỉ an toàn tới x 780.
+Vùng an toàn chung TikTok/Reels/Shorts: x 120..888, y 288..1248; dưới y 840 TikTok chỉ an toàn tới x 780
+(nên dòng nguồn luật, có thể xuống quá y 840 khi 2 dòng, chỉ rộng tới XCW = 660, tức x 780).
+Cỡ chữ: MỌI chữ hiển thị từ rubric.yaml tieu_chi.phu_de.co_chu_toi_thieu px trở lên (skills/creative/short-form.md "42px+ minimum"), kể cả nguồn
+luật, chữ cạnh logo, số trên xe của sơ đồ và màn kết. Bước chấm điểm đo lại từ nguồn (may_reels/co_chu.py).
 """
 from __future__ import annotations
 
@@ -13,6 +16,7 @@ import shutil
 from pathlib import Path
 
 LEAD = 0.15
+CO_CHU_TOI_THIEU = 42  # dự phòng khi kênh chưa có rubric.yaml tieu_chi.phu_de.co_chu_toi_thieu
 W, H, X0, XW = 1080, 1920, 120, 768
 XC0, XCW = 120, 660
 GSAP = "https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"
@@ -27,6 +31,17 @@ def e(s: str) -> str:
 
 def co_chu(text: str, toi_da: int, nho_nhat: int, rong: int = XW - 60, he: float = 0.74) -> int:
     return int(max(nho_nhat, min(toi_da, rong / (max(len(text), 1) * he))))
+
+
+def co_chu_toi_thieu(kenh: str, goc: Path) -> int:
+    """Cỡ chữ tối thiểu (px) của kênh: rubric.yaml tieu_chi.phu_de.co_chu_toi_thieu, cùng số mà bước chấm điểm đo."""
+    import yaml
+    p = goc / "brand" / kenh / "rubric.yaml"
+    try:
+        v = ((yaml.safe_load(p.read_text(encoding="utf-8")) or {}).get("tieu_chi") or {}).get("phu_de", {}).get("co_chu_toi_thieu")
+    except OSError:
+        v = None
+    return int(v or CO_CHU_TOI_THIEU)
 
 
 def tu_khoa(t: str) -> bool:
@@ -53,6 +68,7 @@ class Dung:
         vua = next((f for f in fonts if f.endswith("-Bold.ttf")), dam)
         self.FONT = FONT.replace("FONT_DAM", dam).replace("FONT_VUA", vua)
         self.fonts, self.goc = fonts, goc
+        self.CO = co_chu_toi_thieu(kh["kenh"], goc)
         nguon = {n["id"]: n for n in kh["nguon_luat"]}
         self.the = {}
         for d in kh["doan"]:
@@ -106,8 +122,8 @@ class Dung:
                 than += ('<rect x="-35" y="4" width="70" height="14" fill="#D7263D"/>'
                          '<rect x="-16" y="-58" width="14" height="10" rx="3" fill="#D7263D"/>'
                          '<rect x="2" y="-58" width="14" height="10" rx="3" fill="#1E5BD8"/>')
-        huy_hieu = (f'<g><circle cx="0" cy="-88" r="28" fill="{T}" stroke="{N}" stroke-width="4"/>'
-                    f'<text x="0" y="-78" data-layout-allow-occlusion text-anchor="middle" font-family="BVP" font-weight="800" font-size="34" '
+        huy_hieu = (f'<g id="{xid}-so"><circle cx="0" cy="-90" r="33" fill="{T}" stroke="{N}" stroke-width="4"/>'
+                    f'<text x="0" y="-75" data-layout-allow-occlusion text-anchor="middle" font-family="BVP" font-weight="800" font-size="{self.CO}" '
                     f'fill="{N}">{so}</text></g>') if so else ""
         # Xe có thể chạy vào dưới thẻ chữ: chồng lớp có chủ ý (thẻ chữ luôn ở trên sơ đồ).
         return f'<g id="{xid}" data-layout-allow-occlusion><g id="{xid}-q">{than}</g>{huy_hieu}</g>'
@@ -127,10 +143,13 @@ class Dung:
             s.append(f'<line x1="{x0}" y1="{CY}" x2="{x1}" y2="{CY}" stroke="{vach}" stroke-width="6" stroke-dasharray="34 26"/>')
         if uu:
             ten = "ĐƯỜNG ƯU TIÊN"
-            if uu == "ngang":  # chữ nằm trên mặt đường ưu tiên, bên phải ngã tư
-                s.append(f'<text x="{CX + H2 + 24}" y="{CY - 18}" font-family="BVP" font-weight="800" font-size="30" fill="{self.TRANG}">{ten}</text>')
+            co = self.CO
+            if uu == "ngang":  # chữ nằm trên mặt đường ưu tiên, bên phải ngã tư; 2 dòng để không vượt x 888
+                x = CX + H2 + 24
+                s.append(f'<text x="{x}" y="{CY - 30}" font-family="BVP" font-weight="800" font-size="{co}" fill="{self.TRANG}">'
+                         f'<tspan x="{x}">ĐƯỜNG</tspan><tspan x="{x}" dy="{round(co * 1.1)}">ƯU TIÊN</tspan></text>')
             else:
-                s.append(f'<text x="{CX + 18}" y="{CY + H2 + 60}" font-family="BVP" font-weight="800" font-size="30" fill="{self.TRANG}" '
+                s.append(f'<text x="{CX + 18}" y="{CY + H2 + 60}" font-family="BVP" font-weight="800" font-size="{co}" fill="{self.TRANG}" '
                          f'transform="rotate(90 {CX + 18} {CY + H2 + 60})">{ten}</text>')
         return "".join(s)
 
@@ -146,8 +165,12 @@ class Dung:
             svg.append(self._xe_svg(xid, x.get("loai", "xe_may"), mau, x["thu_tu"]))
             js.append(f'tl.set("#{xid}",{{x:{sx},y:{sy}}},0); tl.set("#{xid}-q",{{rotation:{goc},transformOrigin:"50% 50%"}},0);')
             js.append(f'tl.to("#{xid}",{{x:{dx},y:{dy},duration:{0.8 * k:.2f},ease:"power2.out"}},{0.2 * k:.2f});')
+            # Điểm xuất phát nằm sát mép khung (ngoài vùng an toàn): số trên xe chỉ hiện khi xe gần tới điểm dừng chờ.
+            js.append(f'tl.fromTo("#{xid}-so",{{opacity:0}},{{opacity:1,duration:{0.2 * k:.2f}}},{0.75 * k:.2f});')
             t = round((1.3 + 1.4 * (x["thu_tu"] - 1)) * k, 2)
             js.append(f'tl.to("#{xid}",{{x:{ex},y:{ey},duration:{1.2 * k:.2f},ease:"power1.in"}},{t});')
+            # Số trên xe mờ hẳn trước khi xe chạm mép vùng an toàn lúc chạy ra khỏi khung (hyperframes check).
+            js.append(f'tl.to("#{xid}-so",{{opacity:0,duration:{0.25 * k:.2f}}},{round(t + 0.6 * 1.2 * k, 2)});')
             if x["thu_tu"] > 1:
                 js.append(f'tl.fromTo("#{xid}",{{opacity:1}},{{opacity:0.55,duration:0.25,yoyo:true,repeat:{max(1, x["thu_tu"] - 1)}}},{round(1.0 * k, 2)});')
         return "".join(svg), js
@@ -233,7 +256,7 @@ class Dung:
             media = (f'<video id="{sid}-v" class="clip" data-start="0" data-duration="{D}" data-track-index="0" '
                      f'src="assets/video/{cid}.mp4" muted playsinline></video>')
         f1 = co_chu(l1, 104, 60)
-        f2 = co_chu(l2, 50, 34, he=0.62)
+        f2 = co_chu(l2, 50, self.CO, he=0.62)
         tu1 = "".join(f'<span class="w">{e(w)}</span> ' for w in l1.split()).strip()
         srch = f'<div id="{sid}-src" class="src">Nguồn: {e(src)}</div>' if src else ""
         js = []
@@ -263,9 +286,9 @@ class Dung:
     #{sid}-v {{ position:absolute; left:0; top:0; width:{W}px; height:{H}px; object-fit:cover; }}
     #{sid}-card {{ position:absolute; left:{X0}px; top:452px; width:{XW}px; display:flex; flex-direction:column; align-items:flex-start; gap:14px; font-family:"BVP",sans-serif; }}
     #{sid}-l1 {{ background:{N}; color:{T}; font-weight:800; font-size:{f1}px; line-height:1.12; padding:16px 28px 18px; border-radius:14px; transform-origin:0 50%; }}
-    #{sid}-l2 {{ background:{mau2}; color:{T}; font-weight:800; font-size:{f2}px; line-height:1.2; padding:12px 24px 14px; border-radius:12px; }}
+    #{sid}-l2 {{ background:{mau2}; color:{T}; font-weight:800; font-size:{f2}px; line-height:1.2; padding:12px 24px 14px; border-radius:12px; text-wrap:balance; }}
     #{sid}-card .w {{ display:inline-block; }}
-    #{sid}-src {{ margin-top:6px; background:rgba(14,57,112,0.88); color:{T}; font-weight:700; font-size:30px; line-height:1.3; padding:8px 18px; border-radius:10px; max-width:{XW}px; }}
+    #{sid}-src {{ margin-top:6px; background:rgba(14,57,112,0.88); color:{T}; font-weight:700; font-size:{self.CO}px; line-height:1.22; padding:8px 18px 10px; border-radius:10px; max-width:{XCW}px; text-wrap:balance; }}
   </style>
   <div id="root" data-composition-id="{sid}" data-width="{W}" data-height="{H}">
     <div id="{sid}-cam">
@@ -391,7 +414,7 @@ class Dung:
     #kh-duoi {{ position:absolute; left:0; top:1300px; width:{W}px; height:620px; background:linear-gradient(180deg, rgba(14,57,112,0), rgba(14,57,112,0.55)); }}
     #kh-logo {{ position:absolute; left:{X0}px; top:292px; display:flex; align-items:center; gap:8px; background:{T}; border-radius:20px; padding:8px 24px 8px 8px; font-family:"BVP",sans-serif; box-shadow:0 6px 24px rgba(0,0,0,0.25); }}
     #kh-logo img {{ height:92px; width:auto; display:block; }}
-    #kh-t1 {{ color:{N}; font-weight:700; font-size:28px; letter-spacing:0.02em; line-height:1.1; }}
+    #kh-t1 {{ color:{N}; font-weight:700; font-size:{self.CO}px; letter-spacing:0.01em; line-height:1.05; }}
     #kh-t2 {{ color:{N}; font-weight:800; font-size:44px; line-height:1.05; }}
     #kh-t2 b {{ color:{C}; font-weight:800; }}
   </style>
@@ -436,7 +459,10 @@ class Dung:
         d1, d2 = self._logo_chu()
         zalo = (f'<div id="kt-zalo"><span>ZALO</span>{e(self.LH.get("zalo") or self.LH.get("hotline") or "")}</div>'
                 if mk.get("hotline", True) else "")
-        dc = f'<div id="kt-dc">{e(self.LH.get("dia_chi") or "")}</div>' if mk.get("dia_chi", True) else ""
+        # Địa chỉ: mỗi cụm giữa hai dấu phẩy không bị ngắt dòng (tên xã, tên tỉnh không bị tách đôi).
+        cum_dc = [x.strip() for x in (self.LH.get("dia_chi") or "").split(",") if x.strip()]
+        dc = ('<div id="kt-dc">' + ", ".join(f'<span class="nw">{e(x)}</span>' for x in cum_dc) + "</div>"
+              if mk.get("dia_chi", True) else "")
         N, T, C, X = self.NAVY, self.TRANG, self.CAM, self.XANH
         return f"""<template>
   <style>
@@ -448,15 +474,15 @@ class Dung:
     #kt-cot {{ position:absolute; left:{XC0}px; top:330px; width:{XCW}px; display:flex; flex-direction:column; align-items:center; text-align:center; }}
     #kt-the {{ background:{T}; border-radius:32px; padding:28px 56px 32px; display:flex; flex-direction:column; align-items:center; box-shadow:0 18px 50px rgba(0,0,0,0.35); }}
     #kt-the img {{ height:210px; width:auto; display:block; }}
-    #kt-n1 {{ color:{N}; font-weight:700; font-size:34px; letter-spacing:0.05em; margin-top:6px; }}
+    #kt-n1 {{ color:{N}; font-weight:700; font-size:{self.CO}px; letter-spacing:0.03em; margin-top:6px; }}
     #kt-n2 {{ color:{N}; font-weight:800; font-size:68px; line-height:1.05; }}
     #kt-n2 b {{ color:{C}; font-weight:800; }}
-    #kt-cta {{ margin-top:40px; color:{T}; font-weight:800; font-size:50px; line-height:1.25; max-width:{XCW}px; }}
+    #kt-cta {{ margin-top:40px; color:{T}; font-weight:800; font-size:50px; line-height:1.25; max-width:{XCW}px; text-wrap:balance; }}
     #kt-cta .w {{ display:inline-block; opacity:0.35; }}
-    #kt-cta .nw {{ white-space:nowrap; }}
+    #kt-cta .nw, #kt-dc .nw {{ white-space:nowrap; }}
     #kt-zalo {{ margin-top:32px; background:{C}; color:{T}; font-weight:800; font-size:60px; line-height:1.1; padding:20px 40px 24px; border-radius:20px; }}
-    #kt-zalo span {{ font-size:40px; font-weight:700; margin-right:18px; vertical-align:middle; }}
-    #kt-dc {{ margin-top:28px; color:rgba(255,255,255,0.88); font-weight:700; font-size:32px; }}
+    #kt-zalo span {{ font-size:{self.CO}px; font-weight:700; margin-right:18px; vertical-align:middle; }}
+    #kt-dc {{ margin-top:28px; color:rgba(255,255,255,0.88); font-weight:700; font-size:{self.CO}px; line-height:1.2; text-wrap:balance; }}
   </style>
   <div id="root" data-composition-id="ket" data-width="{W}" data-height="{H}">
     <div id="kt-nen"></div>

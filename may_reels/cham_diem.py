@@ -6,7 +6,9 @@ Luồng (cham_video):
   2. Chặn cứng (Python): cụm từ cấm / câu sáo đã chốt trong lời nghe được và chữ trên màn hình (cả dạng không dấu);
      con số / số hiệu luật không có trong nguồn cho phép; tài sản ngoài kho kênh, brand, sơ đồ được phép.
      Vi phạm -> KetQuaCham.chan khác rỗng: không vào Hàng chờ, job sang loi.
-  3. Đo tất định: nhịp, tỉ lệ cảnh thật, phụ đề, thương hiệu, CTA, mốc chữ đầu, độ đứng yên của 3 giây đầu.
+  3. Đo tất định: nhịp, tỉ lệ cảnh thật, phụ đề, thương hiệu, CTA, mốc chữ đầu, độ đứng yên của 3 giây đầu;
+     cỡ chữ của MỌI chữ trên màn hình (đọc từ nguồn HyperFrames, may_reels/co_chu.py) và chữ ra ngoài vùng an toàn
+     (hyperframes check). Thiếu thì áp trần tiêu chí phu_de và ghi canh_bao.
      Ghi review/bang_chung.json.
   4. Agent (claude -p, skills/may-reels/cham-diem.md) chấm các tiêu chí nguon=agent từ bằng chứng, ghi renders/score.json.
   5. Python gộp: tiêu chí nguon=may lấy số đo, tiêu chí agent bị áp trần khi đo được lỗi cứng, áp trần tổng
@@ -31,12 +33,15 @@ from typing import Callable
 
 import yaml
 
+from may_reels import co_chu
 from may_reels.sheet import bay_gio_vn
 
 GOC = Path(__file__).resolve().parent.parent
 SKILL_CHAM = "skills/may-reels/cham-diem.md"
 MOC_HOOK = (0.0, 0.5, 1.5, 3.0)
 BIEN_PY = "MAY_REELS_PY_GIONG"
+# hyperframes check (vùng an toàn). Test thay bằng hàm giả (tests/may_reels/conftest.py).
+kiem_vung_mac_dinh: Callable[[Path, str], tuple[dict | None, str]] = co_chu.chay_check
 
 
 class LoiRubric(RuntimeError):
@@ -463,6 +468,20 @@ def tinh_diem(rb: dict, do: dict, agent: dict, diem_ky_thuat: float | None) -> t
                 if vp:
                     d = min(d, float(c.get("khi_vi_pham", toi_da)))
                     tran += vp
+                # Mọi chữ trên màn hình (cả nguồn luật, khung logo, màn kết): cỡ tối thiểu và vùng an toàn.
+                cc = do.get("co_chu") or {}
+                if cc.get("duoi_toi_thieu"):
+                    d = min(d, float(c.get("khi_chu_nho", c.get("khi_vi_pham", toi_da))))
+                    tran.append(f"{len(cc['duoi_toi_thieu'])} nhóm chữ dưới {cc['toi_thieu']:g}px")
+                    canh_bao.append(tom_tat_chu_nho(cc))
+                va = do.get("vung_an_toan") or {}
+                if va.get("ngoai_vung"):
+                    d = min(d, float(c.get("khi_ngoai_vung", c.get("khi_vi_pham", toi_da))))
+                    tran.append(f"{len(va['ngoai_vung'])} chữ ra ngoài vùng an toàn")
+                    canh_bao.append("Chữ ra ngoài vùng an toàn: " + "; ".join(
+                        f"\"{x['chu']}\" ({x['file']}, {x['giay']}s)" for x in va["ngoai_vung"][:4]))
+                elif va.get("loi"):
+                    canh_bao.append(f"Chưa đo được vùng an toàn: {va['loi'][:60]}")
             elif ma == "cta":
                 ct = do.get("cta") or {}
                 if not ct.get("nguyen_van"):
@@ -488,6 +507,36 @@ def tinh_diem(rb: dict, do: dict, agent: dict, diem_ky_thuat: float | None) -> t
             tong = float(luat["toi_da"])
             ap.append({"toi_da": luat["toi_da"], "ly_do": luat.get("ly_do", "")})
     return ra, int(round(tong)), ap, canh_bao
+
+
+def _nhom_chu(x: dict) -> str:
+    """Tên nhóm dễ hiểu cho canh_bao, theo file và phần tử nguồn HyperFrames."""
+    pt, f = x["phan_tu"], x["file"]
+    if pt.endswith("src") or str(x.get("vi_du", "")).startswith("Nguồn"):
+        return "nguồn luật"
+    if f == "ket.html":
+        return "màn kết"
+    if f == "khung.html":
+        return "chữ cạnh logo"
+    if f == "phude.html":
+        return "phụ đề"
+    if re.search(r"-x[ev]\d", pt):
+        return "số trên xe sơ đồ"
+    if pt.endswith("-l2"):
+        return "dòng phụ thẻ chữ"
+    if pt.endswith("-l1") or "-l1 " in pt:
+        return "dòng chính thẻ chữ"
+    return f"{f} {pt}"
+
+
+def tom_tat_chu_nho(cc: dict) -> str:
+    """Một dòng canh_bao: 'Chữ dưới 42px: nguồn luật 30px; màn kết 32-40px; ...' (nhỏ nhất trước)."""
+    nhom: dict[str, list[float]] = {}
+    for x in cc.get("duoi_toi_thieu") or []:
+        nhom.setdefault(_nhom_chu(x), []).append(x["px"])
+    phan = sorted(nhom.items(), key=lambda kv: min(kv[1]))
+    return f"Chữ dưới {cc['toi_thieu']:g}px: " + "; ".join(
+        f"{k} {min(v):g}px" if min(v) == max(v) else f"{k} {min(v):g}-{max(v):g}px" for k, v in phan)
 
 
 def ly_do_tru(tieu_chi: list[dict], tran: list[dict]) -> list[str]:
@@ -522,7 +571,8 @@ def _doc_json(p: Path, mac_dinh=None):
 
 def cham_video(ma_video: str, *, goc: Path = GOC, agent: Callable[..., dict] = goi_agent_cham,
                chep: Callable[..., dict] = chep_loi_mac_dinh, log: Callable[[str], None] = print,
-               tom: dict | None = None) -> KetQuaCham:
+               tom: dict | None = None,
+               kiem_vung: Callable[[Path, str], tuple[dict | None, str]] | None = None) -> KetQuaCham:
     from may_reels.dung.ke_hoach import doc_brand, doc_san_xuat
     from may_reels.dung.pipeline import doc_diem_ky_thuat
     t0 = time.monotonic()
@@ -559,7 +609,10 @@ def cham_video(ma_video: str, *, goc: Path = GOC, agent: Callable[..., dict] = g
           "ti_le_canh_that": ti_le_canh_that(cat),
           "nhip": do_nhip(cat, kh, tu, float((tc.get("nhip") or {}).get("giay_toi_da", 4.0))),
           "phu_de": do_phu_de(P / "hf", tc.get("phu_de") or {}), "thuong_hieu": do_thuong_hieu(P, brand, goc),
-          "cta": do_cta(kh, brand, loi_nghe + " " + man_hinh)}
+          "cta": do_cta(kh, brand, loi_nghe + " " + man_hinh),
+          "co_chu": co_chu.do_co_chu(P / "hf", float((tc.get("phu_de") or {}).get("co_chu_toi_thieu", 42)))}
+    bc_check, loi_check = (kiem_vung or kiem_vung_mac_dinh)(P / "hf", str(sx.get("hyperframes_phien_ban") or "0.9.46"))
+    do["vung_an_toan"] = {"ngoai_vung": co_chu.doc_ngoai_vung(bc_check) if bc_check else [], "loi": loi_check}
     bang_chung = {"ma_video": ma_video, "sha1_video": sha, "khung_hook": khung,
                   "khung_review": sorted(f.name for f in rv.glob("khung-*.png")), "luoi": "luoi.png",
                   "chep_loi": loi_nghe, "chu_tren_man_hinh": man_hinh, "do_dac": do,

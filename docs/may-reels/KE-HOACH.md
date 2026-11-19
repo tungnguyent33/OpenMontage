@@ -1,6 +1,6 @@
 # Máy Reels: kế hoạch
 
-Đọc kèm `docs/may-reels/NGUYEN-TAC.md`. Tài liệu này được viết sau khi đã đọc code thật trên nhánh `kenh-vanxuan`. Chỗ nào ghi **chưa xác minh** là chưa đọc hoặc chưa chạy thử được.
+Trạng thái hiện tại và việc đang dở: `docs/may-reels/TRANG-THAI.md`; lịch sử thay đổi: `docs/may-reels/NHAT-KY-PHAT-TRIEN.md`. Đọc kèm `docs/may-reels/NGUYEN-TAC.md`. Tài liệu này được viết sau khi đã đọc code thật trên nhánh `kenh-vanxuan`. Chỗ nào ghi **chưa xác minh** là chưa đọc hoặc chưa chạy thử được.
 
 ---
 

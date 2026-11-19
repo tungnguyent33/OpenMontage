@@ -386,7 +386,10 @@ def test_html_so_do(tmp_path, so_do):
     if so_do["kieu"] != "the_chu":
         assert "s2-xe0" in h and "s2-xe1" in h
     if so_do.get("duong_uu_tien"):
-        assert "ĐƯỜNG ƯU TIÊN" in h
+        # Nhãn đường ưu tiên: 2 dòng (tspan) ở cỡ tối thiểu 42px để không vượt vùng an toàn bên phải.
+        assert ">ĐƯỜNG</tspan>" in h and ">ƯU TIÊN</tspan>" in h
+        from may_reels.co_chu import do_co_chu_file
+        assert all(x["px"] >= 42 for x in do_co_chu_file(P / "hf/compositions/s2.html"))
 
 
 def agent_tam(goi: list):

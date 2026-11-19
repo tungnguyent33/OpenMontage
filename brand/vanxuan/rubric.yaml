@@ -41,15 +41,21 @@ tieu_chi:
     khi_duoi_toi_thieu: 5           # ... thì tối đa 5 điểm, kèm canh_bao bên dưới
     canh_bao: "Nhiều cảnh tạm"
   phu_de:
-    ten: "Phụ đề đọc được"
+    ten: "Phụ đề và chữ đọc được"
     trong_so: 10
     nguon: agent
-    mo_ta: "Đúng dấu, tối đa 2 dòng, nằm trong vùng an toàn 900x1400, đủ tương phản."
+    mo_ta: "Phụ đề đúng dấu, tối đa 2 dòng, nằm trong vùng an toàn 900x1400, đủ tương phản. MỌI chữ trên màn hình (thẻ chữ, nguồn luật, chữ cạnh logo, sơ đồ, màn kết) từ 42px và không ra ngoài vùng an toàn của nền tảng."
     so_dong_toi_da: 2
     ky_tu_moi_dong: 19              # cỡ chữ 58px trong khung 660px của phụ đề: khoảng 19 ký tự mỗi dòng
     vung_an_toan: {x0: 90, y0: 260, x1: 990, y1: 1660}   # 900x1400 căn giữa khung 1080x1920
     tuong_phan_toi_thieu: 4.5
     khi_vi_pham: 5                  # đo được vượt số dòng / ra ngoài vùng an toàn / thiếu tương phản: tối đa 5
+    # Cỡ chữ đọc từ nguồn HyperFrames (may_reels/co_chu.py), không đoán từ ảnh. skills/creative/short-form.md:
+    # "TEXT SIZE: 42px+ minimum" ở 1080p. Vùng an toàn: cảnh báo outside_safe_zone của hyperframes check
+    # (TikTok / Reels / Shorts). Vi phạm thì áp trần tiêu chí này và ghi canh_bao.
+    co_chu_toi_thieu: 42
+    khi_chu_nho: 5                  # có chữ dưới co_chu_toi_thieu: tối đa 5
+    khi_ngoai_vung: 5               # hyperframes check báo chữ ra ngoài vùng an toàn: tối đa 5
   thuong_hieu:
     ten: "Thương hiệu"
     trong_so: 10

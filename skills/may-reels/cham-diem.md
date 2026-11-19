@@ -51,14 +51,14 @@ Ghi `projects/<ma_video>/renders/score.json` như sau, chỉ gồm các tiêu ch
   - Người xem có học được một điều cụ thể, làm theo được không?
 
   Sai luật, hoặc trả lời lạc đề, thì tối đa 3.
-- **phu_de**: chữ đúng dấu tiếng Việt (so `chep_loi` và khung hình), không quá 2 dòng, không bị cắt, không che thẻ chữ, đọc được trên nền. Máy đã đo số dòng, vùng an toàn và tương phản (`do_dac.phu_de`), nên bạn chấm phần mắt mới thấy được.
+- **phu_de**: chữ đúng dấu tiếng Việt (so `chep_loi` và khung hình), không quá 2 dòng, không bị cắt, không che thẻ chữ, đọc được trên nền. Máy đã đo số dòng, vùng an toàn và tương phản (`do_dac.phu_de`), nên bạn chấm phần mắt mới thấy được. Tiêu chí này giờ tính cả **mọi chữ trên màn hình**: máy đọc cỡ chữ từ nguồn HyperFrames (`do_dac.co_chu`: các nhóm chữ dưới 42px, kể cả nguồn luật và màn kết) và chữ ra ngoài vùng an toàn của nền tảng (`do_dac.vung_an_toan`, từ `hyperframes check`). Không tự ước lượng cỡ chữ từ ảnh; hãy dùng số đo này.
 - **cta**: chỉ **một** lời kêu gọi, nói rõ người xem cần làm gì (nhắn số nào, bình luận gì, lưu video). Xem `do_dac.cta`.
 
 ## Chống chấm dễ dãi
 
 - Điểm tối đa chỉ dành cho tiêu chí không có lỗi nào bạn chỉ ra được. Nếu `ly_do` có chữ "nhưng", "hơi", "chưa" thì điểm không được là tối đa.
 - Không được nâng điểm vì kịch bản hay. Chỉ chấm cái có trong video.
-- Máy vẫn áp trần lên điểm của bạn khi đo được lỗi cứng: chữ xuất hiện muộn, 3 giây đầu đứng yên, phụ đề quá 2 dòng, CTA không nguyên văn. Đừng chấm bù cho các lỗi đó.
+- Máy vẫn áp trần lên điểm của bạn khi đo được lỗi cứng: chữ xuất hiện muộn, 3 giây đầu đứng yên, phụ đề quá 2 dòng, chữ dưới 42px hoặc ra ngoài vùng an toàn, CTA không nguyên văn. Đừng chấm bù cho các lỗi đó.
 
 ## Kết thúc
 

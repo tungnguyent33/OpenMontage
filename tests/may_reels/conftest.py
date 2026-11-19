@@ -1,6 +1,7 @@
 """Test của Máy Reels không gọi FFmpeg nén, PhoWhisper hay claude -p trừ khi test tự yêu cầu.
 
 - Bản xem thử: "video" giả (vài byte) không nén được -> chép file. Test cần FFmpeg thật gọi NEN_XEM_THU_THAT.
+- Vùng an toàn khi chấm thật: hyperframes check thay bằng báo cáo rỗng.
 - Chấm điểm (san_xuat / sua / cham-lai): thay bằng cham_gia, lấy điểm từ tóm tắt bước dựng (tom["diem_qa"]) để các
   test luồng cũ giữ nguyên kịch bản điểm. Test chấm thật dùng may_reels.cham_diem.cham_video với agent/chép lời giả.
 """
@@ -30,3 +31,5 @@ def _khong_goi_ngoai(monkeypatch):
     monkeypatch.setattr(hang_cho, "nen_xem_thu", lambda src, dst, cfg: shutil.copyfile(src, dst))
     monkeypatch.setattr("may_reels.san_xuat.cham_mac_dinh", cham_gia)
     monkeypatch.setattr("may_reels.sua.cham_mac_dinh", cham_gia)
+    # Vùng an toàn: không chạy hyperframes check (Chrome, mạng) trong test; test riêng tự truyền kiem_vung.
+    monkeypatch.setattr("may_reels.cham_diem.kiem_vung_mac_dinh", lambda hf, phien_ban: ({"layout": {"findings": []}}, ""))
