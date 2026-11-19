@@ -5,7 +5,8 @@ Chạy bằng Python có faster_whisper (MAY_REELS_PY_GIONG, giống bước sin
 
 `--model` nhận tên cỡ của transcriber (base, large-v3...) hoặc mã/thư mục model CTranslate2; đổi mặc định bằng
 MAY_REELS_MODEL_CHEP_LOI. Mặc định là PhoWhisper vì máy đã dùng nó để nghe lại giọng đọc, đã có sẵn trong cache và
-chạy offline. Phép so sánh trên 2 clip thật CHƯA chạy xong (docs/may-reels/KE-HOACH.md mục 10).
+chạy offline. So sánh trên 2 clip thật (docs/may-reels/KE-HOACH.md mục 10, 2026-11-19): PhoWhisper sát lời nhất;
+large-v3 bịa câu "đăng ký kênh" ở đoạn ồn; base sai nhiều từ.
 Ra: {"model", "device", "ngon_ngu", "doan": [{"start", "end", "text"}], "so_tu", "giay_co_loi", "van_ban"}
 """
 from __future__ import annotations

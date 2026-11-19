@@ -393,19 +393,28 @@ Chạy bằng `tools_local\py.cmd -m pytest -q` (có `PYTHONUTF8=1`):
 - GPU của máy không dùng được cho faster-whisper: thiếu `cublas64_12.dll` (CUDA 12). `transcriber` tự chuyển sang CPU int8, nên chép lời model lớn chậm.
 - Hugging Face không tạo được symlink trong cache trên Windows này (`WinError 1314`), nên tải model mới bị dở (`faster-whisper-large-v3` trong cache thiếu `model.bin`). Model dùng để so sánh được tải vào thư mục thường `~/.cache/whisper-local/`.
 
-**Có cần PhoWhisper không: CHƯA kết luận.** Thử trên 2 clip thật có tiếng trong kho (`Nhieu_hoc_vien_nu_Cancanh.mp4`, `Video quay demo/snaptik...mp4`), cả ba model đều chạy qua tool `transcriber` bằng CPU. Lần chạy bị hệ thống dừng vì máy thiếu bộ nhớ, và chưa chạy lại.
+**Có cần PhoWhisper không: ĐÃ kết luận (2026-11-19): giữ PhoWhisper làm mặc định.** Thử trên 2 clip thật có tiếng trong kho (`Nhieu_hoc_vien_nu_Cancanh.mp4`, `Video quay demo/snaptik...mp4`). Cả ba model đều chạy qua tool `transcriber` (`python -m may_reels.kho_chep_loi`) bằng CPU int8, lần lượt từng model, khi máy còn khoảng 12 GB RAM trống. Lần thử ngày 2026-11-17 bị dừng vì thiếu bộ nhớ; ngày 2026-11-19 chạy lại phần còn thiếu.
 
-| Clip 1 (khoảng 2,5 giây có lời) | Thời gian | Kết quả |
+| Clip 1 (38 giây, khoảng 2,5 giây có lời) | Thời gian | Kết quả |
 |---|---|---|
-| `base` (mặc định của transcriber) | 2,3 giây | "Đi theo đi lúc quen là chết hả hình? Đúng rồi" (sai từ) |
-| `large-v3` | khoảng 25 phút (chạy cùng lúc với test) | "Đi thế không đến lúc quen là chết hết" |
-| PhoWhisper-large | chưa chạy | — |
+| `base` | 2,3 giây | "Đi theo đi lúc quen là chết hả hình? Đúng rồi" (sai từ) |
+| `large-v3` | khoảng 25 phút (chạy cùng lúc với test, 2026-11-17) | "Đi thế không đến lúc quen là chết hết" |
+| PhoWhisper-large | 79 giây | "đi thế lâu đến lúc quen là chết hết. / đúng. / mời." |
 | Bản chép cũ trong kho (script của bộ kit) | — | "đi thế đến lúc quen là chết đấy…", kèm một câu bịa ở đoạn lặng |
 
-- Clip 2 chưa có kết quả.
-- Mặc định tạm thời là PhoWhisper (`MAY_REELS_MODEL_CHEP_LOI` để đổi), vì máy đã dùng nó để nghe lại giọng đọc và nó chạy offline. Nhưng chưa có số liệu chứng minh nó tốt hơn trên cảnh quay thật.
-- Model lớn chạy CPU tốn khoảng 3 GB bộ nhớ: `kho nap` với nhiều video có tiếng có thể chậm, hoặc gặp thiếu bộ nhớ khi chạy cùng việc khác.
-- Muốn chạy lại phép so sánh: cài thư viện CUDA 12 (cuBLAS, cuDNN) để chạy GPU, hoặc chạy vào lúc máy rảnh.
+| Clip 2 (78 giây, người quay nhắc học viên trên sân tập) | Thời gian | Kết quả |
+|---|---|---|
+| `base` | vài giây | 8 đoạn, sai nhiều từ: "Cái này sẽ đi qua khoan trình một ai thí luôn", "Bắt buộc và hảo luật tí ở ai bờ", "Tổng tích một phát vấn đô" |
+| `large-v3` | 22 giây | **Bịa hoàn toàn:** một đoạn duy nhất 9–65 giây "Các bạn hãy đăng ký kênh để ủng hộ kênh của mình nhé." |
+| PhoWhisper-large | 35 giây | "ngày sẽ đi hoàn chỉnh một bài thi luôn rồi … thời điểm này nó hơi hẹp nên là nhiều khi phải bắt buộc phải … một phát vẫn đỗ đấy thế là đúng rồi đấy bắt xe lại." |
+| Bản chép cũ trong kho | — | Trùng từng chữ với PhoWhisper (script của bộ kit có lẽ cũng dùng PhoWhisper, nên đây không phải bằng chứng độc lập) |
+
+- Kết luận: PhoWhisper sát lời thật nhất trên cả hai clip, không bịa câu ở đoạn lặng. `large-v3` bịa câu kiểu "đăng ký kênh" trên clip 2, nên nguy hiểm hơn `base` vì câu bịa đọc trơn tru, khó nhận ra là sai. `base` sai từ quá nhiều để làm trích lời.
+- Chỉ có 2 clip, phần lớn là tiếng nói xa, lẫn tiếng xe. Kết luận này đủ để giữ mặc định, chưa đủ để nói PhoWhisper đúng với lời thầy nói trước máy. Nhãn `loi_noi` vẫn do agent đọc lại trước khi trích.
+- Tốc độ: PhoWhisper chạy CPU mất 35–80 giây mỗi clip ngắn. Con số 25 phút của `large-v3` ngày 2026-11-17 là do chạy cùng lúc với test, không phải tốc độ thường của model.
+- Model lớn chạy CPU tốn khoảng 3 GB bộ nhớ. `kho nap` vẫn chạy chép lời lần lượt từng file, nên không nên chạy cùng việc nặng khác.
+- **Phát hiện thêm:** gọi `base` theo tên (`--model base`) báo lỗi `json.exception.type_error.305` trên clip 2. Nguyên nhân: bản `Systran/faster-whisper-base` trong cache Hugging Face thiếu `config.json` (cùng lỗi symlink `WinError 1314` ở trên). Bản ở `~/.cache/whisper-local/faster-whisper-base` đủ file và chạy được. Mặc định của máy không dùng `base`, nên không sửa gì.
+- GPU vẫn chưa dùng được (thiếu CUDA 12). Không cần cài để dùng PhoWhisper với kho hiện tại.
 
 **Sống chung với script cũ của bộ kit:** `scripts/nap_canh_quay.py` quét cả `canh-quay/moi-quay/`. Nếu script cũ lập index trước, `kho nap` nhận các file đó về (ghi `ngay_nap` thật, gắn nhãn) chứ không bỏ qua; cảnh đã nạp bằng `kho nap` thì script cũ giữ nguyên vì `dau` không đổi. Hướng dẫn `canh-quay/DOC-TOI.md` trong thư mục kênh gốc vẫn chỉ tới script cũ: máy không sửa file đó.
 
