@@ -471,3 +471,45 @@ def test_kho_thieu_tu_choi_goi_y_sai_khong_ghi_sheet(nha_may):
         return {"result": "ok"}
     kq = thieu(bang, "kenhthu", goc=goc, agent=agent, log=lambda s: None)
     assert kq["loi"] and S.doc_dong(bang, CAN_QUAY) == []
+
+
+# ---------------------------------------------------------------- KHO.md
+def test_kho_md_sinh_bang_giu_muc_agent_va_sao_luu_ban_cu(kenh):
+    from may_reels import kho_md
+    goc, k, bang = kenh
+    f = k / "canh-quay/_kho/KHO.md"
+    f.write_text("# Kho cũ\n\n## 1. Tóm tắt\n\ncũ\n\n## 3. Độ phủ theo chủ đề\n\n- vong-xuyen: thiếu\n\n"
+                 "## 4. Nên quay thêm\n\n1. NOI\n", encoding="utf-8")
+    idx = json.loads((k / "canh-quay/_kho/index.json").read_text(encoding="utf-8"))
+    idx["canh-quay/cu.mp4"].update(loai_file="video", rong=720, cao=1280, thoi_luong=12.0, so_lan_dung=2,
+                                   ngay_dung_gan_nhat="2026-11-16")
+    (k / "canh-quay/cu.mp4").write_bytes(b"v")
+    idx["canh-quay/moi-quay/m.jpg"] = {"ma": "m-1", "file": "canh-quay/moi-quay/m.jpg", "dau": "1-1",
+                                       "loai_file": "anh", "rong": 300, "cao": 400, "huong": "doc",
+                                       "ngay_nap": "2026-11-18", "nap_luc": "2026-11-18 10:00:00", "nap_boi": "kho-nap"}
+    nhan = {"cu-1": nhan_dung(), "m-1": nhan_dung(loai="ANH", mat_nguoi=True, dia_diem="phong-hoc",
+                                                  mo_ta="Phòng | học", doan_dung_duoc=[])}
+    kho_md.cap_nhat("kenhthu", k, goc, idx, nhan, bay_gio="2026-11-18 10:05:00", dung_cho_fn=K.dung_cho)
+    md = f.read_text(encoding="utf-8")
+    assert md.startswith(kho_md.MARKER) and "# Kho cảnh quay kênh Kênh thử" in md
+    assert "cũ\n" not in md and "- vong-xuyen: thiếu" in md and "1. NOI" in md  # mục 1 sinh lại, mục 3-4 giữ
+    assert "| cu-1 | BROLL |" in md and "| 0-2,5 |" in md and "| 2 (2026-11-16) | dùng được |" in md
+    assert "Phòng / học" in md and "chờ xác nhận quyền hình" in md  # ảnh có mặt người, nạp sau hạn quyền hình
+    assert "Máy ghi chú:" in md and "`m-1`" in md.split("## 3.")[0]
+    bak = list(f.parent.glob("KHO.md.bak-*"))
+    assert len(bak) == 1 and bak[0].read_text(encoding="utf-8").startswith("# Kho cũ")
+    # Lần sau: không sao lưu nữa (file đã do máy sinh), ghi chú máy không bị nhân đôi.
+    kho_md.cap_nhat("kenhthu", k, goc, idx, nhan, bay_gio="2026-11-18 11:00:00", dung_cho_fn=K.dung_cho)
+    md2 = f.read_text(encoding="utf-8")
+    assert len(list(f.parent.glob("KHO.md.bak-*"))) == 1 and md2.count("Máy ghi chú:") == 1
+    assert "- vong-xuyen: thiếu" in md2
+
+
+def test_kho_md_khong_co_muc_agent_thi_chi_toi_kho_thieu(kenh):
+    from may_reels import kho_md
+    goc, k, bang = kenh
+    idx = json.loads((k / "canh-quay/_kho/index.json").read_text(encoding="utf-8"))
+    kho_md.cap_nhat("kenhthu", k, goc, idx, {"cu-1": nhan_dung()}, bay_gio="t", dung_cho_fn=K.dung_cho)
+    md = (k / "canh-quay/_kho/KHO.md").read_text(encoding="utf-8")
+    assert "kho thieu" in md and not list((k / "canh-quay/_kho").glob("KHO.md.bak-*"))
+    assert "file không tồn tại" in md  # cu.mp4 không có trên đĩa

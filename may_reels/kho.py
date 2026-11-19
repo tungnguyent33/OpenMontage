@@ -12,7 +12,8 @@ brand/<kênh>/cau-hinh.yaml). File nằm yên tại chỗ sau khi nạp. Với m
      thêm vào nhan.json (không sửa nhãn đã có).
   4. Cảnh có mặt người: chưa dùng được cho tới khi người chọn "Đồng ý" ở tab Quyền hình. Lần `kho nap` sau chép
      xác nhận vào quyen_hinh.bo_sung của channel.yaml (sao lưu trước).
-  5. Ghi số lần dùng và ngày dùng gần nhất của từng cảnh vào index.json, chạy tools_local/nap_kenh.py.
+  5. Ghi số lần dùng và ngày dùng gần nhất của từng cảnh vào index.json, viết lại KHO.md (may_reels/kho_md.py),
+     chạy tools_local/nap_kenh.py.
   6. Job đang cho_quay có đủ yêu cầu ở tab Cần quay là "Đã quay" và có file nạp sau yêu cầu: đánh dấu
      san_sang_san_xuat_lai, lệnh `san-xuat` lần sau tự lấy job đó.
 Định dạng bản ghi index.json và nhan.json giữ đúng như scripts/nap_canh_quay.py và subagent phan-loai-canh của bộ
@@ -683,7 +684,15 @@ def nap(bang: BangNguon, kenh: str, *, goc: Path = GOC, thu_muc_kenh: Path | Non
             if ap_thong_ke_vao_index(index, thong_ke_dung_canh(goc, kenh)):
                 ghi_json(f_index, index)
 
-        # 5. Sinh lại brand.json, rồi trả job chờ quay đủ cảnh về hàng sản xuất.
+        # 5. Viết lại KHO.md (mục 1-2 từ dữ liệu, giữ mục 3-4 của agent). Lỗi ở đây không chặn các bước sau.
+        if not thu and f_index.is_file():
+            from may_reels.kho_md import cap_nhat as cap_nhat_kho_md
+            try:
+                cap_nhat_kho_md(kenh, tm.kenh, goc, index, nhan, bay_gio=bay_gio_vn(), dung_cho_fn=dung_cho)
+            except Exception as e:
+                kq.loi.append(f"KHO.md: {type(e).__name__}: {e}"[:300])
+
+        # 6. Sinh lại brand.json, rồi trả job chờ quay đủ cảnh về hàng sản xuất.
         if not thu:
             nap_kenh(kenh, goc)
         kq.tra_ve = tra_ve_san_xuat(bang, kenh, index, goc=goc, thu=thu, log=log)
