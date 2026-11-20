@@ -25,7 +25,7 @@ File tạo ngày 2026-11-19. Các phiên trước ngày này được ghi trong 
 
 **Đã làm (`may_reels/dung/hf.py`):** dòng nguồn chỉ hiện ở đoạn mà **lời đọc đang trích luật** (`TRICH_LUAT`: luật, Điều n, khoản n, điểm x, nghị định, thông tư, quy chuẩn, QCVN) và **mỗi nguồn một lần** (lần trích đầu). Áp vào kế hoạch hiện có: vx-006 còn s2, s3; vx-007 còn s2, s5. `nguon_ids` vẫn giữ trong kế hoạch (bước chặn cứng dùng). Caption cả 3 nền tảng đã ghi nguồn đầy đủ (kiểm vx-007). `skills/may-reels/san-xuat-khong-hoi.md` ghi quy tắc mới và yêu cầu caption ghi nguồn đầy đủ. Test `test_dong_nguon_chi_hien_khi_loi_trich_luat_moi_nguon_mot_lan`.
 
-**Lỗi trong lúc làm:** viết regex qua heredoc sinh ra ký tự `` thay cho ``, regex không khớp gì. Đã thay và rà mọi file `.py` của Máy Reels: không còn ký tự này.
+**Lỗi trong lúc làm:** viết regex qua heredoc sinh ra ký tự điều khiển backspace (mã 0x08) thay cho hai ký tự gạch chéo ngược + b (ranh giới từ trong regex), regex không khớp gì. Chính câu này lần đầu cũng bị ghi sai y như vậy. Đã thay và rà mọi file `.py` của Máy Reels: không còn ký tự này.
 
 **Test:** `tests/may_reels` 291/291 (không chạy lại toàn repo cho thay đổi này).
 
