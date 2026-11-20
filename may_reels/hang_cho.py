@@ -264,7 +264,9 @@ def dua_vao_hang_cho(bang: BangNguon, *, video: Path, kenh: str, ma_video: str, 
                      "canh_bao": "\n".join(gon_canh_bao(kq.canh_bao, int(cbc.get("so_dong", 3)),
                                                          int(cbc.get("ky_tu_moi_dong", 90)))),
                      "duyet": GIA_TRI_CHO,
-                     "ghi_chu_may": f"Thư mục đăng tay: {xuat_hien}"})
+                     "ghi_chu_may": f"Thư mục đăng tay: {xuat_hien}",
+                     # Bản video mới (sua / thay-canh): lỗi của lần trước không còn đúng nữa.
+                     **({"loi": ""} if ban_moi else {})})
     ban_ghi = {"ma_video": ma_video, "kenh": kenh, "video": str(video), "sha1": sha, "nen_tang": list(nen_tang),
                "link_xem_thu": kq.link_xem_thu, "tieu_de": tieu_de,
                "thong_so": {"rong": ts.rong, "cao": ts.cao, "giay": ts.giay, "fps": ts.fps}, **(thong_tin_them or {})}

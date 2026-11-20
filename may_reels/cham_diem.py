@@ -139,7 +139,7 @@ def moc_chu_dau(hf: Path) -> float | None:
             continue
         s = f.read_text(encoding="utf-8")
         if ten == "phude":
-            st = [float(x) for x in re.findall(r'class="clip grp"[^>]*data-start="([\d.]+)"', s)]
+            st = [float(x) for x in re.findall(r'class="clip grp[^"]*"[^>]*data-start="([\d.]+)"', s)]
             if st:
                 moc.append(t0 + min(st))
         elif re.fullmatch(r"s\d+", ten):
@@ -228,7 +228,7 @@ def do_phu_de(hf: Path, cfg: dict) -> dict:
     if not f.is_file():
         return {"co_phu_de": False}
     s = f.read_text(encoding="utf-8")
-    nhom = [_bo_the(g) for g in re.findall(r'class="clip grp"[^>]*>(.*?)</div>', s, re.S)]
+    nhom = [_bo_the(g) for g in re.findall(r'class="clip grp[^"]*"[^>]*>(.*?)</div>', s, re.S)]
     ktd = int(cfg.get("ky_tu_moi_dong", 19))
     so_dong = max((math.ceil(len(t) / ktd) for t in nhom if t), default=0)
     css = re.search(r"\.grp\s*\{([^}]*)\}", s)
@@ -241,6 +241,9 @@ def do_phu_de(hf: Path, cfg: dict) -> dict:
     lh = float(get(pill, "line-height").group(1)) if get(pill, "line-height") else 1.4
     vung = cfg.get("vung_an_toan") or {}
     trong_vung = None
+    thap = re.search(r"\.grp\.thap\s*\{([^}]*)\}", s)  # phụ đề hạ thấp trong cảnh sơ đồ: đo vị trí thấp hơn
+    if top is not None and get(thap, "top"):
+        top = max(top, float(get(thap, "top").group(1).rstrip("px")))
     if None not in (left, top, rong):
         day = top + max(so_dong, 1) * co * lh + 16
         trong_vung = (left >= vung.get("x0", 0) and left + rong <= vung.get("x1", 1080)

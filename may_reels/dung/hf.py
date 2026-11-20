@@ -69,6 +69,7 @@ class Dung:
         self.FONT = FONT.replace("FONT_DAM", dam).replace("FONT_VUA", vua)
         self.fonts, self.goc = fonts, goc
         self.CO = co_chu_toi_thieu(kh["kenh"], goc)
+        self._ti_le = 1.0  # tỉ lệ thu phóng của sơ đồ đang vẽ (so_do đặt rồi trả về 1)
         nguon = {n["id"]: n for n in kh["nguon_luat"]}
         self.the = {}
         for d in kh["doan"]:
@@ -99,8 +100,18 @@ class Dung:
                         for k in ("dev", "check", "render")}}, indent=2), encoding="utf-8")
 
     # ---------- cảnh tạm: sơ đồ động (SVG + GSAP), không AI, không stock ----------
-    # Tâm sơ đồ y=840: nằm giữa thẻ chữ (y 452..~700) và phụ đề (y 1050..1250). Xe đi bên phải đường.
+    # Tọa độ sơ đồ (đơn vị SVG) quanh tâm (540, 840). Xe đi bên phải đường.
+    # Bố cục trên màn hình (2026-11-20): trong cảnh sơ đồ, dòng phụ và nguồn luật của thẻ chữ hiện SD_DOC_GIAY giây rồi mờ,
+    # chỉ còn tiêu đề; phụ đề hạ xuống PD_TOP_SO_DO; sơ đồ được thu phóng/dời bằng viewBox để mọi xe và số trên xe nằm
+    # trong khoảng trống giữa tiêu đề và phụ đề, và xe chỉ bắt đầu chạy sau khi chữ đã mờ. Trước đó xe chờ ở nhánh trên
+    # nằm dưới thẻ chữ, ở nhánh dưới nằm dưới phụ đề (vx-007 cảnh s3, s5).
     CX, CY, NUA = 540, 840, 130
+    SD_DOC_GIAY = 2.6
+    PD_TOP_SO_DO = 1075  # 2 dòng phụ đề cao ~158px: đáy ~1233 < 1248 (mép dưới Reels/Shorts theo hyperframes check)
+    SO = {"r": 33, "lech": 90, "ty": 15}  # số trên xe: px trên màn hình, không đổi theo tỉ lệ sơ đồ
+    # Phần sơ đồ phải nằm trọn trong khoảng trống: (trên, dưới) tính từ tâm, đơn vị SVG, và số trên xe có nằm phía
+    # trên xe cao nhất không. Vòng xuyến: số đặt bên cạnh xe chờ (không đè lên làn trong vòng khi sơ đồ thu nhỏ).
+    TAM_VUNG = {"giao_nhau": (170, 224, True), "vong_xuyen": (379, 379, False)}
     LAN = {  # tu: (điểm xuất phát, điểm dừng chờ, điểm ra, góc quay của xe [xe vẽ hướng lên])
         "duoi": ((605, 1500), (605, 1000), (605, 520), 0),
         "tren": ((475, 520), (475, 670), (475, 1500), 180),
@@ -109,7 +120,8 @@ class Dung:
     }
     GOC_NHANH = {"phai": 0, "duoi": 90, "trai": 180, "tren": -90}  # góc màn hình của nhánh vòng xuyến
 
-    def _xe_svg(self, xid: str, loai: str, mau: str, so: int | None) -> str:
+    def _xe_svg(self, xid: str, loai: str, mau: str, so: int | None, huong: tuple[float, float] = (0, -1)) -> str:
+        """huong: hướng đặt số so với tâm xe (mặc định phía trên)."""
         N, T = self.NAVY, self.TRANG
         if loai == "xe_may":
             than = (f'<rect x="-17" y="-42" width="34" height="84" rx="15" fill="{mau}" stroke="{T}" stroke-width="3"/>'
@@ -122,8 +134,10 @@ class Dung:
                 than += ('<rect x="-35" y="4" width="70" height="14" fill="#D7263D"/>'
                          '<rect x="-16" y="-58" width="14" height="10" rx="3" fill="#D7263D"/>'
                          '<rect x="2" y="-58" width="14" height="10" rx="3" fill="#1E5BD8"/>')
-        huy_hieu = (f'<g id="{xid}-so"><circle cx="0" cy="-90" r="33" fill="{T}" stroke="{N}" stroke-width="4"/>'
-                    f'<text x="0" y="-75" data-layout-allow-occlusion text-anchor="middle" font-family="BVP" font-weight="800" font-size="{self.CO}" '
+        q = 1 / self._ti_le  # số trên xe giữ đúng cỡ trên màn hình dù sơ đồ thu nhỏ
+        bx, by = huong[0] * self.SO["lech"] * q, huong[1] * self.SO["lech"] * q
+        huy_hieu = (f'<g id="{xid}-so"><circle cx="{bx:.1f}" cy="{by:.1f}" r="{self.SO["r"] * q:.1f}" fill="{T}" stroke="{N}" stroke-width="{4 * q:.1f}"/>'
+                    f'<text x="{bx:.1f}" y="{by + self.SO["ty"] * q:.1f}" data-layout-allow-occlusion text-anchor="middle" font-family="BVP" font-weight="800" font-size="{self.CO * q:.1f}" '
                     f'fill="{N}">{so}</text></g>') if so else ""
         # Xe có thể chạy vào dưới thẻ chữ: chồng lớp có chủ ý (thẻ chữ luôn ở trên sơ đồ).
         return f'<g id="{xid}" data-layout-allow-occlusion><g id="{xid}-q">{than}</g>{huy_hieu}</g>'
@@ -134,16 +148,16 @@ class Dung:
         uu = sd.get("duong_uu_tien")
         mau_doc = sang if uu == "doc" else duong
         mau_ngang = sang if uu == "ngang" else duong
-        s = [f'<rect x="{CX - H2}" y="480" width="{2 * H2}" height="1100" fill="{mau_doc}"/>',
-             f'<rect x="40" y="{CY - H2}" width="1000" height="{2 * H2}" fill="{mau_ngang}"/>',
+        s = [f'<rect x="{CX - H2}" y="-2000" width="{2 * H2}" height="6000" fill="{mau_doc}"/>',
+             f'<rect x="-2000" y="{CY - H2}" width="5000" height="{2 * H2}" fill="{mau_ngang}"/>',
              f'<rect x="{CX - H2}" y="{CY - H2}" width="{2 * H2}" height="{2 * H2}" fill="{sang if uu else duong}"/>']
-        for y0, y1 in ((480, CY - H2 - 30), (CY + H2 + 30, 1580)):
+        for y0, y1 in ((-2000, CY - H2 - 30), (CY + H2 + 30, 4000)):
             s.append(f'<line x1="{CX}" y1="{y0}" x2="{CX}" y2="{y1}" stroke="{vach}" stroke-width="6" stroke-dasharray="34 26"/>')
-        for x0, x1 in ((40, CX - H2 - 30), (CX + H2 + 30, 1040)):
+        for x0, x1 in ((-2000, CX - H2 - 30), (CX + H2 + 30, 3000)):
             s.append(f'<line x1="{x0}" y1="{CY}" x2="{x1}" y2="{CY}" stroke="{vach}" stroke-width="6" stroke-dasharray="34 26"/>')
         if uu:
             ten = "ĐƯỜNG ƯU TIÊN"
-            co = self.CO
+            co = round(self.CO / self._ti_le, 1)
             if uu == "ngang":  # chữ nằm trên mặt đường ưu tiên, bên phải ngã tư; 2 dòng để không vượt x 888
                 x = CX + H2 + 24
                 s.append(f'<text x="{x}" y="{CY - 30}" font-family="BVP" font-weight="800" font-size="{co}" fill="{self.TRANG}">'
@@ -153,36 +167,43 @@ class Dung:
                          f'transform="rotate(90 {CX + 18} {CY + H2 + 60})">{ten}</text>')
         return "".join(s)
 
-    def _so_do_giao_nhau(self, sid: str, sd: dict, D: float) -> tuple[str, list[str]]:
+    def _xa(self, x: float, y: float) -> tuple[int, int]:
+        """Điểm xuất phát/điểm ra: đẩy ra xa theo tỉ lệ để vẫn ở mép khung khi sơ đồ thu nhỏ."""
+        q = 1 / self._ti_le
+        return round(self.CX + (x - self.CX) * q), round(self.CY + (y - self.CY) * q)
+
+    def _so_do_giao_nhau(self, sid: str, sd: dict, D: float, t0: float = 0.0) -> tuple[str, list[str]]:
+        """t0: giây bắt đầu chuyển động (sau khi chữ của thẻ mờ). Mọi tween dời thêm t0; tl.set vẫn ở 0."""
         xe = sorted(sd.get("xe") or [], key=lambda x: x["thu_tu"])
         svg, js = [self._nen_duong(sd)], []
         can = 1.3 + 1.4 * len(xe)
-        k = min(1.0, max(0.4, (D - 0.4) / can))  # co giãn cho vừa thời lượng cảnh
+        k = min(1.0, max(0.4, (D - t0 - 0.4) / can))  # co giãn cho vừa thời lượng cảnh
         for i, x in enumerate(xe):
             (sx, sy), (dx, dy), (ex, ey), goc = self.LAN[x["tu"]]
+            (sx, sy), (ex, ey) = self._xa(sx, sy), self._xa(ex, ey)
             xid = f"{sid}-xe{i}"
             mau = self.CAM if x["thu_tu"] == 1 else self.XANH
             svg.append(self._xe_svg(xid, x.get("loai", "xe_may"), mau, x["thu_tu"]))
             js.append(f'tl.set("#{xid}",{{x:{sx},y:{sy}}},0); tl.set("#{xid}-q",{{rotation:{goc},transformOrigin:"50% 50%"}},0);')
-            js.append(f'tl.to("#{xid}",{{x:{dx},y:{dy},duration:{0.8 * k:.2f},ease:"power2.out"}},{0.2 * k:.2f});')
+            js.append(f'tl.to("#{xid}",{{x:{dx},y:{dy},duration:{0.8 * k:.2f},ease:"power2.out"}},{t0 + 0.2 * k:.2f});')
             # Điểm xuất phát nằm sát mép khung (ngoài vùng an toàn): số trên xe chỉ hiện khi xe gần tới điểm dừng chờ.
-            js.append(f'tl.fromTo("#{xid}-so",{{opacity:0}},{{opacity:1,duration:{0.2 * k:.2f}}},{0.75 * k:.2f});')
-            t = round((1.3 + 1.4 * (x["thu_tu"] - 1)) * k, 2)
+            js.append(f'tl.fromTo("#{xid}-so",{{opacity:0}},{{opacity:1,duration:{0.2 * k:.2f}}},{t0 + 0.75 * k:.2f});')
+            t = round(t0 + (1.3 + 1.4 * (x["thu_tu"] - 1)) * k, 2)
             js.append(f'tl.to("#{xid}",{{x:{ex},y:{ey},duration:{1.2 * k:.2f},ease:"power1.in"}},{t});')
             # Số trên xe mờ hẳn trước khi xe chạm mép vùng an toàn lúc chạy ra khỏi khung (hyperframes check).
             js.append(f'tl.to("#{xid}-so",{{opacity:0,duration:{0.25 * k:.2f}}},{round(t + 0.6 * 1.2 * k, 2)});')
             if x["thu_tu"] > 1:
-                js.append(f'tl.fromTo("#{xid}",{{opacity:1}},{{opacity:0.55,duration:0.25,yoyo:true,repeat:{max(1, x["thu_tu"] - 1)}}},{round(1.0 * k, 2)});')
+                js.append(f'tl.fromTo("#{xid}",{{opacity:1}},{{opacity:0.55,duration:0.25,yoyo:true,repeat:{max(1, x["thu_tu"] - 1)}}},{round(t0 + 1.0 * k, 2)});')
         return "".join(svg), js
 
-    def _so_do_vong_xuyen(self, sid: str, sd: dict, D: float) -> tuple[str, list[str]]:
+    def _so_do_vong_xuyen(self, sid: str, sd: dict, D: float, t0: float = 0.0) -> tuple[str, list[str]]:
         import math
         CX, CY, R = self.CX, self.CY, 165
         duong, vach = "#2B3F5C", "#E8EEF6"
         svg = []
         for ten, phi in self.GOC_NHANH.items():  # 4 nhánh đường
             rad = math.radians(phi)
-            x2, y2 = CX + 560 * math.cos(rad), CY + 560 * math.sin(rad)
+            x2, y2 = CX + 3000 * math.cos(rad), CY + 3000 * math.sin(rad)
             svg.append(f'<line x1="{CX}" y1="{CY}" x2="{x2:.0f}" y2="{y2:.0f}" stroke="{duong}" stroke-width="210"/>')
         svg.append(f'<circle cx="{CX}" cy="{CY}" r="{R}" fill="none" stroke="{duong}" stroke-width="130"/>')
         svg.append(f'<circle cx="{CX}" cy="{CY}" r="{R - 72}" fill="#2E7D4F" stroke="{vach}" stroke-width="6"/>')
@@ -194,7 +215,7 @@ class Dung:
         js = []
         if not xe:
             return "".join(svg), js
-        k = min(1.0, max(0.4, (D - 0.4) / (1.0 + 1.6 * len(xe))))
+        k = min(1.0, max(0.4, (D - t0 - 0.4) / (1.0 + 1.6 * len(xe))))
         cho = xe[1]["tu"] if len(xe) > 1 else xe[0]["tu"]
         phi_cho = self.GOC_NHANH[cho]
         for i, x in enumerate(xe):
@@ -204,28 +225,46 @@ class Dung:
                 gid = f"{sid}-vong{i}"
                 svg.append(f'<g id="{gid}"><g transform="translate({CX + R},{CY})">{self._xe_svg(f"{sid}-xe{i}", loai, mau, None)}</g></g>')
                 js.append(f'tl.set("#{gid}",{{rotation:{phi_cho + 100},svgOrigin:"{CX} {CY}"}},0);')
-                js.append(f'tl.to("#{gid}",{{rotation:{phi_cho - 80},duration:{2.2 * k:.2f},ease:"none"}},{0.2 * k:.2f});')
+                js.append(f'tl.to("#{gid}",{{rotation:{phi_cho - 80},duration:{2.2 * k:.2f},ease:"none"}},{t0 + 0.2 * k:.2f});')
+                # Qua nhánh của xe chờ rồi thì rẽ ra khỏi vòng (mờ dần), trước khi xe chờ vào vòng. Trước 2026-11-20
+                # xe này đứng lại trong vòng và xe chờ chạy đè lên nó (vx-007 cảnh s3, giây 13).
+                js.append(f'tl.to("#{gid}",{{opacity:0,duration:{0.3 * k:.2f}}},{t0 + 2.2 * k:.2f});')
             else:  # xe chờ ở nhánh, nhường rồi mới vào
                 phi = self.GOC_NHANH[x["tu"]]
                 rad = math.radians(phi)
                 ax, ay = CX + (R + 150) * math.cos(rad), CY + (R + 150) * math.sin(rad)
                 aid, gid = f"{sid}-xe{i}", f"{sid}-vao{i}"
-                svg.append(self._xe_svg(aid, loai, mau, x["thu_tu"]))
+                svg.append(self._xe_svg(aid, loai, mau, x["thu_tu"], (-math.sin(rad), math.cos(rad))))
                 svg.append(f'<g id="{gid}" opacity="0"><g transform="translate({CX + R},{CY})">'
                            f'{self._xe_svg(f"{sid}-xv{i}", loai, mau, None)}</g></g>')
                 js.append(f'tl.set("#{aid}",{{x:{ax:.0f},y:{ay:.0f}}},0); tl.set("#{aid}-q",{{rotation:{phi - 90},transformOrigin:"50% 50%"}},0);')
-                t = round((1.0 + 1.6 * (x["thu_tu"] - 1)) * k + 0.6, 2)
+                # Số trên xe chờ hiện khi chữ của thẻ đã mờ (trước đó có thể nằm dưới dòng phụ / nguồn luật).
+                js.append(f'tl.fromTo("#{aid}-so",{{opacity:0}},{{opacity:1,duration:0.2}},{t0:.2f});')
+                t = round(t0 + (1.0 + 1.6 * (x["thu_tu"] - 1)) * k + 0.6, 2)
                 js.append(f'tl.to("#{aid}",{{opacity:0,duration:0.2}},{t});')
                 js.append(f'tl.set("#{gid}",{{rotation:{phi},svgOrigin:"{CX} {CY}"}},0);')
                 js.append(f'tl.to("#{gid}",{{opacity:1,duration:0.2}},{t});')
                 js.append(f'tl.to("#{gid}",{{rotation:{phi - 90},duration:{1.4 * k:.2f},ease:"none"}},{t});')
         return "".join(svg), js
 
-    def so_do(self, sid: str, sd: dict, D: float) -> tuple[str, list[str]]:
+    def bo_cuc_so_do(self, kieu: str, y0: float, y1: float) -> tuple[float, float]:
+        """(tỉ lệ, tâm y trên màn hình) để phần sơ đồ cần thấy nằm trọn trong [y0, y1] px. Số trên xe giữ cỡ cố định."""
+        tren, duoi, so_tren = self.TAM_VUNG[kieu]
+        so = self.SO["lech"] + self.SO["r"] if so_tren else 0
+        s = min(1.0, max(0.35, (y1 - y0 - so) / (tren + duoi)))
+        return s, y0 + so + tren * s
+
+    def so_do(self, sid: str, sd: dict, D: float, t0: float = 0.0, y0: float | None = None) -> tuple[str, list[str]]:
+        vb = f"0 0 {W} {H}"
+        self._ti_le = 1.0
+        if sd["kieu"] in self.TAM_VUNG and y0 is not None:
+            s, yc = self.bo_cuc_so_do(sd["kieu"], y0, self.PD_TOP_SO_DO - 20)
+            self._ti_le = s
+            vb = f"{self.CX - self.CX / s:.1f} {self.CY - yc / s:.1f} {W / s:.1f} {H / s:.1f}"
         if sd["kieu"] == "giao_nhau":
-            ve, js = self._so_do_giao_nhau(sid, sd, D)
+            ve, js = self._so_do_giao_nhau(sid, sd, D, t0)
         elif sd["kieu"] == "vong_xuyen":
-            ve, js = self._so_do_vong_xuyen(sid, sd, D)
+            ve, js = self._so_do_vong_xuyen(sid, sd, D, t0)
         else:  # the_chu: chữ lớn trên nền thương hiệu
             chu = e(sd.get("chu", ""))
             ve = (f'<rect x="120" y="760" width="840" height="300" rx="36" fill="{self.TRANG}"/>'
@@ -235,8 +274,9 @@ class Dung:
             js = [f'tl.fromTo("#{sid}-sd",{{opacity:0,scale:0.96}},{{opacity:1,scale:1,duration:0.4,ease:"expo.out",transformOrigin:"50% 50%"}},0.1);']
         media = (f'<svg id="{sid}-sd" class="clip" data-start="0" data-duration="{D}" data-track-index="0" '
                  f'data-layout-allow-occlusion data-layout-allow-overflow '
-                 f'viewBox="0 0 {W} {H}" width="{W}" height="{H}" style="position:absolute;left:0;top:0;'
+                 f'viewBox="{vb}" width="{W}" height="{H}" style="position:absolute;left:0;top:0;'
                  f'background:linear-gradient(180deg,{self.NAVY},#16467F)">{ve}</svg>')
+        self._ti_le = 1.0
         return media, js
 
     # ---------- cảnh có thẻ chữ ----------
@@ -246,8 +286,13 @@ class Dung:
         D = c["dai"]
         cid = c["id"]
         js_so_do: list[str] = []
+        co_so_do = bool(c.get("so_do")) and c["so_do"].get("kieu") in self.TAM_VUNG
+        f1 = co_chu(l1, 80 if co_so_do else 104, 60)
+        t0 = round(min(self.SD_DOC_GIAY, max(1.4, D * 0.5)), 2) if co_so_do else 0.0
         if c.get("so_do"):
-            media, js_so_do = self.so_do(sid, c["so_do"], D)
+            dong1 = max(1, -(-len(l1) * f1 * 0.74 // (XW - 60)))  # số dòng ước lượng của tiêu đề
+            y0 = 452 + 34 + dong1 * f1 * 1.12 + 24 if co_so_do else None
+            media, js_so_do = self.so_do(sid, c["so_do"], D, t0, y0)
         elif c["anh"]:
             anh = next((p.name for p in (self.P / "hf/assets/img").glob(f"{cid}.*")), f"{cid}.jpg")
             media = (f'<img id="{sid}-v" class="clip" data-start="0" data-duration="{D}" data-track-index="0" '
@@ -255,7 +300,6 @@ class Dung:
         else:
             media = (f'<video id="{sid}-v" class="clip" data-start="0" data-duration="{D}" data-track-index="0" '
                      f'src="assets/video/{cid}.mp4" muted playsinline></video>')
-        f1 = co_chu(l1, 104, 60)
         f2 = co_chu(l2, 50, self.CO, he=0.62)
         tu1 = "".join(f'<span class="w">{e(w)}</span> ' for w in l1.split()).strip()
         srch = f'<div id="{sid}-src" class="src">Nguồn: {e(src)}</div>' if src else ""
@@ -271,6 +315,9 @@ class Dung:
                    f'tl.fromTo("#{sid}-l2",{{clipPath:"inset(0 100% 0 0)"}},{{clipPath:"inset(0 0% 0 0)",duration:0.42,ease:"expo.out"}},0.3);']
         if src:
             js.append(f'tl.fromTo("#{sid}-src",{{opacity:0}},{{opacity:1,duration:0.25,ease:"power1.out"}},0.6);')
+        if co_so_do:  # nhường chỗ cho sơ đồ: dòng phụ và nguồn luật mờ trước khi xe chạy
+            dich = ", ".join(f'"#{sid}-{x}"' for x in (["l2", "src"] if src else ["l2"]))
+            js.append(f'tl.to([{dich}],{{opacity:0,duration:0.3,ease:"power1.in"}},{round(t0 - 0.3, 2)});')
         if c["anh"]:
             js.append(f'tl.fromTo("#{sid}-cam",{{scale:1}},{{scale:1.08,duration:{D},ease:"none"}},0);')
         elif sid == self.kh["doan"][0]["id"] and not c.get("so_do"):
@@ -352,6 +399,8 @@ class Dung:
         tu = [dict(w) for w in self.tu if w["doan"] != self.cta_id]
         nhom = self.nhom_phu_de(tu)
         bat_dau_canh = {c["doan"]: c["start"] for c in self.cat}
+        canh_so_do = [(c["start"], c["start"] + c["dai"]) for c in self.cat
+                      if c.get("so_do") and c["so_do"].get("kieu") in self.TAM_VUNG]
         rows, js = [], []
         for n, g in enumerate(nhom):
             a = max(round(g[0]["start"] - 0.08, 2), 0.1 if n == 0 else 0)
@@ -367,7 +416,8 @@ class Dung:
                 w["_id"] = wid
                 chu = "kW" if re.fullmatch(r"kW\.?", w["text"]) else w["text"].rstrip(",.:?!").upper()
                 spans.append(f'<span id="{wid}" class="w{" kw" if tu_khoa(w["text"]) else ""}">{e(chu)}</span>')
-            rows.append(f'<div id="pd{n}" class="clip grp" data-start="{a}" data-duration="{round(b - a, 2)}" '
+            thap = " thap" if any(x0 - 0.05 <= a < x1 for x0, x1 in canh_so_do) else ""  # cảnh sơ đồ: phụ đề hạ thấp
+            rows.append(f'<div id="pd{n}" class="clip grp{thap}" data-start="{a}" data-duration="{round(b - a, 2)}" '
                         f'data-track-index="0"><span class="pill">{" ".join(spans)}</span></div>')
             js.append(f'tl.fromTo("#pd{n} .pill",{{opacity:0,y:10}},{{opacity:1,y:0,duration:0.1,ease:"power2.out"}},{a});')
             for m, w in enumerate(g):
@@ -383,8 +433,9 @@ class Dung:
     {self.FONT}
     #root {{ position:absolute; inset:0; pointer-events:none; }}
     #root .grp {{ position:absolute; left:{XC0}px; top:1050px; width:{XCW}px; text-align:center; overflow:visible; font-family:"BVP",sans-serif; }}
+    #root .grp.thap {{ top:{self.PD_TOP_SO_DO}px; }}
     #root .pill {{ display:inline; background:rgba(14,57,112,0.92); color:{self.TRANG}; font-weight:800; font-size:58px; line-height:1.42; padding:6px 22px 10px; border-radius:16px; -webkit-box-decoration-break:clone; box-decoration-break:clone; }}
-    #root .w {{ display:inline-block; opacity:0.45; }}
+    #root .w {{ display:inline-block; opacity:0.45; margin:0 0.09em; }}  /* từ đang đọc phóng 1.08: chừa khoảng để không dính chữ bên cạnh */
   </style>
   <div id="root" data-composition-id="phude" data-width="{W}" data-height="{H}">
     {chr(10).join("    " + r for r in rows).strip()}

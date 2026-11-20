@@ -287,6 +287,8 @@ def test_sua_dua_duyet_ve_cho_duyet_va_chan_khi_co_dong_da_duyet(nha_may):
         if h[0] == "kt-005-cd-a":
             hc.dat(r, cd, "Sửa")
             hc.dat(r, cg, "Đổi câu chốt cho vui hơn")
+            # Lỗi của một lần sửa hỏng trước đó: bản mới vào Hàng chờ thì phải xóa (vx-007, 2026-11-20).
+            hc.dat(r, tieu_de.index("loi") + 1, "Sửa tự động không được: dựng lại lỗi (2)")
         if h[0] == "kt-006-cd-b" and h[tieu_de.index("nen_tang")] == "fb_reels":
             hc.dat(r, cd, "Sửa")
             hc.dat(r, cg, "Sửa hook")
@@ -306,6 +308,7 @@ def test_sua_dua_duyet_ve_cho_duyet_va_chan_khi_co_dong_da_duyet(nha_may):
     a = rows[("kt-005-cd-a", "fb_reels")]
     assert a["duyet"] == "Chờ duyệt" and a["diem_qa"] == "93" and "Đã sửa theo ghi chú lần 1" in a["canh_bao"]
     assert a["link_xem_thu"] == "kt-005-cd-a-v2.mp4" and a["ghi_chu_sua"] == "Đổi câu chốt cho vui hơn"
+    assert a["loi"] == ""
     assert (goc / "projects/kt-005-cd-a/ke_hoach.truoc-sua-1.json").is_file()
     # kt-006: TikTok đã Duyệt -> không thay video, giữ nguyên "Sửa" và ghi lỗi
     assert ket["kt-006-cd-b"]["trang_thai"] == "loi"
@@ -494,3 +497,61 @@ def test_loi_hyperframes_chi_lay_dong_loi():
         "        Fix: Give the text its own zone", "  1 error(s)"] + ["[hyperframes] check: craft 2/269"] * 50)
     r = loi_hyperframes(log)
     assert "text_occluded" in r and "Fix:" in r and "overlap" not in r
+
+
+def test_vong_xuyen_xe_trong_vong_ra_truoc_khi_xe_cho_vao(tmp_path):
+    """vx-007 cảnh s3 (2026-11-20): xe trong vòng dừng lại và xe chờ chạy đè lên. Xe trong vòng phải mờ hẳn trước khi
+    xe chờ vào vòng."""
+    import re as _re
+    kh = ke_hoach_tam()
+    kh["doan"][1]["canh"]["so_do"] = {"kieu": "vong_xuyen", "xe": [{"tu": "trai", "thu_tu": 1}, {"tu": "tren", "thu_tu": 2}]}
+    goc = tmp_path / "repo"
+    (goc / "brand/kenhthu/assets/fonts").mkdir(parents=True)
+    for f in ("F-ExtraBold.ttf", "F-Bold.ttf"):
+        (goc / "brand/kenhthu/assets/fonts" / f).write_bytes(b"f")
+    (goc / "brand/kenhthu/assets/logo.png").write_bytes(b"png")
+    P = goc / "projects" / kh["ma_video"]
+    (P / "hf/assets/img").mkdir(parents=True)
+    (P / "hf/assets/img/c4.jpg").write_bytes(b"j")
+    moc = moc_gia(kh)
+    cat = canh.tinh_cat(kh, BRAND, SX, moc)
+    Dung(P, kh, BRAND, SX, cat, [], {"doan": list(moc.values())}, goc).viet()
+    h = (P / "hf/compositions/s2.html").read_text(encoding="utf-8")
+    m = _re.search(r'tl\.to\("#s2-vong0",\{opacity:0,duration:([\d.]+)\},([\d.]+)\)', h)
+    assert m, "xe trong vòng không rời vòng"
+    het = float(m.group(1)) + float(m.group(2))
+    vao = float(_re.search(r'tl\.to\("#s2-vao1",\{opacity:1,duration:[\d.]+\},([\d.]+)\)', h).group(1))
+    assert het <= vao
+
+
+def test_canh_so_do_chu_mo_truoc_khi_xe_chay_va_so_do_vua_khoang_trong(tmp_path):
+    """2026-11-20 (vx-007): trong cảnh sơ đồ, dòng phụ + nguồn luật mờ trước khi xe chạy; sơ đồ thu phóng bằng viewBox;
+    số trên xe vẫn 42px trên màn hình; phụ đề của cảnh sơ đồ hạ thấp."""
+    import re as _re
+    from may_reels.co_chu import do_co_chu_file
+    kh = ke_hoach_tam()
+    kh["doan"][1]["canh"]["so_do"] = {"kieu": "vong_xuyen", "xe": [{"tu": "trai", "thu_tu": 1}, {"tu": "duoi", "thu_tu": 2}]}
+    goc = tmp_path / "repo"
+    (goc / "brand/kenhthu/assets/fonts").mkdir(parents=True)
+    for f in ("F-ExtraBold.ttf", "F-Bold.ttf"):
+        (goc / "brand/kenhthu/assets/fonts" / f).write_bytes(b"f")
+    (goc / "brand/kenhthu/assets/logo.png").write_bytes(b"png")
+    P = goc / "projects" / kh["ma_video"]
+    (P / "hf/assets/img").mkdir(parents=True)
+    (P / "hf/assets/img/c4.jpg").write_bytes(b"j")
+    moc = moc_gia(kh)
+    cat = canh.tinh_cat(kh, BRAND, SX, moc)
+    tu = [{"doan": d["id"], "text": w, "start": moc[d["id"]]["start"] + 0.2 + i * 0.2,
+           "end": moc[d["id"]]["start"] + 0.35 + i * 0.2} for d in kh["doan"] for i, w in enumerate(d["loi"].split()[:3])]
+    Dung(P, kh, BRAND, SX, cat, tu, {"doan": list(moc.values())}, goc).viet()
+    h = (P / "hf/compositions/s2.html").read_text(encoding="utf-8")
+    m = _re.search(r'tl\.to\(\["#s2-l2"[^\]]*\],\{opacity:0,duration:0\.3[^}]*\},([\d.]+)\)', h)
+    assert m, "dòng phụ không mờ trong cảnh sơ đồ"
+    mo_xong = float(m.group(1)) + 0.3
+    bat_dau_chay = min(float(x) for x in _re.findall(r'tl\.to\("#s2-(?:vong|vao)\d+",\{rotation:[^}]*\},([\d.]+)\)', h))
+    assert bat_dau_chay >= mo_xong - 1e-6
+    vb = _re.search(r'<svg id="s2-sd"[^>]*viewBox="([^"]+)"', h).group(1)
+    assert vb != "0 0 1080 1920"
+    assert all(x["px"] >= 42 for x in do_co_chu_file(P / "hf/compositions/s2.html"))
+    pd = (P / "hf/compositions/phude.html").read_text(encoding="utf-8")
+    assert "grp thap" in pd and ".grp.thap" in pd
