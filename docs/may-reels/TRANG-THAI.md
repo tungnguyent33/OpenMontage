@@ -25,6 +25,7 @@ File này được tạo ngày 2026-11-19. Trước đó trạng thái chỉ n�
 
 - **vx-007: đã sửa và dựng lại ngày 2026-11-20** (`sua`, ghi chú ở J8): xe 2 của cảnh s3 chuyển xuống nhánh dưới; lỗi hai xe chồng nhau ở giây ~13 hết; mẫu bố cục mới. Đang "Chờ duyệt". Điểm 70 (dưới ngưỡng 75), do trần tổng "phần lớn là cảnh tạm" (cảnh thật 40%); kỹ thuật 87 → 96; 0 chữ dưới 42px, 0 chữ ngoài vùng an toàn.
   - Agent chấm còn nêu: (1) trong 2,6 s đầu của cảnh sơ đồ, ô nguồn luật che mép trên vòng xuyến (cố ý: lúc đó xe chưa chạy, chữ mờ trước khi xe chạy); (2) phụ đề "KHÔNG CÓ" ở ~25,6 s trông dính liền, do từ đang đọc phóng 1,08. Đã sửa mẫu (khoảng cách giữa các từ phụ đề) **sau** khi vx-007 dựng xong, nên bản đang ở Hàng chờ chưa có sửa này.
+- **Dòng nguồn luật chỉ hiện khi lời đọc trích luật, mỗi nguồn một lần** (người dùng yêu cầu 2026-11-20, đã làm trong mẫu). vx-007 ở Hàng chờ dựng trước thay đổi này.
 - **Dựng lại khi chỉ đổi mẫu:** `sua` chỉ dựng lại nếu agent đổi `ke_hoach.json`. Sửa mẫu (`hf.py`) mà kế hoạch không đổi thì `sua` báo "khong_doi". Chưa có lệnh "dựng lại + chấm + cập nhật Hàng chờ" khi kế hoạch giữ nguyên.
 - vx-006: người dùng đã đổi sang "Duyệt" (2026-11-20), dựng ngày 2026-11-16 theo mẫu cũ (chữ dưới 42px).
 - Prompt 6 (kho cảnh và danh sách quay): **phần máy làm được đã xong**. Việc cuối là so sánh model chép lời, có kết luận ngày 2026-11-19 (giữ PhoWhisper, `KE-HOACH.md` mục 10). Còn lại đều cần người quyết, xem mục dưới.

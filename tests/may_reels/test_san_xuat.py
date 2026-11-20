@@ -555,3 +555,29 @@ def test_canh_so_do_chu_mo_truoc_khi_xe_chay_va_so_do_vua_khoang_trong(tmp_path)
     assert all(x["px"] >= 42 for x in do_co_chu_file(P / "hf/compositions/s2.html"))
     pd = (P / "hf/compositions/phude.html").read_text(encoding="utf-8")
     assert "grp thap" in pd and ".grp.thap" in pd
+
+
+def test_dong_nguon_chi_hien_khi_loi_trich_luat_moi_nguon_mot_lan(tmp_path):
+    """2026-11-20: dòng nguồn trên thẻ chỉ ở đoạn lời đọc trích luật, mỗi nguồn một lần (không che cảnh)."""
+    kh = ke_hoach_tam()
+    kh["nguon_luat"] = [dict(kh["nguon_luat"][0], id="n1", dieu_khoan="Điều 1 khoản 2")]
+    for d in kh["doan"]:
+        d["nguon_ids"] = []
+    kh["doan"][1].update(loi="Khoản 2 Điều 1 ghi: xe bên phải được ưu tiên.", nguon_ids=["n1"])
+    kh["doan"][2].update(loi="Tức là bạn nhường xe đến từ bên phải.", nguon_ids=["n1"])
+    kh["doan"][3].update(loi="Luật nói lại lần nữa: bên phải đi trước.", nguon_ids=["n1"])
+    goc = tmp_path / "repo"
+    (goc / "brand/kenhthu/assets/fonts").mkdir(parents=True)
+    for f in ("F-ExtraBold.ttf", "F-Bold.ttf"):
+        (goc / "brand/kenhthu/assets/fonts" / f).write_bytes(b"f")
+    (goc / "brand/kenhthu/assets/logo.png").write_bytes(b"png")
+    P = goc / "projects" / kh["ma_video"]
+    (P / "hf/assets/img").mkdir(parents=True)
+    (P / "hf/assets/img/c4.jpg").write_bytes(b"j")
+    moc = moc_gia(kh)
+    d = Dung(P, kh, BRAND, SX, canh.tinh_cat(kh, BRAND, SX, moc), [], {"doan": list(moc.values())}, goc)
+    src = {k: v[2] for k, v in d.the.items()}
+    ids = [x["id"] for x in kh["doan"]]
+    assert src[ids[1]] and "Điều 1 khoản 2" in src[ids[1]]   # lời trích luật, lần đầu
+    assert src[ids[2]] is None                               # giải thích, không trích
+    assert src[ids[3]] is None                               # trích lại nguồn đã hiện

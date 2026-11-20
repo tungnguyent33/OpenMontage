@@ -25,6 +25,10 @@ FONT = """@font-face{font-family:"BVP";src:url("assets/fonts/FONT_DAM") format("
 KHONG_TACH = ("phân", "hạng", "bằng", "năm", "đến", "dưới", "từ", "mô", "bắt", "của", "trật", "giao", "thời", "hiệu", "ôn")
 
 
+# Lời đọc đang trích văn bản luật (dòng nguồn trên thẻ chữ chỉ hiện ở các đoạn này).
+TRICH_LUAT = re.compile(r"(?i)\b(luật|điều\s+\d+|khoản\s+\d+|điểm\s+[a-zđ]\b|nghị\s+định|thông\s+tư|quy\s+chuẩn|qcvn)")
+
+
 def e(s: str) -> str:
     return html.escape(s, quote=True)
 
@@ -72,9 +76,15 @@ class Dung:
         self._ti_le = 1.0  # tỉ lệ thu phóng của sơ đồ đang vẽ (so_do đặt rồi trả về 1)
         nguon = {n["id"]: n for n in kh["nguon_luat"]}
         self.the = {}
+        da_hien: set[str] = set()
         for d in kh["doan"]:
+            # Dòng nguồn trên màn hình chỉ khi lời đọc đang trích luật, mỗi nguồn một lần (lần trích đầu tiên).
+            # Đoạn giải thích / chốt dùng lại nguồn đã hiện thì không lặp, để không che cảnh. Nguồn đầy đủ nằm ở
+            # caption; nguon_ids vẫn giữ trong kế hoạch cho bước chặn cứng (người dùng chốt 2026-11-20).
+            moi = [i for i in d["nguon_ids"] if i not in da_hien] if TRICH_LUAT.search(d.get("loi") or "") else []
+            da_hien.update(moi)
             if d["the"]:
-                src = "; ".join(f"{nguon[i]['ten_ngan']}, {nguon[i]['dieu_khoan']}" for i in d["nguon_ids"]) or None
+                src = "; ".join(f"{nguon[i]['ten_ngan']}, {nguon[i]['dieu_khoan']}" for i in moi) or None
                 self.the[d["id"]] = (d["the"]["dong1"], d["the"]["dong2"], src,
                                      self.CAM if d["the"]["mau"] == "cam" else self.XANH, d["the"]["kieu"])
 

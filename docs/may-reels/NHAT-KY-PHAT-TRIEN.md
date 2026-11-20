@@ -4,6 +4,20 @@ Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết 
 
 File tạo ngày 2026-11-19. Các phiên trước ngày này được ghi trong `KE-HOACH.md` (mục 7–10) và trong lịch sử git của nhánh `kenh-vanxuan`.
 
+## 2026-11-20 (2): dòng nguồn luật chỉ hiện khi cần
+
+**Yêu cầu của người dùng:** trích dẫn luật chỉ nên xuất hiện khi cần; xuất hiện thường xuyên thì che cảnh chính.
+
+**Trước:** mọi đoạn có `nguon_ids` đều có dòng nguồn trên thẻ chữ (vx-006: 5 cảnh, vx-007: 5 cảnh).
+
+**Đã làm (`may_reels/dung/hf.py`):** dòng nguồn chỉ hiện ở đoạn mà **lời đọc đang trích luật** (`TRICH_LUAT`: luật, Điều n, khoản n, điểm x, nghị định, thông tư, quy chuẩn, QCVN) và **mỗi nguồn một lần** (lần trích đầu). Áp vào kế hoạch hiện có: vx-006 còn s2, s3; vx-007 còn s2, s5. `nguon_ids` vẫn giữ trong kế hoạch (bước chặn cứng dùng). Caption cả 3 nền tảng đã ghi nguồn đầy đủ (kiểm vx-007). `skills/may-reels/san-xuat-khong-hoi.md` ghi quy tắc mới và yêu cầu caption ghi nguồn đầy đủ. Test `test_dong_nguon_chi_hien_khi_loi_trich_luat_moi_nguon_mot_lan`.
+
+**Lỗi trong lúc làm:** viết regex qua heredoc sinh ra ký tự `` thay cho ``, regex không khớp gì. Đã thay và rà mọi file `.py` của Máy Reels: không còn ký tự này.
+
+**Test:** `tests/may_reels` 291/291 (không chạy lại toàn repo cho thay đổi này).
+
+**Chưa áp vào video đang ở Hàng chờ:** vx-007 cần dựng lại; `sua` không dựng lại khi kế hoạch không đổi (xem `TRANG-THAI.md`).
+
 ## 2026-11-20: vx-007 sửa (hai xe chồng nhau, xe bị thẻ chữ che) và bố cục cảnh sơ đồ
 
 **Yêu cầu:** người dùng thấy ở vx-007 cảnh s3, khoảng giây 13, hai xe chồng lên nhau. Người dùng ghi `ghi_chu_sua` (J8): xe 2 chờ ở nhánh trên bị thẻ chữ che, cho xuống nhánh dưới.

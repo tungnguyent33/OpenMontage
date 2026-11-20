@@ -42,7 +42,7 @@ Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/
    - Không mở được nguồn hoặc không chắc điều khoản → không nói ý đó. Không bịa số liệu, không hứa kết quả thi.
 4. **Cụm từ cấm:** không dùng bất kỳ cụm nào trong `brand.json` → `cam.cum_tu_cam` và `cam.cum_tu_cam_du_an`, ở lời đọc, thẻ chữ và caption. Tránh cả câu sáo đã chốt (`cam.cau_sao_da_chot`).
 5. **CTA:** đoạn `cta` là **nguyên văn** một câu trong `brand.json` → `cta`. Chọn câu khác với video gần nhất nếu biết. Đoạn này có `canh = null` và `the = null`, vì máy dựng màn kết có logo và hotline.
-6. **Thẻ chữ** (`the`): `dong1` tối đa 22 ký tự, viết hoa; `dong2` tối đa 34 ký tự. Chọn `mau` là `cam` (nhấn mạnh) hoặc `xanh` (thông tin), và `kieu` là `hook`, `wipe`, `word` hoặc `scale`. Dòng nguồn trên thẻ do máy tự ghép từ `nguon_ids`.
+6. **Thẻ chữ** (`the`): `dong1` tối đa 22 ký tự, viết hoa; `dong2` tối đa 34 ký tự. Chọn `mau` là `cam` (nhấn mạnh) hoặc `xanh` (thông tin), và `kieu` là `hook`, `wipe`, `word` hoặc `scale`. Dòng nguồn trên thẻ do máy tự ghép từ `nguon_ids`, nhưng **chỉ hiện ở đoạn mà lời đọc đang trích luật** ("Luật…", "Điều…", "khoản…", "Nghị định…", "QCVN…") và mỗi nguồn chỉ hiện một lần, để không che cảnh. Vẫn gắn `nguon_ids` cho mọi ý về luật (máy dùng để chặn cứng), và **caption phải ghi nguồn đầy đủ** (tên văn bản, Điều, khoản).
 
 ## Chọn cảnh (chỉ từ kho kênh)
 
