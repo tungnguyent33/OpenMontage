@@ -4,6 +4,19 @@ Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết 
 
 File tạo ngày 2026-11-19. Các phiên trước ngày này được ghi trong `KE-HOACH.md` (mục 7–10) và trong lịch sử git của nhánh `kenh-vanxuan`.
 
+## 2026-11-20 (3): lệnh `dung-lai`
+
+**Vì sao:** `sua` chỉ dựng lại khi agent đổi `ke_hoach.json`. Sửa mẫu (`hf.py`) thì kế hoạch giữ nguyên, `sua` báo "khong_doi"; vx-007 cần dựng lại hai lần chỉ vì đổi mẫu.
+
+**Đã làm:**
+- `may_reels/sua.py`: tách phần "dựng → chấm → đưa vào Hàng chờ → job cho_duyet" thành `_dung_cham_dua` (dùng chung cho `sua`, `thay-canh`, `dung-lai`). `_lam_lai(che_do="dung_lai")` không gọi agent, không sao lưu kế hoạch, luôn dựng lại. Hậu tố bản xem thử lấy theo `-vK` lớn nhất trên Hàng chờ (`_phien_ban_hang_cho`).
+- `dung_lai()`: từ chối **trước khi dựng** nếu mã chưa có trên Hàng chờ hoặc có dòng đã Duyệt / Bỏ / đã đăng; ghi Nhật ký bước `dung_lai`.
+- `python -m may_reels dung-lai --ma <mã>`: nhận mã rút gọn khớp đúng một dự án (`vx-007` → `vx-007-vong-xuyen`).
+- Test `test_dung_lai_giu_ke_hoach_khong_goi_agent_va_tu_choi_khi_da_duyet`. `HUONG-DAN-SU-DUNG.md` có lệnh mới.
+- Chạy thật cho vx-007: `cho_duyet`, bản xem thử `-v3`, điểm 70 (trần cảnh tạm), dòng nguồn chỉ còn ở s2 và s5.
+- Test: `tests/may_reels` 292/292; toàn repo 3218 qua, 19 bỏ qua, 1 hỏng (`test_fal_resume_output_format[webp]`, hỏng từ trước).
+- Theo nhận xét của agent chấm (chữ mồ côi ở tiêu đề), thêm `text-wrap:balance` cho tiêu đề thẻ chữ; chưa dựng lại vx-007 cho thay đổi này.
+
 ## 2026-11-20 (2): dòng nguồn luật chỉ hiện khi cần
 
 **Yêu cầu của người dùng:** trích dẫn luật chỉ nên xuất hiện khi cần; xuất hiện thường xuyên thì che cảnh chính.

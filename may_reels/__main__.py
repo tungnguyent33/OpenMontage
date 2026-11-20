@@ -212,6 +212,19 @@ def lenh_sua(a) -> int:
     return 0 if all(k["trang_thai"] != "loi" for k in ds) else 1
 
 
+def lenh_dung_lai(a) -> int:
+    from may_reels.sua import GOC, dung_lai
+    ma = a.ma
+    if not (GOC / "projects" / ma / "ke_hoach.json").is_file():  # mã rút gọn: "vx-007" -> "vx-007-vong-xuyen"
+        khop = [p.name for p in (GOC / "projects").glob(f"{ma}*") if (p / "ke_hoach.json").is_file()]
+        if len(khop) != 1:
+            print(f"LỖI: mã {ma!r} khớp {len(khop)} dự án {khop}", file=sys.stderr)
+            return 1
+        ma = khop[0]
+    kq = dung_lai(mo_tu_env(), ma)
+    return 0 if kq["trang_thai"] != "loi" else 1
+
+
 def lenh_dung_luong(a) -> int:
     from may_reels.dung_luong import bao_cao
     from tools_local.nap_kenh import nap_env
@@ -334,6 +347,10 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("sua", help="sửa và dựng lại các video được chọn Sửa trên Hàng chờ")
     p.set_defaults(ham=lenh_sua)
+
+    p = sub.add_parser("dung-lai", help="dựng lại một video theo mẫu hiện tại, giữ nguyên kế hoạch, cập nhật Hàng chờ")
+    p.add_argument("--ma", required=True, help="mã video, ví dụ vx-007-vong-xuyen")
+    p.set_defaults(ham=lenh_dung_lai)
 
     p = sub.add_parser("thay-canh", help="thay cảnh tạm bằng cảnh thật khi Cần quay ghi 'Đã quay'")
     p.set_defaults(ham=lenh_thay_canh)

@@ -34,7 +34,8 @@ TAT_CA_STAGE = ["idea", "script", "scene_plan", "assets", "edit", "compose", "pu
 
 def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: Path, agent, dung, log,
              cham=None) -> dict:
-    """che_do: 'sua' hoặc 'thay_canh'. Trả về {trang_thai, loi, dung_lai, doi}."""
+    """che_do: 'sua', 'thay_canh' hoặc 'dung_lai' (không gọi agent, giữ nguyên kế hoạch, luôn dựng lại theo mẫu
+    hiện tại). Trả về {trang_thai, loi, dung_lai, doi}."""
     from may_reels.dung.ke_hoach import doc_brand, doc_san_xuat
     from may_reels.hang_cho import dua_vao_hang_cho
     kq = {"ma_video": ma_video, "trang_thai": "loi", "loi": "", "dung_lai": False, "doi": True}
@@ -46,6 +47,10 @@ def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: 
     brand, sx = doc_brand(kenh, goc), doc_san_xuat(kenh, goc)
     n = len(list(P.glob("ke_hoach.truoc-sua-*.json"))) + 1
     cu = json.loads((P / "ke_hoach.json").read_text(encoding="utf-8"))
+    if che_do == "dung_lai":
+        return _dung_cham_dua(bang, ma_video, P, job, cu, cu, kenh, brand, sx, che_do=che_do, n=_phien_ban_hang_cho(bang, ma_video),
+                              ly_do="dựng lại theo mẫu hiện tại (kế hoạch giữ nguyên)", goc=goc, dung=dung, log=log,
+                              cham=cham, kq=kq)
     shutil.copyfile(P / "ke_hoach.json", P / f"ke_hoach.truoc-sua-{n}.json")
     cd = next((c for c in brand.get("chu_de") or [] if c.get("ma") == job["ma_chu_de"]), {"ma": job["ma_chu_de"]})
     _yeu_cau(P, job, cd, brand, sx, None, ghi_chu, goc)
@@ -60,9 +65,29 @@ def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: 
         (P / f"ke_hoach.truoc-sua-{n}.json").unlink()
         kq.update(trang_thai="khong_doi", doi=False)
         return kq
-    job = chuyen_trang_thai(job, "dang_san_xuat", ly_do=f"{che_do} lần {n}: {ghi_chu[:200]}")
+    return _dung_cham_dua(bang, ma_video, P, job, cu, moi, kenh, brand, sx, che_do=che_do, n=n,
+                          ly_do=f"{che_do} lần {n}: {ghi_chu[:200]}", goc=goc, dung=dung, log=log, cham=cham, kq=kq)
+
+
+def _phien_ban_hang_cho(bang: BangNguon, ma_video: str) -> int:
+    """Số n để hậu tố bản xem thử mới là -v{n+1}: lấy theo hậu tố -vK lớn nhất đang ở link_xem_thu của mã này."""
+    import re
+    k = 1
+    for d in doc_dong(bang, HANG_CHO):
+        if d.get("ma_video") == ma_video:
+            m = re.search(r"-v(\d+)\.\w+", d.get("link_xem_thu") or "")
+            k = max(k, int(m.group(1)) if m else 1)
+    return k
+
+
+def _dung_cham_dua(bang, ma_video, P, job, cu, moi, kenh, brand, sx, *, che_do, n, ly_do, goc, dung, log, cham,
+                   kq) -> dict:
+    """Dựng lại (trừ khi chỉ đổi caption), chấm, đưa bản mới vào Hàng chờ (-v{n+1}), job -> cho_duyet."""
+    from may_reels.hang_cho import dua_vao_hang_cho
+    job = chuyen_trang_thai(job, "dang_san_xuat", ly_do=ly_do)
     _luu_job(P, job)
-    chi_caption = {k: v for k, v in cu.items() if k != "caption"} == {k: v for k, v in moi.items() if k != "caption"}
+    chi_caption = che_do != "dung_lai" and (
+        {k: v for k, v in cu.items() if k != "caption"} == {k: v for k, v in moi.items() if k != "caption"})
     tom: dict = {}
     if not chi_caption:
         kq["dung_lai"] = True
@@ -71,7 +96,7 @@ def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: 
             job = chuyen_trang_thai(job, "loi", loi=f"dựng lại lỗi ({ma_thoat}): {tom.get('loi', '')}"[:500])
             _luu_job(P, job)
             raise RuntimeError(f"dựng lại lỗi ({ma_thoat}): {tom.get('loi', '')}")
-    nhan = "Đã sửa theo ghi chú" if che_do == "sua" else "Đã thay cảnh tạm bằng cảnh thật"
+    nhan = {"sua": "Đã sửa theo ghi chú", "dung_lai": "Đã dựng lại theo mẫu mới"}.get(che_do, "Đã thay cảnh tạm bằng cảnh thật")
     kc = (cham or cham_mac_dinh)(ma_video, goc=goc, log=log, tom=tom)
     nhat_ky_cham(bang, kenh, ma_video, kc)
     if kc.chan:
@@ -85,7 +110,7 @@ def _lam_lai(bang: BangNguon, ma_video: str, ghi_chu: str, *, che_do: str, goc: 
     hq = dua_vao_hang_cho(bang, video=P / "renders" / "final.mp4", kenh=kenh, ma_video=ma_video, tieu_de=moi["tieu_de"],
                           caption=moi["caption"], nen_tang=job["nen_tang_dich"], brand=brand,
                           diem_qa=str(diem if diem is not None else ""), canh_bao=canh_bao, thu_muc_xuat=P / "exports",
-                          goc=goc, phien_ban=f"-v{n + 1}", cho_phep_cap_nhat_duyet=(che_do == "sua"), ban_moi=True,
+                          goc=goc, phien_ban=f"-v{n + 1}", cho_phep_cap_nhat_duyet=(che_do in ("sua", "dung_lai")), ban_moi=True,
                           thong_tin_them={"du_an": f"projects/{ma_video}"})
     if hq.loi:
         raise RuntimeError("; ".join(hq.loi))
@@ -137,6 +162,33 @@ def sua(bang: BangNguon, *, goc: Path = GOC, agent: Callable[..., dict] = goi_ag
     if not nhom:
         log("Không có dòng nào chọn 'Sửa'.")
     return ket_qua
+
+
+def dung_lai(bang: BangNguon, ma_video: str, *, goc: Path = GOC,
+             dung: Callable[..., tuple[int, dict]] = chay_dung, log: Callable[[str], None] = print,
+             cham: Callable | None = None) -> dict:
+    """`python -m may_reels dung-lai --ma <mã>`: dựng lại theo mẫu hiện tại, KHÔNG đổi kế hoạch, không gọi agent.
+
+    Dùng khi chỉ đổi mẫu đồ họa (may_reels/dung/hf.py) hoặc cấu hình dựng. Chấm lại, đưa bản xem thử -v<n> mới vào
+    Hàng chờ, các dòng về "Chờ duyệt". Từ chối TRƯỚC khi dựng nếu mã chưa có trên Hàng chờ, hoặc có dòng đã
+    "Duyệt"/"Bỏ"/đã đăng (lời duyệt là cho bản cũ).
+    """
+    t0 = time.monotonic()
+    dong = [d for d in doc_dong(bang, HANG_CHO) if d.get("ma_video") == ma_video]
+    try:
+        if not dong:
+            raise RuntimeError(f"{ma_video} chưa có trên Hàng chờ")
+        da_xu_ly = [d["nen_tang"] for d in dong
+                    if chuan(d.get("trang_thai_dang")) or chuan(d.get("duyet")) not in ("", "Chờ duyệt", "Sửa")]
+        if da_xu_ly:
+            raise RuntimeError(f"dòng {da_xu_ly} đã được duyệt, bỏ hoặc đã đăng: không dựng lại (đặt về Sửa nếu muốn)")
+        kq = _lam_lai(bang, ma_video, "", che_do="dung_lai", goc=goc, agent=None, dung=dung, log=log, cham=cham)
+    except Exception as e:
+        kq = {"ma_video": ma_video, "trang_thai": "loi", "loi": f"{type(e).__name__}: {e}"[:500], "dung_lai": False}
+    kq["giay"] = round(time.monotonic() - t0, 1)
+    log(f"{ma_video}: {kq['trang_thai']} {'(dựng lại)' if kq['dung_lai'] else ''} {kq['loi']}")
+    _nhat_ky(bang, "dung_lai", kq)
+    return kq
 
 
 def thay_canh(bang: BangNguon, *, goc: Path = GOC, agent: Callable[..., dict] = goi_agent,

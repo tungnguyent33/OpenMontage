@@ -301,6 +301,7 @@ tools_local\py.cmd -m may_reels nguon-luat ap-dung --kenh vanxuan    # chép ngu
 ```powershell
 tools_local\py.cmd -m may_reels san-xuat --kenh vanxuan --so-luong 3   # các chủ đề đã chọn "Làm" -> Hàng chờ
 tools_local\py.cmd -m may_reels sua                                     # dựng lại các dòng chọn "Sửa" theo ghi_chu_sua
+tools_local\py.cmd -m may_reels dung-lai --ma vx-007                    # dựng lại theo mẫu mới, giữ nguyên kế hoạch
 tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng lại một dự án có sẵn ke_hoach.json
 ```
 
@@ -314,6 +315,7 @@ tools_local\py.cmd -m may_reels dung --du-an <ma_video>                 # dựng
 - **Duyệt trên tab Hàng chờ:**
   - Chọn **Duyệt** để cho đăng.
   - Chọn **Sửa** và ghi lý do vào `ghi_chu_sua`, rồi chạy lệnh `sua`. Máy sửa kế hoạch, dựng lại (đoạn giọng không đổi thì dùng lại), cập nhật bản xem thử (tên file có hậu tố `-v2`, `-v3`…) và đưa ô về "Chờ duyệt".
+  - **Chỉ đổi mẫu đồ họa, không đổi nội dung** (ví dụ cỡ chữ, bố cục sơ đồ): `sua` sẽ báo "không đổi" vì kế hoạch giữ nguyên. Dùng `dung-lai --ma <mã>` (nhận mã rút gọn như `vx-007`): máy dựng lại theo mẫu hiện tại, chấm lại, tạo bản xem thử `-v<n>` mới và đưa các dòng về "Chờ duyệt". Lệnh từ chối nếu mã có dòng đã "Duyệt", "Bỏ" hoặc đã đăng.
   - Muốn sửa một nền tảng thì các nền tảng khác của cùng video cũng phải chưa chọn "Duyệt"/"Bỏ", vì máy không thay video đã có lời duyệt.
 - **Thư mục đăng tay** của từng nền tảng (video + `description.txt`) được ghi ở cột `ghi_chu_may`.
 - **Thiếu cảnh thật:** máy dùng **cảnh tạm** là sơ đồ động (ngã tư, vòng xuyến, chữ lớn), vẽ bằng code, không AI, không stock. Video vẫn vào Hàng chờ kèm cảnh báo "Có cảnh tạm", và tab **Cần quay** vẫn ghi yêu cầu quay.

@@ -581,3 +581,38 @@ def test_dong_nguon_chi_hien_khi_loi_trich_luat_moi_nguon_mot_lan(tmp_path):
     assert src[ids[1]] and "Điều 1 khoản 2" in src[ids[1]]   # lời trích luật, lần đầu
     assert src[ids[2]] is None                               # giải thích, không trích
     assert src[ids[3]] is None                               # trích lại nguồn đã hiện
+
+
+def test_dung_lai_giu_ke_hoach_khong_goi_agent_va_tu_choi_khi_da_duyet(nha_may):
+    """dung-lai (2026-11-20): dựng lại theo mẫu hiện tại, kế hoạch giữ nguyên, bản xem thử -v<n> mới, về Chờ duyệt;
+    từ chối TRƯỚC khi dựng nếu có dòng đã Duyệt."""
+    from may_reels.sua import dung_lai
+    goc, bang = nha_may
+    san_xuat(bang, "kenhthu", 2, goc=goc, agent=agent_gia([]), log=lambda s: None,
+             dung=dung_gia({"kt-005-cd-a": [(MA_OK, {"diem_qa": 90})], "kt-006-cd-b": [(MA_OK, {"diem_qa": 88})]}))
+    kh_truoc = (goc / "projects/kt-005-cd-a/ke_hoach.json").read_text(encoding="utf-8")
+    goi_dung = []
+
+    def dung(ma, *, goc, stages=None):
+        goi_dung.append(ma)
+        return MA_OK, {"diem_qa": 91}
+    kq = dung_lai(bang, "kt-005-cd-a", goc=goc, dung=dung, log=lambda s: None)
+    assert kq["trang_thai"] == "cho_duyet" and kq["dung_lai"] and goi_dung == ["kt-005-cd-a"]
+    assert (goc / "projects/kt-005-cd-a/ke_hoach.json").read_text(encoding="utf-8") == kh_truoc
+    assert not list((goc / "projects/kt-005-cd-a").glob("ke_hoach.truoc-sua-*.json"))
+    rows = {(d["ma_video"], d["nen_tang"]): d for d in S.doc_dong(bang, HANG_CHO)}
+    a = rows[("kt-005-cd-a", "fb_reels")]
+    assert a["duyet"] == "Chờ duyệt" and a["link_xem_thu"] == "kt-005-cd-a-v2.mp4" and "dựng lại theo mẫu mới" in a["canh_bao"]
+    # lần 2: hậu tố tăng tiếp
+    dung_lai(bang, "kt-005-cd-a", goc=goc, dung=dung, log=lambda s: None)
+    assert {d["link_xem_thu"] for d in S.doc_dong(bang, HANG_CHO) if d["ma_video"] == "kt-005-cd-a"} == {"kt-005-cd-a-v3.mp4"}
+    # dòng đã Duyệt: từ chối, không dựng
+    hc = bang.tab("Hàng chờ")
+    td = hc.doc_tat_ca()[0]
+    for r, h in enumerate(hc.doc_tat_ca()[1:], start=2):
+        if h[0] == "kt-006-cd-b" and h[td.index("nen_tang")] == "tiktok":
+            hc.dat(r, td.index("duyet") + 1, "Duyệt")
+    goi_dung.clear()
+    kq = dung_lai(bang, "kt-006-cd-b", goc=goc, dung=dung, log=lambda s: None)
+    assert kq["trang_thai"] == "loi" and "đã được duyệt" in kq["loi"] and goi_dung == []
+    assert dung_lai(bang, "kt-999-khong-co", goc=goc, dung=dung, log=lambda s: None)["trang_thai"] == "loi"

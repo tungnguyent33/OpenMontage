@@ -342,7 +342,7 @@ class Dung:
     #{sid}-cam {{ position:absolute; inset:0; transform-origin:50% 55%; }}
     #{sid}-v {{ position:absolute; left:0; top:0; width:{W}px; height:{H}px; object-fit:cover; }}
     #{sid}-card {{ position:absolute; left:{X0}px; top:452px; width:{XW}px; display:flex; flex-direction:column; align-items:flex-start; gap:14px; font-family:"BVP",sans-serif; }}
-    #{sid}-l1 {{ background:{N}; color:{T}; font-weight:800; font-size:{f1}px; line-height:1.12; padding:16px 28px 18px; border-radius:14px; transform-origin:0 50%; }}
+    #{sid}-l1 {{ background:{N}; color:{T}; font-weight:800; font-size:{f1}px; line-height:1.12; padding:16px 28px 18px; border-radius:14px; transform-origin:0 50%; text-wrap:balance; }}
     #{sid}-l2 {{ background:{mau2}; color:{T}; font-weight:800; font-size:{f2}px; line-height:1.2; padding:12px 24px 14px; border-radius:12px; text-wrap:balance; }}
     #{sid}-card .w {{ display:inline-block; }}
     #{sid}-src {{ margin-top:6px; background:rgba(14,57,112,0.88); color:{T}; font-weight:700; font-size:{self.CO}px; line-height:1.22; padding:8px 18px 10px; border-radius:10px; max-width:{XCW}px; text-wrap:balance; }}
