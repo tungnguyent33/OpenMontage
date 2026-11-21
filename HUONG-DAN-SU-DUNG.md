@@ -279,6 +279,20 @@ Cấu hình một lần:
   - trần chi phí 0 USD;
   - khung nhịp cho từng trụ cột nội dung.
 
+**Chiến lược nội dung và dữ liệu bán hàng (từ 2026-11-20).** Nguồn sự thật về nội dung là `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`. File này chỉ có trên máy, không lên GitHub. Máy đọc 5 file trong `brand/vanxuan/`:
+
+- `doi-tuong.yaml` (5 nhóm người mua), `dinh-vi.yaml` (lời hứa), `ban-hang.yaml` (học phí, giấy tờ, lịch khai giảng, ưu đãi, mồi nhử, người đồng ý lên hình). Ba file này có dữ liệu kinh doanh thật nên **chỉ để trên máy**. Repo chỉ có bản mẫu `*.mau.yaml`. Máy khác cần tạo từ bản mẫu, ví dụ: `copy brand\vanxuan\ban-hang.mau.yaml brand\vanxuan\ban-hang.yaml`.
+- `dinh-dang.yaml` (16 định dạng, có khung nhịp) và `lich.yaml` (lịch tuần, mùa): commit bình thường.
+- **Máy không tự điền `ban-hang.yaml`.** Bạn điền và đổi `trang_thai` thành `da_xac_nhan` khi chắc chắn. Số chưa chắc (ví dụ học phí trong bài Facebook cũ) để ở mục `cho_xac_nhan`, máy không dùng mục này. Định dạng "Học phí gồm gì", "Đăng ký cần mang gì", "Lịch khai giảng", "Học viên kể" chỉ làm được khi mục tương ứng đã xác nhận.
+- Không ghi họ tên, số điện thoại hay ảnh học viên vào `ban-hang.yaml`. Người đồng ý lên hình chỉ ghi mã (ví dụ `hv-01`), vai trò và ngày đồng ý.
+
+```powershell
+tools_local\py.cmd -m may_reels chien-luoc kiem-tra --kenh vanxuan              # tóm tắt
+tools_local\py.cmd -m may_reels chien-luoc kiem-tra --kenh vanxuan --chi-tiet   # liệt kê hết ô trống, giả thuyết
+```
+
+Báo cáo gồm: thiếu file, lỗi cấu trúc, tham chiếu sai (mã nhóm, mã định dạng, khung nhịp), mùa đang chạy, ưu đãi hết hạn, định dạng chưa làm được vì thiếu số liệu, định dạng thiếu cảnh trong kho (ví dụ chưa có cảnh "thầy nói trước máy"), ô trống, số chờ xác nhận, giả thuyết chưa xác nhận. Lệnh trả mã 1 nếu có lỗi cấu trúc hoặc tham chiếu.
+
 **Nguồn luật: máy tra, bạn xác nhận.** `san-xuat` từ chối chủ đề có nội dung luật mà `nguon_doi_chieu` chưa ghi tới mức khoản. Với QCVN, mức cần đạt là mục, phụ lục hoặc số hiệu biển/vạch. Mỗi lần nhắc một Điều đều phải có khoản. Lý do từ chối ghi ở cột `ghi_chu_may` của tab Ý tưởng. Chủ đề ghi "Không cần nguồn luật" thì không bị kiểm tra.
 
 ```powershell

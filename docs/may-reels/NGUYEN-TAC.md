@@ -203,15 +203,41 @@ Kho cảnh có thể không có cảnh khớp một ý: không đủ cảnh, sai
 
 ---
 
+## 11. Nguyên tắc nội dung (2026-11-20)
+
+Nguồn sự thật về nội dung (làm video gì, cho ai, để làm gì) là `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`. File này **chỉ có trên máy** (bị `.gitignore`), không có trên GitHub. Tóm tắt 7 nguyên tắc; chi tiết và lý do đọc trong file chiến lược:
+
+1. **Một người, một nỗi lo, một bước tiếp theo.** Trước khi làm phải nói được: video cho ai (nhóm trong `doi-tuong.yaml`), gỡ nỗi lo gì, xem xong họ làm gì.
+2. **Người xem nhận ra mình trong 3 giây đầu.** Hook gọi đúng người hoặc đúng nỗi lo, hơn là gây tò mò chung chung.
+3. **Bán bằng bằng chứng, không bằng tính từ.** Người thật, sân thật, giá trọn gói ghi rõ, quy trình thật. Không "uy tín số 1", không "bao đậu".
+4. **Giảm ma sát bước đầu.** Lời kêu gọi là việc nhỏ làm được ngay (nhắn một mã, nhận một mồi nhử), không phải "đăng ký ngay".
+5. **Giọng thật của thầy cho video bán hàng.** Giọng máy dùng được cho video luật; video về khóa học, học phí cần người thật nói (`dinh-dang.yaml` khóa `giong`).
+6. **Mỗi video có mã riêng để đo.** Không đo được thì không biết nên làm thêm loại nào.
+7. **Chỉ trả tiền quảng cáo cho video đã thắng tự nhiên.**
+
+Dữ liệu máy đọc (đều có `trang_thai: gia_thuyet | da_xac_nhan` và `ngay_cap_nhat`), kiểm bằng `python -m may_reels chien-luoc kiem-tra --kenh <mã>`:
+
+| File trong `brand/<kênh>/` | Commit? | Nội dung |
+|---|---|---|
+| `doi-tuong.yaml` | Không (có `doi-tuong.mau.yaml`) | Nhóm đối tượng n1..n5 |
+| `dinh-vi.yaml` | Không (có `dinh-vi.mau.yaml`) | Lời hứa, trụ của lời hứa |
+| `ban-hang.yaml` | Không (có `ban-hang.mau.yaml`) | Học phí, giấy tờ, lịch, ưu đãi, mồi nhử. **Máy không tự điền số liệu.** Số chưa xác nhận để ở `cho_xac_nhan` |
+| `dinh-dang.yaml` | Có | Thư viện định dạng, khung nhịp (5 định dạng luật trỏ về `san-xuat.yaml khung_nhip`) |
+| `lich.yaml` | Có | Lịch tuần, mùa |
+
+Dữ liệu kinh doanh thật chỉ để trên máy; repo public chỉ có bản mẫu cùng cấu trúc. Code đọc file thật; thiếu thì báo cần tạo từ bản mẫu. Test dùng bản mẫu. Video không được nói số, giá, ngày, ưu đãi không có trong `ban-hang.yaml` ở trạng thái `da_xac_nhan`; không tạo gấp gáp giả.
+
+---
+
 ## Điểm chạm upstream
 
 Mọi file của OpenMontage gốc mà Máy Reels sửa, hoặc thư mục lõi mà Máy Reels buộc phải thêm file vào. Cập nhật bảng này mỗi khi có thay đổi.
 
 | File | Loại | Thay đổi | Lý do | Khi merge upstream |
 |---|---|---|---|---|
-| `.gitignore` | Sửa (đã làm 2026-11-15) | Thêm 2 dòng ở cuối file: `secrets/` và `brand/*/_local/` | Giữ file service account, token và nội dung riêng của kênh ngoài repo public | Giữ 2 dòng này nếu upstream sửa `.gitignore` (thêm ở cuối file nên ít xung đột) |
+| `.gitignore` | Sửa (2026-11-15, thêm 2026-11-20) | Khối Máy Reels ở cuối file: `secrets/`, `brand/*/_local/`; từ 2026-11-20 thêm `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`, `brand/*/ban-hang.yaml`, `brand/*/doi-tuong.yaml`, `brand/*/dinh-vi.yaml` | Giữ file service account, token và nội dung riêng của kênh ngoài repo public | Giữ 2 dòng này nếu upstream sửa `.gitignore` (thêm ở cuối file nên ít xung đột) |
 | `.env.example` | Sửa (đã làm 2026-11-15) | Thêm khối `# --- Máy Reels ---` ở cuối file: `MAY_REELS_SA_JSON`, `MAY_REELS_SHEET_ID`, `KENH_GOC_DIR`, `MAY_REELS_GOOGLE_CLIENT_SECRET`, `MAY_REELS_DRIVE_TOKEN`, và ví dụ `VANXUAN_FB_PAGE_TOKEN`, `VANXUAN_YT_TOKEN_FILE` | Người cài mới biết cần đặt biến nào | Thêm ở cuối file nên ít xung đột. Nếu upstream sửa đoạn cuối file thì giữ cả hai. |
-| `schemas/may-reels/reel_job.schema.json` | Thêm file vào thư mục lõi `schemas/` (đã làm 2026-11-15) | Schema job của Máy Reels | Theo yêu cầu đặt schema ở đây. Thư mục con riêng `may-reels/` không phải package Python và không bị `schemas.artifacts.list_schemas()` quét | Không xung đột trừ khi upstream tạo thư mục cùng tên. |
+| `schemas/may-reels/*.schema.json` | Thêm file vào thư mục lõi `schemas/` (từ 2026-11-15; 2026-11-20 thêm doi-tuong, dinh-vi, dinh-dang, lich, ban-hang) | Schema của Máy Reels | Theo yêu cầu đặt schema ở đây. Thư mục con riêng `may-reels/` không phải package Python và không bị `schemas.artifacts.list_schemas()` quét | Không xung đột trừ khi upstream tạo thư mục cùng tên. |
 | `tools/publishers/facebook_reels.py`, `youtube_shorts.py`, `tiktok_handoff.py`, `_dang_chung.py` | Thêm file mới vào thư mục lõi (2026-11-15) | Publisher của Máy Reels | Registry chỉ tìm tool trong `tools/`. Không sửa file có sẵn nào | Không xung đột trừ khi upstream thêm file cùng tên. `export_bundle.py` giữ nguyên. |
 | `pipeline_defs/may-reels.yaml` | Thêm file (đã làm 2026-11-15) | Manifest riêng cho chế độ chạy không dừng | `lib/pipeline_loader.py` chỉ đọc manifest trong `pipeline_defs/`, và `lib/checkpoint.py` tìm cổng duyệt qua tên pipeline | Không xung đột trừ khi upstream đổi schema manifest. `tests/contracts/test_pipeline_catalog.py` sẽ tự kiểm tra file này. |
 | `HUONG-DAN-SU-DUNG.md` | File của nhánh, không phải upstream | — | — | — |

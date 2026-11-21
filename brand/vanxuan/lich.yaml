@@ -1,0 +1,91 @@
+# Lịch tuần và chiến dịch theo mùa (cách làm nội dung, commit lên repo). Sửa tay; máy chỉ đọc.
+# Nguồn: docs/may-reels/CHIEN-LUOC-NOI-DUNG.md mục "Lịch tuần và chiến dịch theo mùa" (2026-11-17).
+# Schema: schemas/may-reels/lich.schema.json. Mã định dạng tham chiếu dinh-dang.yaml; mã nhóm tham chiếu doi-tuong.yaml.
+#
+# Mỗi ngày một video, bảy video mỗi tuần: 3 chuyển đổi, 2 niềm tin, 2 kéo xem.
+# Mỗi ngày có danh sách dinh_dang theo thứ tự ưu tiên ("hoặc"): máy chọn cái đầu tiên đủ điều kiện (dinh-dang.yaml dieu_kien).
+
+phien_ban: 1
+
+tuan:
+  - thu: 2
+    tang: keo_xem
+    dinh_dang: [luat-hoi-nhanh-dap-dung, luat-mot-phut-luat-moi, luat-loi-sa-hinh, thi-thu-3-cau]
+    ghi_chu: "Luật hoặc thi thử 3 câu, có câu cầu nối"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+  - thu: 3
+    tang: chuyen_doi
+    dinh_dang: [di-xe-chua-co-bang, so-truot-thay-tra-loi]
+    ghi_chu: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+  - thu: 4
+    tang: niem_tin
+    dinh_dang: [mot-buoi-hoc-that]
+    ghi_chu: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+  - thu: 5
+    tang: chuyen_doi
+    dinh_dang: [hoc-phi-gom-gi, dang-ky-mang-gi]
+    ghi_chu: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+  - thu: 6
+    tang: keo_xem
+    dinh_dang: [luat-dung-hay-sai, tra-loi-binh-luan]
+    ghi_chu: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+  - thu: 7
+    tang: niem_tin
+    dinh_dang: [hoc-vien-ke, ngay-thi-nhan-bang]
+    ghi_chu: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+  - thu: 8          # Chủ Nhật
+    tang: chuyen_doi
+    dinh_dang: [lich-khai-giang]
+    ghi_chu: "Lịch khai giảng khi có ngày thật; nếu không: video chuyển đổi ra nhiều tin nhắn nhất tuần trước, làm lại góc mới"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+# Chiến dịch theo mùa. Trong mùa, đổi 2–3 video chuyển đổi mỗi tuần sang nhóm của mùa đó.
+# dieu_kien_duoc_noi: những câu chỉ được nói khi điều kiện đúng (không tạo gấp gáp giả).
+mua:
+  - ma: truoc-tet
+    ten: "Trước Tết"
+    tu_ngay: 2026-11-17
+    den_ngay: 2027-02-05        # Tết Đinh Mùi 2027 là 2027-02-06: anh kiểm lại
+    nhom: [n1, n5]
+    goc: "Người đi làm xa về quê, công nhân nghỉ Tết"
+    dieu_kien_duoc_noi:
+      - "Chỉ nói \"có bằng trước Tết\" nếu lịch học và lịch thi thật sự kịp (ban-hang.yaml)"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+  - ma: he
+    ten: "Sau kỳ thi tốt nghiệp đến hết hè"
+    tu_ngay: 2027-06-15         # anh chốt 2026-11-21
+    den_ngay: 2027-08-31
+    nhom: [n2]
+    goc: "Học dịp hè trước khi đi học xa; video nói với phụ huynh"
+    dieu_kien_duoc_noi: []
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+  - ma: quy-dinh-moi
+    ten: "Khi quy định mới có hiệu lực"
+    tu_ngay: null               # không ghi ngày cố định: tính theo sự kiện (anh chốt 2026-11-21)
+    den_ngay: null
+    theo_su_kien:               # mùa chạy quanh một mốc: từ truoc_ngay ngày trước đến sau_ngay ngày sau mốc
+      moc: "Ngày văn bản luật có hiệu lực"
+      truoc_ngay: 30
+      sau_ngay: 30
+    nhom: [n1, n3]
+    goc: "Giải thích thay đổi có nguồn, rồi cầu nối sang \"chưa có bằng\" hoặc \"cần đổi bằng\""
+    dieu_kien_duoc_noi:
+      - "Mọi thay đổi luật phải có nguồn đã mở"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+mua_dang_chay: truoc-tet

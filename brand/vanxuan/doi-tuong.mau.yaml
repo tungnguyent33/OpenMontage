@@ -1,0 +1,30 @@
+# BẢN MẪU (commit lên repo). Không có dữ liệu thật của kênh.
+# Tạo file thật trên máy:  copy brand\<kênh>\doi-tuong.mau.yaml brand\<kênh>\doi-tuong.yaml  rồi điền.
+# File thật bị .gitignore. Schema: schemas/may-reels/doi-tuong.schema.json.
+#
+# Mỗi nhóm là một kiểu người mua. Mã nhóm n1, n2, ... được dinh-dang.yaml, lich.yaml, ban-hang.yaml (mồi nhử) tham chiếu.
+# trang_thai: gia_thuyet | da_xac_nhan.   ngay_cap_nhat: YYYY-MM-DD.
+
+phien_ban: 1
+
+nhom:
+  - ma: n1
+    uu_tien: 1                              # 1 = ưu tiên cao nhất
+    ten: "<tên nhóm, ví dụ: người đi xe nhiều năm chưa có bằng>"
+    do_tuoi: "<khoảng tuổi>"
+    ai_quyet_dinh: "<ai trả tiền, ai chọn nơi học>"
+    noi_lo:                                 # nỗi lo thật, viết bằng chữ của khách
+      - "<nỗi lo 1>"
+    khoanh_khac_mua:                        # lúc nào họ cần học
+      - "<khoảnh khắc 1>"
+    bang_chung_thuyet_phuc:                 # bằng chứng nào làm họ tin
+      - "<bằng chứng 1>"
+    ghi_chu: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  # n2..n5: cùng cấu trúc. Giữ đủ mã vì dinh-dang.yaml và lich.yaml (được commit) tham chiếu n1..n5.
+  - {ma: n2, uu_tien: 2, ten: "<tên nhóm>", do_tuoi: "", ai_quyet_dinh: "<...>", noi_lo: ["<nỗi lo>"], khoanh_khac_mua: ["<khoảnh khắc>"], bang_chung_thuyet_phuc: ["<bằng chứng>"], ghi_chu: "", trang_thai: gia_thuyet, ngay_cap_nhat: 2026-11-20}
+  - {ma: n3, uu_tien: 3, ten: "<tên nhóm>", do_tuoi: "", ai_quyet_dinh: "<...>", noi_lo: ["<nỗi lo>"], khoanh_khac_mua: ["<khoảnh khắc>"], bang_chung_thuyet_phuc: ["<bằng chứng>"], ghi_chu: "", trang_thai: gia_thuyet, ngay_cap_nhat: 2026-11-20}
+  - {ma: n4, uu_tien: 4, ten: "<tên nhóm>", do_tuoi: "", ai_quyet_dinh: "<...>", noi_lo: ["<nỗi lo>"], khoanh_khac_mua: ["<khoảnh khắc>"], bang_chung_thuyet_phuc: ["<bằng chứng>"], ghi_chu: "", trang_thai: gia_thuyet, ngay_cap_nhat: 2026-11-20}
+  - {ma: n5, uu_tien: 5, ten: "<tên nhóm>", do_tuoi: "", ai_quyet_dinh: "<...>", noi_lo: ["<nỗi lo>"], khoanh_khac_mua: ["<khoảnh khắc>"], bang_chung_thuyet_phuc: ["<bằng chứng>"], ghi_chu: "", trang_thai: gia_thuyet, ngay_cap_nhat: 2026-11-20}

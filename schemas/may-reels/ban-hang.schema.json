@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "may-reels/ban-hang.schema.json",
+  "title": "Thông tin bán hàng (brand/<kênh>/ban-hang.yaml). Máy không tự điền số liệu.",
+  "type": "object",
+  "required": ["phien_ban", "khoa_hoc", "quy_trinh_dang_ky", "giay_to", "lich_khai_giang", "uu_dai", "cau_hoi_thuong_gap", "nguoi_dong_y_len_hinh", "moi_nhu", "cho_xac_nhan"],
+  "additionalProperties": false,
+  "$defs": {
+    "trang_thai": {"enum": ["gia_thuyet", "da_xac_nhan"]},
+    "ngay": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "ds_chu": {"type": "array", "items": {"type": "string"}}
+  },
+  "properties": {
+    "phien_ban": {"const": 1},
+    "khoa_hoc": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ma", "ten", "hoc_phi_vnd", "gom", "khong_gom", "so_buoi", "trang_thai"],
+        "additionalProperties": false,
+        "properties": {
+          "ma": {"type": "string"},
+          "ten": {"type": "string"},
+          "hoc_phi_vnd": {"type": ["integer", "null"], "minimum": 0},
+          "gom": {"$ref": "#/$defs/ds_chu"},
+          "khong_gom": {"$ref": "#/$defs/ds_chu"},
+          "so_buoi": {"type": ["integer", "null"], "minimum": 0},
+          "thoi_gian_hoc": {"type": "string"},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"},
+          "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+        }
+      }
+    },
+    "quy_trinh_dang_ky": {
+      "type": "object",
+      "required": ["buoc", "trang_thai"],
+      "additionalProperties": false,
+      "properties": {
+        "buoc": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["thu_tu", "viec"],
+            "additionalProperties": false,
+            "properties": {
+              "thu_tu": {"type": "integer", "minimum": 1},
+              "viec": {"type": "string"},
+              "trung_tam_lam": {"type": "boolean"},
+              "so_lan_den": {"type": ["integer", "null"], "minimum": 0}
+            }
+          }
+        },
+        "trang_thai": {"$ref": "#/$defs/trang_thai"},
+        "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+      }
+    },
+    "giay_to": {
+      "type": "object",
+      "required": ["danh_sach", "trang_thai"],
+      "additionalProperties": false,
+      "properties": {
+        "danh_sach": {"$ref": "#/$defs/ds_chu"},
+        "trang_thai": {"$ref": "#/$defs/trang_thai"},
+        "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+      }
+    },
+    "lich_khai_giang": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["khoa", "ngay", "trang_thai"],
+        "additionalProperties": false,
+        "properties": {
+          "khoa": {"type": "string"},
+          "ngay": {"$ref": "#/$defs/ngay"},
+          "han_dang_ky": {"$ref": "#/$defs/ngay"},
+          "ghi_chu": {"type": "string"},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"},
+          "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+        }
+      }
+    },
+    "uu_dai": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["noi_dung", "het_han", "trang_thai"],
+        "additionalProperties": false,
+        "properties": {
+          "noi_dung": {"type": "string"},
+          "het_han": {"$ref": "#/$defs/ngay"},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"},
+          "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+        }
+      }
+    },
+    "cau_hoi_thuong_gap": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["hoi", "tra_loi", "trang_thai"],
+        "additionalProperties": false,
+        "properties": {
+          "hoi": {"type": "string"},
+          "tra_loi": {"type": "string"},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"},
+          "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+        }
+      }
+    },
+    "nguoi_dong_y_len_hinh": {
+      "type": "array",
+      "description": "Chỉ mã, vai trò, phạm vi, ngày đồng ý. Không họ tên, số điện thoại, ảnh.",
+      "items": {
+        "type": "object",
+        "required": ["ma", "vai_tro", "ngay_dong_y", "trang_thai"],
+        "additionalProperties": false,
+        "properties": {
+          "ma": {"type": "string"},
+          "vai_tro": {"enum": ["", "thay", "hoc-vien"]},
+          "pham_vi": {"type": "string"},
+          "ngay_dong_y": {"$ref": "#/$defs/ngay"},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"}
+        }
+      }
+    },
+    "moi_nhu": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ma", "ten", "noi_dung_gui_zalo", "nhom_hop", "trang_thai"],
+        "additionalProperties": false,
+        "properties": {
+          "ma": {"type": "string"},
+          "ten": {"type": "string"},
+          "noi_dung_gui_zalo": {"type": "string"},
+          "nhom_hop": {"type": "array", "items": {"type": "string", "pattern": "^n\\d+$"}},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"},
+          "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+        }
+      }
+    },
+    "cho_xac_nhan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["noi_dung"],
+        "additionalProperties": false,
+        "properties": {
+          "noi_dung": {"type": "string"},
+          "nguon": {"type": "string"},
+          "ghi_chu": {"type": "string"}
+        }
+      }
+    }
+  }
+}

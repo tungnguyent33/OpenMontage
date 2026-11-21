@@ -1,0 +1,26 @@
+# BẢN MẪU (commit lên repo). Không có dữ liệu thật của kênh.
+# Tạo file thật:  copy brand\<kênh>\dinh-vi.mau.yaml brand\<kênh>\dinh-vi.yaml  rồi điền. File thật bị .gitignore.
+# Schema: schemas/may-reels/dinh-vi.schema.json. trang_thai: gia_thuyet | da_xac_nhan.
+
+phien_ban: 1
+
+loi_hua:                       # MỘT lời hứa, mọi video chuyển đổi lặp lại, nói bằng bằng chứng
+  noi_dung: "<lời hứa của kênh>"
+  ghi_chu: ""
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: 2026-11-20
+
+doi_thu_so_sanh:               # các lựa chọn người xem so với kênh (không nêu tên ai trong video)
+  - "<lựa chọn khác 1>"
+
+tru:                           # mỗi trụ: đánh vào lựa chọn nào, bằng chứng đưa lên video, cần gì để có bằng chứng
+  - ma: tru-1
+    ten: "<tên trụ>"
+    danh_vao: "<lựa chọn khác bị so>"
+    bang_chung_tren_video: "<cảnh hoặc chữ chứng minh>"
+    can_gi_de_co: "<việc cần làm>"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+khong_lam:
+  - "<điều kênh không làm>"

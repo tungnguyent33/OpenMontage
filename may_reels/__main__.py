@@ -6,7 +6,9 @@
     python -m may_reels dung --du-an <ma_video> [--stage ...]
     python -m may_reels san-xuat --kenh <mã> --so-luong 3
     python -m may_reels sua
+    python -m may_reels dung-lai --ma <mã video>
     python -m may_reels thay-canh
+    python -m may_reels chien-luoc kiem-tra --kenh <mã> [--chi-tiet]
     python -m may_reels dang [--that]
     python -m may_reels dang-nhap drive
     python -m may_reels dang-nhap youtube --kenh <mã>
@@ -212,6 +214,13 @@ def lenh_sua(a) -> int:
     return 0 if all(k["trang_thai"] != "loi" for k in ds) else 1
 
 
+def lenh_chien_luoc(a) -> int:
+    from may_reels.chien_luoc import in_bao_cao, kiem_tra
+    bc = kiem_tra(a.kenh)
+    print(in_bao_cao(bc, chi_tiet=a.chi_tiet))
+    return 1 if bc.loi else 0
+
+
 def lenh_dung_lai(a) -> int:
     from may_reels.sua import GOC, dung_lai
     ma = a.ma
@@ -347,6 +356,13 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("sua", help="sửa và dựng lại các video được chọn Sửa trên Hàng chờ")
     p.set_defaults(ham=lenh_sua)
+
+    p = sub.add_parser("chien-luoc", help="dữ liệu chiến lược nội dung của kênh (doi-tuong, dinh-vi, dinh-dang, lich, ban-hang)")
+    sub2 = p.add_subparsers(dest="viec", required=True)
+    p2 = sub2.add_parser("kiem-tra", help="kiểm schema, tham chiếu, mục trống, ưu đãi hết hạn, cảnh thiếu, giả thuyết")
+    p2.add_argument("--kenh", required=True)
+    p2.add_argument("--chi-tiet", action="store_true", help="liệt kê hết mục trống và giả thuyết")
+    p2.set_defaults(ham=lenh_chien_luoc)
 
     p = sub.add_parser("dung-lai", help="dựng lại một video theo mẫu hiện tại, giữ nguyên kế hoạch, cập nhật Hàng chờ")
     p.add_argument("--ma", required=True, help="mã video, ví dụ vx-007-vong-xuyen")

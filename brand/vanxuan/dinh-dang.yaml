@@ -1,0 +1,286 @@
+# Thư viện định dạng video của kênh (cách làm nội dung, commit lên repo). Sửa tay; máy chỉ đọc.
+# Nguồn: docs/may-reels/CHIEN-LUOC-NOI-DUNG.md mục "Thư viện định dạng video" (2026-11-17). Schema:
+# schemas/may-reels/dinh-dang.schema.json. Kiểm: python -m may_reels chien-luoc kiem-tra --kenh <mã>.
+#
+# Bảng chiến lược có 12 dòng; dòng cuối "Luật (5 trụ cột đang có)" được tách thành 5 định dạng luat-*, mỗi cái trỏ về
+# khung nhịp có sẵn trong san-xuat.yaml (khung_nhip) để code sản xuất hiện tại chạy y nguyên.
+#
+# Các khóa:
+#   tang:        keo_xem | niem_tin | chuyen_doi  (tầng phễu: kéo người lạ xem / làm họ tin / làm họ nhắn tin)
+#   nhom_chinh:  mã nhóm trong doi-tuong.yaml (n1..n5); rỗng = mọi nhóm; theo_cau_hoi: true = nhóm theo câu hỏi được trả lời
+#   giong:       may (giọng đọc máy, dùng được cho video luật) | thay (giọng thật của thầy: bắt buộc cho video bán hàng)
+#   canh_can:    các loại cảnh cần. Mỗi loại khớp với kho_canh trong brand.json nếu có ÍT NHẤT MỘT cảnh dùng được có thẻ
+#                trong the_bat_ky HOẶC loại trong loai_bat_ky (NOI, BROLL, THAO, ANH). may_tu_dung: true = máy tự dựng
+#                (thẻ chữ, bảng chữ, sơ đồ), không cần quay.
+#   khung_nhip:  khóa trong san-xuat.yaml khung_nhip (định dạng luật); HOẶC nhip: cùng cấu trúc với san-xuat.yaml.
+#   dieu_kien:   điều kiện bắt buộc trước khi được làm định dạng này (ví dụ cần số liệu đã xác nhận trong ban-hang.yaml).
+#   trang_thai:  gia_thuyet | da_xac_nhan (định dạng đã chứng minh ra tin nhắn bằng số liệu của kênh).
+
+phien_ban: 1
+
+dinh_dang:
+  # ---------------- chuyển đổi ----------------
+  - ma: di-xe-chua-co-bang
+    ten: "Đi xe nhiều năm chưa có bằng"
+    tang: chuyen_doi
+    nhom_chinh: [n1]
+    hook_mau: "Đi xe máy 10 năm chưa có bằng, giờ đi học có khó không?"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Thầy nói trước máy", loai_bat_ky: [NOI], the_bat_ky: [noi-truoc-may, thay-noi]}
+      - {mo_ta: "Sân tập", the_bat_ky: [san-tap, san-thuc-hanh]}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Gọi đúng người đi xe lâu năm chưa có bằng, nói đúng nỗi lo"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Học mấy buổi, khó ở đâu, người cùng tuổi đã làm được"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Một câu gỡ nỗi lo"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Mồi nhử hợp nhóm, có mã video"}
+    dieu_kien: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: hoc-phi-gom-gi
+    ten: "Học phí gồm gì"
+    tang: chuyen_doi
+    nhom_chinh: [n2, n1]
+    ghi_chu: "Nhóm 2 là phụ huynh; dùng được cho mọi nhóm."
+    hook_mau: "Học bằng A1 hết bao nhiêu, gồm những khoản nào?"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Thầy nói trước máy", loai_bat_ky: [NOI], the_bat_ky: [noi-truoc-may, thay-noi]}
+      - {mo_ta: "Bảng chữ học phí gồm gì, không gồm gì", may_tu_dung: true}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Câu hỏi về tiền mà phụ huynh/người học ngại hỏi"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Đọc to từng khoản gồm gì, không gồm gì; bảng chữ hiện cùng"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Nói trước hết, không phát sinh"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Nhắn mã nhận bảng chi phí trọn gói"}
+    dieu_kien: "Chỉ làm khi ban-hang.yaml có học phí và các khoản đã xác nhận"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: dang-ky-mang-gi
+    ten: "Đăng ký cần mang gì"
+    tang: chuyen_doi
+    nhom_chinh: [n3, n2]
+    hook_mau: "Đi đăng ký học A1, nhớ mang đủ mấy thứ này"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Văn phòng", the_bat_ky: [van-phong, tu-van]}
+      - {mo_ta: "Giấy tờ mẫu", the_bat_ky: [ho-so, lam-ho-so]}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Gọi người sắp đi đăng ký hoặc cần đổi, cấp lại bằng"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Từng giấy tờ, từng bước, mấy lần phải đến"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Mang đủ là xong trong một lần"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Nhắn mã nhận danh sách giấy tờ"}
+    dieu_kien: "Chỉ làm khi ban-hang.yaml có giấy tờ và quy trình đăng ký đã xác nhận"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: lich-khai-giang
+    ten: "Lịch khai giảng tháng này"
+    tang: chuyen_doi
+    nhom_chinh: [n2, n5]
+    hook_mau: "Lớp A1 tháng này mở ngày [chờ anh xác nhận]"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Thầy nói trước máy", loai_bat_ky: [NOI], the_bat_ky: [noi-truoc-may, thay-noi]}
+      - {mo_ta: "Thẻ chữ lịch", may_tu_dung: true}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Ngày khai giảng thật"}
+      - {vai: than, so_doan: [2, 3], giay_moi_doan: [3, 7], mo_ta: "Lịch học, ai hợp lớp này"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Hạn đăng ký thật (nếu có)"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Nhắn mã giữ chỗ / hỏi lịch"}
+    dieu_kien: "Chỉ làm khi ban-hang.yaml có ngày khai giảng thật chưa qua"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: so-truot-thay-tra-loi
+    ten: "Sợ trượt? Thầy trả lời"
+    tang: chuyen_doi
+    nhom_chinh: [n4, n1]
+    hook_mau: "Sợ đi thi sa hình run tay? Nghe thầy nói 30 giây"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Thầy nói trước máy", loai_bat_ky: [NOI], the_bat_ky: [noi-truoc-may, thay-noi]}
+      - {mo_ta: "Sân tập", the_bat_ky: [san-tap, sa-hinh, san-thuc-hanh]}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Gọi tên nỗi sợ cụ thể"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Vì sao sợ, thầy giúp thế nào, người giống bạn đã qua"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Một câu trấn an có cơ sở"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Mồi nhử hợp nhóm, có mã video"}
+    dieu_kien: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: tra-loi-binh-luan
+    ten: "Trả lời bình luận"
+    tang: keo_xem
+    ghi_chu: "Kéo xem sang chuyển đổi. Bình luận chụp phải ẩn tên và ảnh người viết."
+    nhom_chinh: []
+    theo_cau_hoi: true
+    hook_mau: "Bình luận thật (ẩn tên), rồi thầy trả lời"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Thầy nói trước máy", loai_bat_ky: [NOI], the_bat_ky: [noi-truoc-may, thay-noi]}
+      - {mo_ta: "Thẻ bình luận đã ẩn tên", may_tu_dung: true}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Câu hỏi nguyên văn của khách (bỏ tên)"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Trả lời thẳng, có nguồn nếu là luật"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Một câu dễ nhớ"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Mời hỏi tiếp hoặc nhắn mã"}
+    dieu_kien: "Cần câu hỏi thật của khách"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  # ---------------- niềm tin ----------------
+  - ma: mot-buoi-hoc-that
+    ten: "Một buổi học thật"
+    tang: niem_tin
+    nhom_chinh: [n4, n2]
+    hook_mau: "Buổi đầu học xe máy ở Vạn Xuân diễn ra thế nào?"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Cả buổi học, từ lúc đến tới lúc về", the_bat_ky: [tap-xe, hoc-ly-thuyet, huong-dan]}
+      - {mo_ta: "Thầy hướng dẫn tại sân", the_bat_ky: [huong-dan, tai-trung-tam]}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Khoảnh khắc thật đầu buổi"}
+      - {vai: than, so_doan: [3, 5], giay_moi_doan: [3, 7], mo_ta: "Chuỗi cảnh thật theo thứ tự buổi học, ít chữ"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Một câu cảm nhận"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Hẹn đến xem sân tập / nhắn mã"}
+    dieu_kien: "Học viên trong cảnh đã đồng ý lên hình"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: hoc-vien-ke
+    ten: "Học viên kể"
+    tang: niem_tin
+    nhom_chinh: []
+    ghi_chu: "Nhóm theo người kể."
+    theo_cau_hoi: false
+    hook_mau: "Một câu nói thật của học viên"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Học viên nói trước máy (đã đồng ý)", loai_bat_ky: [NOI], the_bat_ky: [hoc-vien-ke]}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Câu nói thật đắt nhất của học viên"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Trước khi học lo gì, học thế nào, giờ ra sao"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Lời khuyên của học viên cho người giống mình"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Mồi nhử hợp nhóm của người kể"}
+    dieu_kien: "Học viên đã đồng ý lên hình (ban-hang.yaml nguoi_dong_y_len_hinh)"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: ngay-thi-nhan-bang
+    ten: "Ngày thi, ngày nhận bằng"
+    tang: niem_tin
+    nhom_chinh: []
+    hook_mau: "Khoảnh khắc thật ở ngày thi hoặc ngày nhận bằng"
+    giong: may
+    canh_can:
+      - {mo_ta: "Cảnh ngày thi", the_bat_ky: [cho-thi, phong-thi, xep-hang]}
+      - {mo_ta: "Cảnh nhận bằng", the_bat_ky: [nhan-bang]}
+    khung_nhip: hau-truong
+    dieu_kien: "Người trong cảnh đã đồng ý lên hình"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: bao-dau-co-that-khong
+    ten: "\"Bao đậu\" có thật không?"
+    tang: niem_tin
+    nhom_chinh: []
+    hook_mau: "Trung tâm hứa bao đậu, nên tin không?"
+    giong: thay
+    canh_can:
+      - {mo_ta: "Thầy nói trước máy", loai_bat_ky: [NOI], the_bat_ky: [noi-truoc-may, thay-noi]}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Câu hỏi người xem đang tự hỏi"}
+      - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Vì sao không ai hứa được; Vạn Xuân làm gì để học viên tự tin"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Một câu về sự thật, không hứa kết quả"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Mồi nhử ôn thi"}
+    dieu_kien: "Không nêu tên trung tâm nào; không tự hứa kết quả thi"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  # ---------------- kéo xem ----------------
+  - ma: thi-thu-3-cau
+    ten: "Thi thử 3 câu"
+    tang: keo_xem
+    nhom_chinh: [n1, n2, n4]
+    hook_mau: "3 câu điểm liệt hay sai nhất, bạn đúng mấy câu?"
+    giong: may
+    canh_can:
+      - {mo_ta: "Chữ và giọng đọc", may_tu_dung: true}
+    nhip:
+      - {vai: hook, giay: [1.5, 3.0], mo_ta: "Thách người xem tự chấm"}
+      - {vai: than, so_doan: [3, 3], giay_moi_doan: [4, 9], mo_ta: "Mỗi câu: đọc câu hỏi, dừng 1 nhịp, đáp án và vì sao"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Đúng mấy câu thì nên làm gì"}
+      - {vai: cta, giay: [3, 6], mo_ta: "Câu nối sang nhóm liên quan + nhắn mã nhận bộ câu ôn"}
+    dieu_kien: "Câu hỏi lấy từ bộ đề chính thức, có nguồn"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  # Dòng 12 của bảng chiến lược: 5 trụ cột luật đang có. Giữ khung nhịp trong san-xuat.yaml, tầng keo_xem.
+  # Quy tắc cầu nối: video luật kết bằng một câu nối sang nhóm liên quan (ví dụ mức phạt -> "Chưa có bằng thì nhắn mã …").
+  - ma: luat-hoi-nhanh-dap-dung
+    ten: "Hỏi nhanh đáp đúng"
+    tang: keo_xem
+    nhom_chinh: []
+    hook_mau: "Đọc nguyên câu hỏi hay nhầm"
+    giong: may
+    canh_can:
+      - {mo_ta: "Kho cảnh sân tập, tập xe", the_bat_ky: [san-tap, tap-xe, sa-hinh]}
+    khung_nhip: hoi-nhanh-dap-dung
+    dieu_kien: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: luat-dung-hay-sai
+    ten: "Đúng hay sai?"
+    tang: keo_xem
+    nhom_chinh: []
+    hook_mau: "Nêu quan niệm phổ biến + 'Đúng hay sai?'"
+    giong: may
+    canh_can:
+      - {mo_ta: "Kho cảnh sân tập, tập xe", the_bat_ky: [san-tap, tap-xe, sa-hinh]}
+    khung_nhip: dung-hay-sai
+    dieu_kien: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: luat-loi-sa-hinh
+    ten: "Lỗi khi thi sa hình"
+    tang: keo_xem
+    nhom_chinh: [n1, n4]
+    hook_mau: "Gọi tên lỗi hay bị trừ điểm"
+    giong: may
+    canh_can:
+      - {mo_ta: "Sân sa hình, bài thi thực hành", the_bat_ky: [sa-hinh, bai-thi-thuc-hanh, vong-so-8]}
+    khung_nhip: loi-sa-hinh
+    dieu_kien: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: luat-mot-phut-luat-moi
+    ten: "1 phút luật mới"
+    tang: keo_xem
+    nhom_chinh: [n1, n3]
+    hook_mau: "Câu hỏi luật cụ thể"
+    giong: may
+    canh_can:
+      - {mo_ta: "Kho cảnh đường, sân tập", the_bat_ky: [san-tap, tap-xe, duong-cong]}
+    khung_nhip: mot-phut-luat-moi
+    dieu_kien: "Mọi đoạn luật có nguồn (văn bản, Điều, khoản, link đã mở)"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20
+
+  - ma: luat-hau-truong
+    ten: "Hậu trường"
+    tang: keo_xem
+    nhom_chinh: []
+    hook_mau: "Khoảnh khắc thật ở sân tập/ngày thi"
+    giong: may
+    canh_can:
+      - {mo_ta: "Cảnh thật sân tập, ngày thi", the_bat_ky: [san-tap, tap-xe, cho-thi]}
+    khung_nhip: hau-truong
+    dieu_kien: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-20

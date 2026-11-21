@@ -4,6 +4,8 @@ Trạng thái hiện tại và việc đang dở: `docs/may-reels/TRANG-THAI.md`
 
 ---
 
+> **2026-11-20: bộ prompt C thay Prompt 5 và 5A.** Chiến lược nội dung (`docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`, chỉ trên máy) đưa vào máy qua bộ C, mục "Kế hoạch 30 ngày và cách đưa vào Máy Reels" của file chiến lược: C0 dữ liệu kênh (nhóm đối tượng, định vị, định dạng, lịch, bán hàng) — đã làm 2026-11-20; C0b học từ video mẫu (trạm phân tích); C1 sinh chủ đề theo nhóm và lịch; C2 mã theo dõi, tiêu chí "đúng đối tượng"; C3 video giọng thật của thầy; C4 mẫu trả lời Zalo, số liệu theo mã; C5 buổi xem lại hằng tuần; C6 trường nguồn trong hệ thống quản lý học viên. Prompt 5 và 5A cũ không làm nữa.
+
 ## 1. Hiện trạng: những gì đã có
 
 | Thành phần | Hiện trạng |

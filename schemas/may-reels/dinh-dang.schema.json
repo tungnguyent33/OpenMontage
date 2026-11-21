@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "may-reels/dinh-dang.schema.json",
+  "title": "Thư viện định dạng video (brand/<kênh>/dinh-dang.yaml)",
+  "type": "object",
+  "required": ["phien_ban", "dinh_dang"],
+  "additionalProperties": false,
+  "$defs": {
+    "trang_thai": {"enum": ["gia_thuyet", "da_xac_nhan"]},
+    "ngay": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "khoang": {"type": "array", "items": {"type": "number", "minimum": 0}, "minItems": 2, "maxItems": 2},
+    "buoc_nhip": {
+      "type": "object",
+      "required": ["vai", "mo_ta"],
+      "additionalProperties": false,
+      "properties": {
+        "vai": {"enum": ["hook", "than", "chot", "cta"]},
+        "giay": {"$ref": "#/$defs/khoang"},
+        "so_doan": {"$ref": "#/$defs/khoang"},
+        "giay_moi_doan": {"$ref": "#/$defs/khoang"},
+        "mo_ta": {"type": "string"}
+      }
+    },
+    "canh": {
+      "type": "object",
+      "required": ["mo_ta"],
+      "additionalProperties": false,
+      "properties": {
+        "mo_ta": {"type": "string"},
+        "the_bat_ky": {"type": "array", "items": {"type": "string"}},
+        "loai_bat_ky": {"type": "array", "items": {"enum": ["NOI", "BROLL", "THAO", "ANH"]}},
+        "may_tu_dung": {"type": "boolean"}
+      }
+    }
+  },
+  "properties": {
+    "phien_ban": {"const": 1},
+    "dinh_dang": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["ma", "ten", "tang", "nhom_chinh", "hook_mau", "giong", "canh_can", "trang_thai", "ngay_cap_nhat"],
+        "additionalProperties": false,
+        "oneOf": [{"required": ["khung_nhip"]}, {"required": ["nhip"]}],
+        "properties": {
+          "ma": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "ten": {"type": "string"},
+          "tang": {"enum": ["keo_xem", "niem_tin", "chuyen_doi"]},
+          "nhom_chinh": {"type": "array", "items": {"type": "string", "pattern": "^n\\d+$"}},
+          "theo_cau_hoi": {"type": "boolean"},
+          "ghi_chu": {"type": "string"},
+          "hook_mau": {"type": "string"},
+          "giong": {"enum": ["may", "thay"]},
+          "canh_can": {"type": "array", "items": {"$ref": "#/$defs/canh"}},
+          "khung_nhip": {"type": "string"},
+          "nhip": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/buoc_nhip"}},
+          "dieu_kien": {"type": "string"},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"},
+          "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "may-reels/doi-tuong.schema.json",
+  "title": "Nhóm đối tượng của kênh (brand/<kênh>/doi-tuong.yaml)",
+  "type": "object",
+  "required": ["phien_ban", "nhom"],
+  "additionalProperties": false,
+  "$defs": {
+    "trang_thai": {"enum": ["gia_thuyet", "da_xac_nhan"]},
+    "ngay": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "ds_chu": {"type": "array", "items": {"type": "string"}}
+  },
+  "properties": {
+    "phien_ban": {"const": 1},
+    "nhom": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["ma", "uu_tien", "ten", "ai_quyet_dinh", "noi_lo", "khoanh_khac_mua", "bang_chung_thuyet_phuc", "trang_thai", "ngay_cap_nhat"],
+        "additionalProperties": false,
+        "properties": {
+          "ma": {"type": "string", "pattern": "^n\\d+$"},
+          "uu_tien": {"type": "integer", "minimum": 1},
+          "ten": {"type": "string"},
+          "do_tuoi": {"type": "string"},
+          "ai_quyet_dinh": {"type": "string"},
+          "noi_lo": {"$ref": "#/$defs/ds_chu"},
+          "khoanh_khac_mua": {"$ref": "#/$defs/ds_chu"},
+          "bang_chung_thuyet_phuc": {"$ref": "#/$defs/ds_chu"},
+          "ghi_chu": {"type": "string"},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"},
+          "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+        }
+      }
+    }
+  }
+}

@@ -4,6 +4,32 @@ Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết 
 
 File tạo ngày 2026-11-19. Các phiên trước ngày này được ghi trong `KE-HOACH.md` (mục 7–10) và trong lịch sử git của nhánh `kenh-vanxuan`.
 
+## 2026-11-20 (4): prompt C0, dữ liệu chiến lược nội dung
+
+**Bối cảnh:** prompt C2b (biên kịch) cần `dinh-dang.yaml` và `doi-tuong.yaml` mà chưa có. Người dùng dừng C2b, chạy C0 trước.
+
+**Đã làm:**
+- File chiến lược đổi tên thành `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`, đưa vào `.gitignore` (chỉ trên máy). Theo yêu cầu người dùng, `brand/*/ban-hang.yaml`, `doi-tuong.yaml`, `dinh-vi.yaml` cũng vào `.gitignore`; repo chỉ có bản mẫu `*.mau.yaml` cùng cấu trúc, không có dữ liệu thật.
+- Dữ liệu `brand/vanxuan/`, mỗi mục có `trang_thai` (`gia_thuyet`/`da_xac_nhan`) và `ngay_cap_nhat`:
+  - `doi-tuong.yaml`: 5 nhóm n1..n5 lấy nguyên bảng "Ai là người mua".
+  - `dinh-vi.yaml`: lời hứa, 5 trụ, đối thủ so sánh, điều không làm.
+  - `dinh-dang.yaml`: 16 định dạng = 11 định dạng mới + dòng "Luật (5 trụ cột)" tách thành 5 định dạng `luat-*`, mỗi cái trỏ `khung_nhip` có sẵn trong `san-xuat.yaml` (không chuyển khung nhịp ra khỏi `san-xuat.yaml`, code sản xuất không đổi). 11 định dạng mới có `nhip` cùng cấu trúc. Khóa `giong` (`may`/`thay`) theo nguyên tắc 5; `canh_can` khai báo thẻ/loại cảnh chấp nhận để đối chiếu kho.
+  - `lich.yaml`: lịch 7 ngày, 3 mùa, `mua_dang_chay: truoc-tet` (2026-11-17 → 2027-02-05; ngày Tết cần người kiểm lại).
+  - `ban-hang.yaml`: mẫu trống; máy chỉ ghi 2 số của bài Facebook cũ vào `cho_xac_nhan`.
+- Schema `schemas/may-reels/{doi-tuong,dinh-vi,dinh-dang,lich,ban-hang}.schema.json`.
+- `may_reels/chien_luoc.py` + lệnh `chien-luoc kiem-tra --kenh <mã> [--chi-tiet]`: thiếu file (báo tạo từ bản mẫu), lỗi schema (dừng kiểm tiếp), tham chiếu chéo (nhóm, định dạng, khung nhịp, mùa đang chạy), mục trống, ưu đãi hết hạn, định dạng chưa đủ số liệu đã xác nhận, định dạng thiếu cảnh (khớp `canh_can` với thẻ/loại của cảnh `dung_duoc` trong `kho_canh`), số chờ xác nhận, giả thuyết.
+- `NGUYEN-TAC.md` mục 11 "Nguyên tắc nội dung" (7 nguyên tắc, bảng file dữ liệu) và bảng điểm chạm upstream (`.gitignore`, `schemas/`). `KE-HOACH.md`: bộ C thay Prompt 5 và 5A. `HUONG-DAN-SU-DUNG.md`: lệnh mới, cách tạo file thật từ bản mẫu.
+- Test `tests/may_reels/test_chien_luoc.py` (13): file trong repo đúng schema, bản mẫu kiểm không lỗi, thiếu file riêng, tham chiếu sai, sai schema dừng, ưu đãi hết hạn, số liệu đã xác nhận, thiếu cảnh, `.gitignore` đúng, không đường dẫn tuyệt đối / số điện thoại trong file commit.
+- `nap_kenh.py` và `brand.json` không đổi.
+
+**Test:** `tests/may_reels` 305/305; toàn repo 3236 qua, 19 bỏ qua, 1 hỏng (`test_fal_resume_output_format[webp]`, hỏng từ trước).
+
+**Kết quả `chien-luoc kiem-tra --kenh vanxuan`:** cấu trúc đúng; 4 định dạng chưa làm được vì `ban-hang.yaml` trống; 8 định dạng thiếu cảnh (7 cần "thầy nói trước máy", 1 "học viên nói trước máy", "nhận bằng"); `ban-hang.yaml` 21 ô trống; `lich.yaml` 2 mùa chưa có ngày; 2 số chờ xác nhận; mọi mục còn là giả thuyết.
+
+**Chưa làm:** chưa có code sản xuất nào dùng các file này (C1, C2 sẽ dùng). C2b tạm dừng.
+
+**Bổ sung 2026-11-21 (bước 1 của LO-TRINH.md, trước khi commit C0):** `lich.yaml` mùa hè 2027-06-15 → 2027-08-31; mùa "quy định mới" tính theo sự kiện (30 ngày trước đến 30 ngày sau ngày luật có hiệu lực), ghi bằng khóa mới `theo_su_kien` (`lich.schema.json`), không có ngày cố định nên `chien-luoc kiem-tra` không báo ô trống (test `test_mua_theo_su_kien_khong_tinh_la_o_trong`). Người dùng điền `ban-hang.yaml` (chỉ trên máy): học phí A1, A, ưu đãi (chưa có ngày hết hạn nên máy chưa dùng), lý thuyết online, lịch thi, đánh giá Google Maps (số liệu chỉ ghi trong file trên máy); sân thực hành và "không phát sinh" còn là giả thuyết. `tests/may_reels` 306/306; toàn repo 3237 qua, 19 bỏ qua, 1 hỏng (`test_fal_resume_output_format[webp]`, từ trước).
+
 ## 2026-11-20 (3): lệnh `dung-lai`
 
 **Vì sao:** `sua` chỉ dựng lại khi agent đổi `ke_hoach.json`. Sửa mẫu (`hf.py`) thì kế hoạch giữ nguyên, `sua` báo "khong_doi"; vx-007 cần dựng lại hai lần chỉ vì đổi mẫu.

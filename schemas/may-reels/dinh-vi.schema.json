@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "may-reels/dinh-vi.schema.json",
+  "title": "Định vị: lời hứa và các trụ (brand/<kênh>/dinh-vi.yaml)",
+  "type": "object",
+  "required": ["phien_ban", "loi_hua", "tru"],
+  "additionalProperties": false,
+  "$defs": {
+    "trang_thai": {"enum": ["gia_thuyet", "da_xac_nhan"]},
+    "ngay": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}
+  },
+  "properties": {
+    "phien_ban": {"const": 1},
+    "loi_hua": {
+      "type": "object",
+      "required": ["noi_dung", "trang_thai", "ngay_cap_nhat"],
+      "additionalProperties": false,
+      "properties": {
+        "noi_dung": {"type": "string"},
+        "ghi_chu": {"type": "string"},
+        "trang_thai": {"$ref": "#/$defs/trang_thai"},
+        "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+      }
+    },
+    "doi_thu_so_sanh": {"type": "array", "items": {"type": "string"}},
+    "tru": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ma", "ten", "bang_chung_tren_video", "can_gi_de_co", "trang_thai", "ngay_cap_nhat"],
+        "additionalProperties": false,
+        "properties": {
+          "ma": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "ten": {"type": "string"},
+          "danh_vao": {"type": "string"},
+          "bang_chung_tren_video": {"type": "string"},
+          "can_gi_de_co": {"type": "string"},
+          "trang_thai": {"$ref": "#/$defs/trang_thai"},
+          "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
+        }
+      }
+    },
+    "khong_lam": {"type": "array", "items": {"type": "string"}}
+  }
+}

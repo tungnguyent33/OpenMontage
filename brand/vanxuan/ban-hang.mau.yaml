@@ -1,0 +1,71 @@
+# BẢN MẪU (commit lên repo). Thông tin bán hàng của kênh. Không có dữ liệu thật.
+# Tạo file thật:  copy brand\<kênh>\ban-hang.mau.yaml brand\<kênh>\ban-hang.yaml  rồi điền. File thật bị .gitignore.
+# Schema: schemas/may-reels/ban-hang.schema.json. Kiểm: python -m may_reels chien-luoc kiem-tra --kenh <mã>.
+#
+# MÁY KHÔNG TỰ ĐIỀN SỐ LIỆU. Chỉ người điền. Video chỉ được nói số, giá, ngày, ưu đãi có trong các mục "dùng được"
+# (mọi mục trừ cho_xac_nhan) và có trang_thai: da_xac_nhan.
+# cho_xac_nhan: số liệu gặp ở nơi khác (bài cũ, website) nhưng CHƯA được xác nhận còn đúng. Máy không dùng mục này.
+# Ô để trống ("" / null / []) = chưa có. chien-luoc kiem-tra liệt kê mọi ô trống.
+
+phien_ban: 1
+
+khoa_hoc:                          # mỗi khóa một mục
+  - ma: ""                         # ví dụ a1, a, doi-bang
+    ten: ""
+    hoc_phi_vnd: null              # số nguyên, đồng
+    gom: []                        # các khoản đã gồm trong học phí trọn gói
+    khong_gom: []                  # các khoản người học tự trả thêm (ghi rõ để không "phát sinh")
+    so_buoi: null
+    thoi_gian_hoc: ""              # ví dụ "khoảng 3 tuần"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: null
+
+quy_trinh_dang_ky:                 # các bước theo thứ tự, mỗi bước ai làm
+  buoc: []                         # ví dụ {thu_tu: 1, viec: "...", trung_tam_lam: true, so_lan_den: 1}
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: null
+
+giay_to:                           # danh sách giấy tờ cần mang
+  danh_sach: []
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: null
+
+lich_khai_giang:                   # mỗi lớp một mục, chỉ ngày thật
+  - khoa: ""
+    ngay: null                     # YYYY-MM-DD
+    han_dang_ky: null
+    ghi_chu: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: null
+
+uu_dai:                            # chỉ ưu đãi thật, có ngày hết hạn. Hết hạn thì máy không dùng.
+  - noi_dung: ""
+    het_han: null                  # YYYY-MM-DD, bắt buộc khi có nội dung
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: null
+
+cau_hoi_thuong_gap:                # câu hỏi khách hay hỏi + câu trả lời đã xác nhận
+  - hoi: ""
+    tra_loi: ""
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: null
+
+nguoi_dong_y_len_hinh:             # chỉ mã, vai trò, ngày đồng ý. KHÔNG ghi họ tên, số điện thoại, ảnh của học viên.
+  - ma: ""                         # ví dụ hv-01
+    vai_tro: ""                    # thay | hoc-vien
+    pham_vi: ""                    # ví dụ "video trên mọi nền tảng"
+    ngay_dong_y: null
+    trang_thai: gia_thuyet
+
+moi_nhu:                           # thứ gửi lại qua Zalo khi người xem nhắn mã
+  - ma: ""                         # ví dụ bo-cau-on-a1
+    ten: ""
+    noi_dung_gui_zalo: ""          # nội dung/đường dẫn gửi đi
+    nhom_hop: []                   # mã nhóm trong doi-tuong.yaml
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: null
+
+cho_xac_nhan:                      # số liệu chưa được dùng; người xác nhận thì chuyển sang mục tương ứng ở trên
+  - noi_dung: ""
+    nguon: ""
+    ghi_chu: ""
