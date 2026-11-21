@@ -121,3 +121,9 @@ gfpgan/
 secrets/
 # Máy Reels: nội dung kênh không đưa lên repo public (toàn văn context/*.md do nap_kenh.py chép ra)
 brand/*/_local/
+# Máy Reels: chiến lược và dữ liệu kinh doanh thật chỉ để trên máy (2026-11-20). Repo chỉ có bản mẫu *.mau.yaml.
+docs/may-reels/CHIEN-LUOC-NOI-DUNG.md
+docs/may-reels/LO-TRINH.md
+brand/*/ban-hang.yaml
+brand/*/doi-tuong.yaml
+brand/*/dinh-vi.yaml
