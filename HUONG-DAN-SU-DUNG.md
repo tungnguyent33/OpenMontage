@@ -245,8 +245,11 @@ Muốn chắc chắn 0 đồng: thêm câu **"chỉ dùng công cụ miễn phí
 
 Máy Reels là dự án biến nhánh `kenh-vanxuan` thành máy tự sản xuất và đăng video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh. Bạn chỉ duyệt trên Google Sheet ở hai chỗ: duyệt chủ đề và duyệt video trước khi đăng. Hiện đã có lớp nối Google Sheet (`may_reels/`). Phần sản xuất và đăng video chưa có. Tài liệu:
 
-- `docs/may-reels/NGUYEN-TAC.md`: nguyên tắc phát triển (code đặt ở đâu, Sheet là nguồn sự thật về duyệt, đăng bài mặc định chạy thử, quy tắc cấm của kênh, bí mật, chi phí).
-- `docs/may-reels/KE-HOACH.md`: sơ đồ luồng, cách chạy không dừng, lý do chọn pipeline `hybrid`, các rủi ro, và mục 6 **"Quyết định đã chốt"**. Cuối mục 6 có danh sách việc còn chờ bạn: câu 5, 6, 17 còn để trống.
+- `docs/may-reels/TRANG-THAI.md`: **cửa vào**: Máy Reels đang ở đâu, các lệnh, bản đồ file, việc đang dở, việc chờ bạn, việc tiếp theo.
+- `docs/may-reels/NGUYEN-TAC.md`: nguyên tắc phát triển (code đặt ở đâu, Sheet là nguồn sự thật về duyệt, đăng bài mặc định chạy thử, quy tắc cấm của kênh, bí mật, chi phí, quy tắc kết thúc phiên).
+- `docs/may-reels/QUYET-DINH.md`: các quyết định đã chốt (câu 1–19 ngày 2026-11-15 và các quyết định sau), mục C là những gì còn chưa chốt.
+- `docs/may-reels/KE-HOACH.md`: sơ đồ luồng, cách chạy không dừng, các rủi ro còn hiệu lực.
+- `docs/may-reels/NHAT-KY-PHAT-TRIEN.md`: lịch sử từng phiên phát triển (mới nhất ở trên).
 
 - `docs/may-reels/CAI-DAT-GOOGLE.md`: tạo service account, chia sẻ Sheet, cách dùng các cột trên Sheet.
 - `docs/may-reels/CAI-DAT-DANG-BAI.md`: app Meta và Page token, OAuth client cho YouTube và Drive, ý nghĩa các trạng thái đăng.

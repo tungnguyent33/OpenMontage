@@ -59,7 +59,7 @@ Nếu buộc phải sửa (hoặc thêm file vào thư mục lõi mà code lõi 
 - Giá trị ghi bằng chế độ RAW, để Sheet không tự đổi chuỗi thành ngày hay số.
 - Danh sách cột của người được khai báo ở một chỗ duy nhất trong code. Hàm ghi Sheet từ chối ghi vào cột có tên trong danh sách đó và có test chứng minh việc từ chối này.
 - **Cổng A (tab Ý tưởng, cột `duyet_chu_de`, dropdown `Chờ` / `Làm` / `Bỏ`):** chỉ chủ đề có đúng giá trị `Làm` mới được sản xuất.
-- **Cổng B (tab Hàng chờ, cột `duyet`, dropdown `Chờ duyệt` / `Duyệt` / `Sửa` / `Bỏ`):** máy chỉ đăng một dòng khi ô có đúng giá trị `Duyệt`. Ô trống, `duyệt`, `OK`, `Sửa` hay bất kỳ giá trị nào khác đều là **không đăng**. Giá trị của hai dropdown theo yêu cầu ngày 2026-11-15; yêu cầu này thay cho câu 2 trong `KE-HOACH.md` mục 6. Máy so khớp đúng chuỗi `Duyệt`, có phân biệt hoa thường, sau khi chuẩn hóa Unicode NFC và cắt khoảng trắng hai đầu. `Sửa` thì máy đọc cột ghi chú của người rồi làm lại; `Bỏ` thì máy dừng dòng đó. Máy không bao giờ tự đổi giá trị ô này.
+- **Cổng B (tab Hàng chờ, cột `duyet`, dropdown `Chờ duyệt` / `Duyệt` / `Sửa` / `Bỏ`):** máy chỉ đăng một dòng khi ô có đúng giá trị `Duyệt`. Ô trống, `duyệt`, `OK`, `Sửa` hay bất kỳ giá trị nào khác đều là **không đăng**. Giá trị của hai dropdown theo yêu cầu ngày 2026-11-15; yêu cầu này thay cho câu 2 trong `QUYET-DINH.md` (trước đây `KE-HOACH.md` mục 6). Máy so khớp đúng chuỗi `Duyệt`, có phân biệt hoa thường, sau khi chuẩn hóa Unicode NFC và cắt khoảng trắng hai đầu. `Sửa` thì máy đọc cột ghi chú của người rồi làm lại; `Bỏ` thì máy dừng dòng đó. Máy không bao giờ tự đổi giá trị ô này.
 - Đọc lại ô Duyệt **ngay trước khi đăng**, không dùng giá trị đọc từ đầu lượt chạy. Người có thể rút lại duyệt trong lúc máy đang dựng.
 - Trạng thái duyệt không lưu ở chỗ nào khác (không lưu trong checkpoint, không lưu trong file local) như một nguồn thay thế. File local chỉ được ghi lại *bản sao* để kiểm tra về sau.
 - Checkpoint của OpenMontage (`lib/checkpoint.py`) vẫn ghi `human_approved=True` ở các cổng duyệt. Lần ghi đó chỉ được phép khi Sheet đang có `Duyệt` cho đúng dòng ấy, và `metadata` của checkpoint phải ghi mã dòng Sheet cùng giá trị đã đọc.
@@ -115,7 +115,7 @@ Với kênh Vạn Xuân hiện tại, các quy tắc là:
   - Ngày nạp lấy từ `ngay_nap` trong `index.json` (do `kho nap` ghi) trước, rồi mới suy từ mtime. File quay từ trước mà mới chép vào kho vẫn giữ mtime cũ: nếu tin mtime thì cảnh có mặt người sẽ lọt vào phạm vi `quyen_hinh` cũ.
   - Cảnh mới có mặt người được liệt kê ở tab **Quyền hình** (cột người `xac_nhan_quyen`: `Chờ` / `Đồng ý` / `Không`). Chỉ khi người chọn `Đồng ý`, lệnh `kho nap` mới thêm mã cảnh vào `quyen_hinh.bo_sung` của `channel.yaml` (sao lưu trước, giữ nguyên chú thích, kiểm bằng `yaml.safe_load` rằng không phần nào khác đổi). Trong thư mục kênh gốc, máy chỉ ghi vào `canh-quay/_kho/`, `quyen_hinh.bo_sung` của `channel.yaml` (lệnh này) và ô nguồn, ô ý chính của `chu-de.md` (`nguon-luat ap-dung` hoặc khi người yêu cầu). Hai file sau chỉ được ghi khi người đã xác nhận.
 - Lúc chọn cảnh, máy kiểm tra lại: nếu `mat_nguoi: true` thì phải thỏa các điều kiện `quyen_hinh` ở trên, không chỉ tin vào `dung_duoc`.
-- Chỉ cắt trong các đoạn `doan_dung_duoc` (nếu cảnh có khai báo). Phải tôn trọng `rui_ro` (ví dụ `mat-hoc-vien`, `bien-so`) và `can_xu_ly`. Đã chốt (`KE-HOACH.md` mục 6, câu 15): máy **được tự cắt khung** theo vùng ghi trong `can_xu_ly`. Máy **không tự làm mờ** mặt người hay biển số; cảnh cần làm mờ thì chỉ dùng đoạn không cần xử lý. Không xác định được đoạn như vậy thì không dùng cảnh đó và ghi vào tab "Cần quay".
+- Chỉ cắt trong các đoạn `doan_dung_duoc` (nếu cảnh có khai báo). Phải tôn trọng `rui_ro` (ví dụ `mat-hoc-vien`, `bien-so`) và `can_xu_ly`. Đã chốt (`QUYET-DINH.md` câu 15): máy **được tự cắt khung** theo vùng ghi trong `can_xu_ly`. Máy **không tự làm mờ** mặt người hay biển số; cảnh cần làm mờ thì chỉ dùng đoạn không cần xử lý. Không xác định được đoạn như vậy thì không dùng cảnh đó và ghi vào tab "Cần quay".
 
 ---
 
@@ -163,6 +163,7 @@ Kho cảnh có thể không có cảnh khớp một ý: không đủ cảnh, sai
 - Trước mỗi commit chạy `git status` và xem kỹ danh sách file. `tests/may_reels/test_nap_kenh.py` dùng `git check-ignore` để kiểm tra `.env`, `secrets/` và `brand/<id>/_local/` bị bỏ qua.
 - `brand.json` không được chứa đường dẫn tuyệt đối. Chỉ ghi `file_tuong_doi`. Thư mục kênh gốc đọc từ `KENH_GOC_DIR` trong `.env`, vì đây là đường dẫn riêng của từng máy.
 - Toàn văn `context/*.md` của kênh nằm trong `brand/<id>/_local/` (bị gitignore). Code cần nội dung này thì đọc theo trường `context.<tên>.ban_local` của brand.json.
+- **File chỉ có ở máy, không commit** (bị `.gitignore`; tài liệu được commit chỉ nhắc tên, không chép nội dung): `docs/may-reels/LO-TRINH.md` (thứ tự các bước phát triển), `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`, `brand/<id>/ban-hang.yaml`, `doi-tuong.yaml`, `dinh-vi.yaml`, `brand/<id>/_local/`, `.env`, `secrets/`. Tài liệu được commit không chứa học phí, số liệu bán hàng, nội dung chiến lược hay khóa. Trước khi commit, `git ls-files | Select-String "secrets|\.env$|LO-TRINH"` phải không ra gì.
 - Dữ liệu cũ vẫn còn trong lịch sử git: commit `dc52b79` đã đẩy lên GitHub, có đường dẫn tuyệt đối và toàn văn context. **Không viết lại lịch sử git khi chưa hỏi người dùng.**
 
 ---
@@ -172,7 +173,7 @@ Kho cảnh có thể không có cảnh khớp một ý: không đủ cảnh, sai
 - Thứ tự ưu tiên: công cụ chạy trên máy và miễn phí (FFmpeg, faster-whisper `transcriber`, Remotion, HyperFrames, giọng chạy CPU), sau đó mới đến API miễn phí, cuối cùng là API trả phí. API trả phí chỉ dùng khi người dùng đã đồng ý.
 - Ngân sách theo `config.yaml` mục `budget` và `tools/cost_tracker.py` (theo thứ tự estimate → reserve → reconcile).
 - Mỗi lần chạy máy ghi một dòng chi phí: kênh, mã video, bước, công cụ, số tiền (0 nếu miễn phí), thời gian chạy. Ghi vào file trong dự án và vào tab chi phí trên Sheet. Checkpoint có trường `cost_snapshot`.
-- Nếu máy chạy bằng Claude Code chế độ không tương tác, sổ chi phí ghi **số lượt chạy** và **thời gian chạy** của trợ lý (`KE-HOACH.md` mục 6, câu 10), không đo token.
+- Nếu máy chạy bằng Claude Code chế độ không tương tác, sổ chi phí ghi **số lượt chạy** và **thời gian chạy** của trợ lý (`QUYET-DINH.md` câu 10), không đo token.
 
 ---
 
@@ -191,6 +192,11 @@ Kho cảnh có thể không có cảnh khớp một ý: không đủ cảnh, sai
   1. Chạy `pytest` (ít nhất `tests/may_reels/` và các test hợp đồng bị ảnh hưởng) và báo đúng kết quả.
   2. Cập nhật `HUONG-DAN-SU-DUNG.md` nếu có lệnh hoặc cách dùng mới.
   3. Tạo một commit trên nhánh `kenh-vanxuan`.
+- **Quy tắc kết thúc phiên (2026-11-21).** Trước khi commit:
+  1. Cập nhật `docs/may-reels/TRANG-THAI.md`: bảng prompt (trạng thái, ngày, commit), việc đang dở, việc chờ người dùng, việc tiếp theo, kết quả test. Thêm lệnh mới vào mục "Lệnh", thư mục mới vào "Bản đồ file".
+  2. Thêm một mục vào đầu `docs/may-reels/NHAT-KY-PHAT-TRIEN.md` (mới nhất ở trên): đã làm gì, số đo, test, việc bỏ dở.
+  3. Có quyết định mới thì thêm mục vào `docs/may-reels/QUYET-DINH.md` (ngày, lý do, file liên quan). Đổi quyết định cũ thì không xóa, ghi "Thay bởi".
+  4. Quy tắc nào kiểm tra được bằng code thì viết thành test thay vì chỉ ghi chữ. `tests/may_reels/test_tai_lieu.py` kiểm: `TRANG-THAI.md` tồn tại và không quá 200 dòng; mọi lệnh trong `may_reels/__main__.py` có trong `TRANG-THAI.md`; mọi đường dẫn trong bản đồ file tồn tại (trừ file chỉ có ở máy); `QUYET-DINH.md` và `NHAT-KY-PHAT-TRIEN.md` tồn tại.
 
 ---
 
@@ -235,11 +241,12 @@ Mọi file của OpenMontage gốc mà Máy Reels sửa, hoặc thư mục lõi 
 
 | File | Loại | Thay đổi | Lý do | Khi merge upstream |
 |---|---|---|---|---|
-| `.gitignore` | Sửa (2026-11-15, thêm 2026-11-20) | Khối Máy Reels ở cuối file: `secrets/`, `brand/*/_local/`; từ 2026-11-20 thêm `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`, `brand/*/ban-hang.yaml`, `brand/*/doi-tuong.yaml`, `brand/*/dinh-vi.yaml` | Giữ file service account, token và nội dung riêng của kênh ngoài repo public | Giữ 2 dòng này nếu upstream sửa `.gitignore` (thêm ở cuối file nên ít xung đột) |
+| `.gitignore` | Sửa (2026-11-15, thêm 2026-11-20, 2026-11-21) | Khối Máy Reels ở cuối file: `secrets/`, `brand/*/_local/`; từ 2026-11-20 thêm `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`, `brand/*/ban-hang.yaml`, `brand/*/doi-tuong.yaml`, `brand/*/dinh-vi.yaml`; 2026-11-21 thêm `docs/may-reels/LO-TRINH.md` | Giữ file service account, token và nội dung riêng của kênh ngoài repo public | Giữ 2 dòng này nếu upstream sửa `.gitignore` (thêm ở cuối file nên ít xung đột) |
 | `.env.example` | Sửa (đã làm 2026-11-15) | Thêm khối `# --- Máy Reels ---` ở cuối file: `MAY_REELS_SA_JSON`, `MAY_REELS_SHEET_ID`, `KENH_GOC_DIR`, `MAY_REELS_GOOGLE_CLIENT_SECRET`, `MAY_REELS_DRIVE_TOKEN`, và ví dụ `VANXUAN_FB_PAGE_TOKEN`, `VANXUAN_YT_TOKEN_FILE` | Người cài mới biết cần đặt biến nào | Thêm ở cuối file nên ít xung đột. Nếu upstream sửa đoạn cuối file thì giữ cả hai. |
 | `schemas/may-reels/*.schema.json` | Thêm file vào thư mục lõi `schemas/` (từ 2026-11-15; 2026-11-20 thêm doi-tuong, dinh-vi, dinh-dang, lich, ban-hang) | Schema của Máy Reels | Theo yêu cầu đặt schema ở đây. Thư mục con riêng `may-reels/` không phải package Python và không bị `schemas.artifacts.list_schemas()` quét | Không xung đột trừ khi upstream tạo thư mục cùng tên. |
 | `tools/publishers/facebook_reels.py`, `youtube_shorts.py`, `tiktok_handoff.py`, `_dang_chung.py` | Thêm file mới vào thư mục lõi (2026-11-15) | Publisher của Máy Reels | Registry chỉ tìm tool trong `tools/`. Không sửa file có sẵn nào | Không xung đột trừ khi upstream thêm file cùng tên. `export_bundle.py` giữ nguyên. |
 | `pipeline_defs/may-reels.yaml` | Thêm file (đã làm 2026-11-15) | Manifest riêng cho chế độ chạy không dừng | `lib/pipeline_loader.py` chỉ đọc manifest trong `pipeline_defs/`, và `lib/checkpoint.py` tìm cổng duyệt qua tên pipeline | Không xung đột trừ khi upstream đổi schema manifest. `tests/contracts/test_pipeline_catalog.py` sẽ tự kiểm tra file này. |
+| `CLAUDE.md` | Sửa (2026-11-21) | Thêm một khối ngắn ở đầu file: yêu cầu phát triển Máy Reels thì đọc `docs/may-reels/TRANG-THAI.md` và `NGUYEN-TAC.md` trước; chỉ đọc `AGENT_GUIDE.md` khi cần đụng pipeline của OpenMontage | Phiên phát triển mới đọc đúng trạng thái trong vài phút, không bị luật định tuyến của `AGENT_GUIDE.md` (dành cho yêu cầu làm video) kéo đi | Khối nằm trên dòng tiêu đề của upstream. Nếu upstream sửa `CLAUDE.md` thì giữ khối này ở đầu, phần còn lại lấy theo upstream. |
 | `HUONG-DAN-SU-DUNG.md` | File của nhánh, không phải upstream | — | — | — |
 
-File upstream đã sửa: `.gitignore` và `.env.example`. Thư mục lõi đã thêm file: `schemas/`. `pipeline_defs/may-reels.yaml` sẽ thêm khi bắt đầu code luồng sản xuất.
+File upstream đã sửa: `.gitignore`, `.env.example` và `CLAUDE.md` (2026-11-21). Thư mục lõi đã thêm file: `schemas/`. `pipeline_defs/may-reels.yaml` sẽ thêm khi bắt đầu code luồng sản xuất.

@@ -2,7 +2,24 @@
 
 Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết định, số đo, việc bỏ dở. Trạng thái hiện tại: `TRANG-THAI.md`.
 
-File tạo ngày 2026-11-19. Các phiên trước ngày này được ghi trong `KE-HOACH.md` (mục 7–10) và trong lịch sử git của nhánh `kenh-vanxuan`.
+File tạo ngày 2026-11-19. Các mục từ 2026-11-15 đến 2026-11-18 (cuối file) chuyển nguyên văn từ `KE-HOACH.md` mục 1, 7–10 ngày 2026-11-21; các phiên đó còn ở lịch sử git của nhánh `kenh-vanxuan`. Quyết định đã chốt: `QUYET-DINH.md`.
+
+## 2026-11-21: bước M, trí nhớ dự án
+
+**Mục tiêu:** phiên Claude Code mới đọc đúng trạng thái Máy Reels trong vài phút, không cần người dùng dán lại bối cảnh.
+
+**Đã làm:**
+- `TRANG-THAI.md` viết lại thành cửa vào duy nhất (122 dòng): Máy Reels là gì, bảng prompt (cả bộ C, lấy từ git log và `LO-TRINH.md`), các lệnh lấy từ `__main__.py`, bản đồ file, việc đang dở, lỗi đã biết, việc chờ người dùng, việc tiếp theo.
+- Tách `KE-HOACH.md` (426 → 188 dòng), không bỏ nội dung, số mục và số câu cũ giữ nguyên để các chỗ trỏ trong code và cấu hình vẫn tìm được:
+  - mục 6 (câu 1–19), 3.2, 4 và quyết định ở mục 9, 10 → `QUYET-DINH.md` (mới) mục A, B1–B5; thêm B6–B10 từ nhật ký (bộ C, dữ liệu chỉ ở máy, trạm, bố cục cảnh sơ đồ, dòng nguồn luật); "Việc còn chờ người dùng" → mục C;
+  - mục 1, 7, 8, 9 (thiết kế, kết quả), 10 → nhật ký này, các mục 2026-11-15 đến 2026-11-19 (1);
+  - còn lại ở `KE-HOACH.md`: sơ đồ luồng, 3.1, rủi ro 5.1–5.4, thêm 5.5 (phát hiện khi làm kho cảnh còn hiệu lực); bảng "mục cũ đi đâu" ở đầu file.
+- `CLAUDE.md`: khối ngắn ở đầu (phát triển Máy Reels thì đọc `TRANG-THAI.md`, `NGUYEN-TAC.md` trước; `AGENT_GUIDE.md` chỉ khi đụng pipeline). Ghi vào "Điểm chạm upstream".
+- `NGUYEN-TAC.md`: mục 7 thêm danh sách file chỉ có ở máy (có `LO-TRINH.md`) và lệnh kiểm trước khi commit; mục 9 thêm quy tắc kết thúc phiên; sửa các chỗ trỏ "KE-HOACH.md mục 6" sang `QUYET-DINH.md`. `HUONG-DAN-SU-DUNG.md` mục 10: danh sách tài liệu mới.
+- Test `tests/may_reels/test_tai_lieu.py` (6): `TRANG-THAI.md` tồn tại, ≤ 200 dòng; đọc cây argparse của `__main__.py`, mọi lệnh lá có trong `TRANG-THAI.md`; mọi đường dẫn trong bản đồ file tồn tại (bỏ qua dòng "chỉ có ở máy" và `<KENH_GOC_DIR>`).
+- Không sửa code đang chạy. Chú thích trong `.py`/`.yaml` vẫn ghi "KE-HOACH.md câu N"; `QUYET-DINH.md` giải thích chỗ đọc.
+
+**Test:** `tests/may_reels` 312/312; toàn repo 3258 qua, 19 bỏ qua, 1 hỏng (`test_fal_resume_output_format[webp]`, hỏng từ trước).
 
 ## 2026-11-20 (4): prompt C0, dữ liệu chiến lược nội dung
 
@@ -112,4 +129,175 @@ File tạo ngày 2026-11-19. Các phiên trước ngày này được ghi trong 
 
 ## 2026-11-19 (1): kết luận so sánh model chép lời
 
-Commit `fdc6e75`. Chạy nốt phép so sánh base / large-v3 / PhoWhisper trên 2 clip thật. Kết luận: giữ PhoWhisper. Chi tiết ở `KE-HOACH.md` mục 10.
+Commit `fdc6e75`. Chạy nốt phép so sánh base / large-v3 / PhoWhisper trên 2 clip thật (bắt đầu 2026-11-17, xem mục đó). Kết luận: giữ PhoWhisper (`QUYET-DINH.md` B5). Chuyển nguyên văn từ `KE-HOACH.md` mục 10 ngày 2026-11-21:
+
+**Có cần PhoWhisper không: ĐÃ kết luận (2026-11-19): giữ PhoWhisper làm mặc định.** Thử trên 2 clip thật có tiếng trong kho (`Nhieu_hoc_vien_nu_Cancanh.mp4`, `Video quay demo/snaptik...mp4`). Cả ba model đều chạy qua tool `transcriber` (`python -m may_reels.kho_chep_loi`) bằng CPU int8, lần lượt từng model, khi máy còn khoảng 12 GB RAM trống. Lần thử ngày 2026-11-17 bị dừng vì thiếu bộ nhớ; ngày 2026-11-19 chạy lại phần còn thiếu.
+
+| Clip 1 (38 giây, khoảng 2,5 giây có lời) | Thời gian | Kết quả |
+|---|---|---|
+| `base` | 2,3 giây | "Đi theo đi lúc quen là chết hả hình? Đúng rồi" (sai từ) |
+| `large-v3` | khoảng 25 phút (chạy cùng lúc với test, 2026-11-17) | "Đi thế không đến lúc quen là chết hết" |
+| PhoWhisper-large | 79 giây | "đi thế lâu đến lúc quen là chết hết. / đúng. / mời." |
+| Bản chép cũ trong kho (script của bộ kit) | — | "đi thế đến lúc quen là chết đấy…", kèm một câu bịa ở đoạn lặng |
+
+| Clip 2 (78 giây, người quay nhắc học viên trên sân tập) | Thời gian | Kết quả |
+|---|---|---|
+| `base` | vài giây | 8 đoạn, sai nhiều từ: "Cái này sẽ đi qua khoan trình một ai thí luôn", "Bắt buộc và hảo luật tí ở ai bờ", "Tổng tích một phát vấn đô" |
+| `large-v3` | 22 giây | **Bịa hoàn toàn:** một đoạn duy nhất 9–65 giây "Các bạn hãy đăng ký kênh để ủng hộ kênh của mình nhé." |
+| PhoWhisper-large | 35 giây | "ngày sẽ đi hoàn chỉnh một bài thi luôn rồi … thời điểm này nó hơi hẹp nên là nhiều khi phải bắt buộc phải … một phát vẫn đỗ đấy thế là đúng rồi đấy bắt xe lại." |
+| Bản chép cũ trong kho | — | Trùng từng chữ với PhoWhisper (script của bộ kit có lẽ cũng dùng PhoWhisper, nên đây không phải bằng chứng độc lập) |
+
+- Kết luận: PhoWhisper sát lời thật nhất trên cả hai clip, không bịa câu ở đoạn lặng. `large-v3` bịa câu kiểu "đăng ký kênh" trên clip 2, nên nguy hiểm hơn `base` vì câu bịa đọc trơn tru, khó nhận ra là sai. `base` sai từ quá nhiều để làm trích lời.
+- Chỉ có 2 clip, phần lớn là tiếng nói xa, lẫn tiếng xe. Kết luận này đủ để giữ mặc định, chưa đủ để nói PhoWhisper đúng với lời thầy nói trước máy. Nhãn `loi_noi` vẫn do agent đọc lại trước khi trích.
+- Tốc độ: PhoWhisper chạy CPU mất 35–80 giây mỗi clip ngắn. Con số 25 phút của `large-v3` ngày 2026-11-17 là do chạy cùng lúc với test, không phải tốc độ thường của model.
+- Model lớn chạy CPU tốn khoảng 3 GB bộ nhớ. `kho nap` vẫn chạy chép lời lần lượt từng file, nên không nên chạy cùng việc nặng khác.
+- **Phát hiện thêm:** gọi `base` theo tên (`--model base`) báo lỗi `json.exception.type_error.305` trên clip 2. Nguyên nhân: bản `Systran/faster-whisper-base` trong cache Hugging Face thiếu `config.json` (cùng lỗi symlink `WinError 1314` ở trên). Bản ở `~/.cache/whisper-local/faster-whisper-base` đủ file và chạy được. Mặc định của máy không dùng `base`, nên không sửa gì.
+- GPU vẫn chưa dùng được (thiếu CUDA 12). Không cần cài để dùng PhoWhisper với kho hiện tại.
+
+## 2026-11-18: `kho nap` tự viết lại KHO.md
+
+Commit `87e6ea5` (2026-11-19). Từ `KE-HOACH.md` mục 10, "Việc còn lại".
+
+- ~~`KHO.md` chưa được `kho nap` cập nhật~~ **Đã làm (2026-11-18):** `may_reels/kho_md.py`. Sau mỗi `kho nap`, mục 1 (Tóm tắt) và mục 2 (Bảng cảnh) được sinh lại từ `index.json`, `nhan.json` và quyền hình (cùng hàm `doc_kho` của `nap_kenh.py`, nên "dùng được" khớp `brand.json`: 20/24). Bảng có thêm hai cột "Đã dùng" và "Trạng thái". Mục 3 (Độ phủ theo chủ đề) và mục 4 (Nên quay thêm) cần agent đánh giá, nên được giữ nguyên từ bản cũ, kèm dòng "Máy ghi chú" liệt kê các cảnh nạp sau lần agent viết. Lần đầu ghi đè bản do subagent viết thì bản đó được sao lưu thành `KHO.md.bak-<giờ>` (trên máy này: `KHO.md.bak-20261118-214159`). Đã sinh lại `KHO.md` thật của Vạn Xuân.
+  - Mất so với bản subagent: các ghi chú tự do ở mục 1 (giấy phép Mixkit, cảnh trùng khung, nhóm "Stock (Mixkit)" riêng). Thông tin này vẫn còn trong `ghi_chu` của `nhan.json` và trong bản sao lưu.
+
+## 2026-11-17: kho cảnh tự nạp và máy gợi ý cần quay (Prompt 6)
+
+Commit `226ee1b` (2026-11-18). Từ `KE-HOACH.md` mục 10. Quyết định quyền hình: `QUYET-DINH.md` B4. So sánh model chép lời: mục 2026-11-19 (1).
+
+**Mục tiêu:** quay xong thả file vào một thư mục là máy tự phân tích, gắn nhãn, đưa vào kho; và máy chủ động nói cần quay gì.
+
+**Đã làm:**
+- `python -m may_reels kho nap --kenh <mã>` (`may_reels/kho.py`): quét `canh-quay/moi-quay/` của thư mục kênh gốc. File chưa có trong `canh-quay/_kho/index.json` được:
+  - đo thông số và tách cảnh bằng `audio_probe`, `scene_detect`, `frame_sampler`, ghép thành lưới `khung.jpg` có in mốc giây;
+  - chép lời bằng tool `transcriber` (`may_reels/kho_chep_loi.py`, chạy bằng `MAY_REELS_PY_GIONG`);
+  - gắn nhãn bằng agent (`skills/may-reels/gan-nhan-canh.md`), Python kiểm nhãn rồi mới thêm vào `nhan.json`.
+- **Định dạng bản ghi giữ nguyên** như `scripts/nap_canh_quay.py` và subagent `phan-loai-canh` của bộ kit kênh. Mã cảnh tính bằng cùng thuật toán; test kiểm rằng mã của cảnh cũ trong kho thật không đổi. Chỉ thêm khóa vào bản ghi `index.json`: `ngay_nap`, `nap_luc`, `nap_boi`, `so_lan_dung`, `ngay_dung_gan_nhat`. Chạy thử phân tích trên clip thật `Học Viên Nam_Hạng A_ trung cảnh.mp4`: mọi thông số khớp bản ghi cũ, mất 1,5 giây. Agent gắn nhãn clip đó sát nhãn cũ (cùng đoạn dùng được 0–11 giây, cùng rủi ro mặt học viên và biển số); khác ở `loai` (THAO thay vì BROLL).
+- **Quyền hình** (người dùng chốt 2026-11-17): `nap_kenh.py` chỉ áp điều kiện ngày và `bo_sung` của `quyen_hinh` cho cảnh có mặt người; cảnh không có mặt người dùng được ngay. Cảnh có mặt người lên tab **Quyền hình**; người chọn "Đồng ý" thì lần `kho nap` sau chép vào `quyen_hinh.bo_sung` của `channel.yaml`. `brand.json` của Vạn Xuân không đổi sau khi sửa (24 cảnh cũ giữ nguyên kết quả).
+- **Số lần dùng cảnh:** `so_lan_dung`, `ngay_dung_gan_nhat` ghi vào `index.json` sau mỗi video vào Hàng chờ (`san-xuat`, `sua`, `thay-canh`) và sau mỗi `kho nap`. Đếm lại từ `projects/*/ke_hoach.json` mỗi lần, chỉ tính video đã dựng xong, nên không đếm trùng. `so_lan_dung_canh` (dùng cho cảnh báo và QA) đổi sang cùng cách đếm: trước đây đếm cả kế hoạch của job lỗi hay đang chờ quay. Agent sản xuất (`san-xuat-khong-hoi.md`) nhận thêm `ngay_dung_canh_gan_nhat`. Lần chạy đầu: 8/24 cảnh đã dùng, nhiều nhất `hoc-vien-tap-xe-a-ga` 3 lần.
+- **Job chờ quay tự quay về sản xuất:** xem `NGUYEN-TAC.md` mục 5.
+- `python -m may_reels kho thieu --kenh <mã>` (`may_reels/goi_y_quay.py`, `skills/may-reels/goi-y-quay.md`): danh sách quay gộp theo buổi vào tab Cần quay và bản văn bản để gửi Zalo. Chạy thử thật (`--thu`) với 2 chủ đề đã duyệt và 6 yêu cầu đang mở: 10 cảnh, 3 buổi (đường thật, sân tập, thầy nói trước máy), qua bước kiểm ngay lần đầu.
+- Sheet: thêm tab Quyền hình và 9 cột vào cuối tab Cần quay (`sheet init` đã chạy trên Sheet thật).
+
+**Phát hiện khi làm:**
+- `lib/source_media_review.review_source_media` không dùng nguyên được cho kho: hàm ghi khung hình vào ngay thư mục chứa file gốc (`.source_review_frames_<tên>`), tức thư mục mới quay; và hàm đọc khóa `text` mà `transcriber` không trả về, nên phần tóm tắt lời nói luôn rỗng. `kho nap` gọi thẳng các tool mà hàm này dùng. Không sửa file upstream.
+- `audio_probe` không đo phần hình. Kích thước khung (có tính cờ xoay của điện thoại) đo bằng ffprobe như `source_media_review` và `nap_canh_quay.py`.
+- GPU của máy không dùng được cho faster-whisper: thiếu `cublas64_12.dll` (CUDA 12). `transcriber` tự chuyển sang CPU int8, nên chép lời model lớn chậm.
+- Hugging Face không tạo được symlink trong cache trên Windows này (`WinError 1314`), nên tải model mới bị dở (`faster-whisper-large-v3` trong cache thiếu `model.bin`). Model dùng để so sánh được tải vào thư mục thường `~/.cache/whisper-local/`.
+
+
+**Sống chung với script cũ của bộ kit:** `scripts/nap_canh_quay.py` quét cả `canh-quay/moi-quay/`. Nếu script cũ lập index trước, `kho nap` nhận các file đó về (ghi `ngay_nap` thật, gắn nhãn) chứ không bỏ qua; cảnh đã nạp bằng `kho nap` thì script cũ giữ nguyên vì `dau` không đổi. Hướng dẫn `canh-quay/DOC-TOI.md` trong thư mục kênh gốc vẫn chỉ tới script cũ: máy không sửa file đó.
+
+- Mục 6 của yêu cầu (đường dẫn tuyệt đối trong `brand.json`) đã xử lý từ 2026-11-15 (`KE-HOACH.md` mục 5.1): `brand.json` không còn đường dẫn tuyệt đối, thư mục kênh gốc khai báo một lần bằng `KENH_GOC_DIR` trong `.env`. Lần này không đổi gì thêm. Còn lại: lịch sử git (commit `dc52b79`) vẫn chứa bản cũ.
+
+## 2026-11-16: chấm điểm nội dung theo rubric
+
+Commit `ef6232b`, `3ed17ea`. Từ `KE-HOACH.md` mục 9. Bốn quyết định của máy chờ người xác nhận: `QUYET-DINH.md` B3.
+
+**Vì sao đổi:** `diem_qa` cũ (`DIEM_TRU` trong `may_reels/dung/kiem_tra.py`) chỉ đo kỹ thuật, nên video có nội dung yếu vẫn được 91. Từ nay:
+
+- **`diem_ky_thuat`:** giữ nguyên công thức cũ, chỉ đổi tên. Không còn mục `canh_tam`, vì cảnh tạm đã được tính trong tiêu chí "Chân thực".
+- **`diem_qa`:** tổng rubric `brand/<kenh>/rubric.yaml` (100 điểm, 8 tiêu chí). Trọng số, ngưỡng, trần và từ khóa đều nằm trong file này, code không viết cứng.
+- **Chia việc:**
+  - Python (`may_reels/cham_diem.py`) đo những gì tất định: nhịp, tỉ lệ thời lượng cảnh thật, phụ đề, thương hiệu, CTA, mốc chữ đầu, độ đứng yên của 3 giây đầu.
+  - Agent (`claude -p`, `skills/may-reels/cham-diem.md`) chấm hook, độ đúng và giá trị, phụ đề, CTA từ **bằng chứng của bản đã render**: khung hook, lưới khung, lời PhoWhisper chép từ âm thanh cuối. Agent không chấm trên kịch bản.
+  - Python áp trần lên điểm agent khi đo được lỗi cứng, rồi áp trần tổng. Kết quả ghi `renders/score.json` (`schemas/may-reels/score.schema.json`).
+- **Chặn cứng** (không vào Hàng chờ, job sang `loi`) khi gặp một trong ba trường hợp, tất cả đều kiểm tra trên bản đã render:
+  - cụm từ cấm hoặc câu sáo đã chốt, trong lời nghe được và chữ trên màn hình, kể cả viết không dấu;
+  - số hoặc số hiệu luật ngoài `y_chinh`/`nguon_doi_chieu`;
+  - tài sản ngoài kho kênh, brand hoặc sơ đồ được phép.
+- **Vòng sửa:** dùng lại vòng phản hồi của `san_xuat.py`, nhưng nội dung phản hồi là lý do trừ điểm nội dung, nặng nhất trước. Tối đa 2 vòng. Vẫn dưới ngưỡng thì cột `canh_bao` ghi "Dưới ngưỡng (điểm/ngưỡng)" và 2 lý do nặng nhất; cột này tối đa 3 dòng.
+- **Hiệu chỉnh:** tab Hàng chờ có thêm hai cột của người là `diem_cua_toi` và `nhan_xet`.
+  - Lệnh `cham-lai` chấm lại video mà không dựng lại.
+  - Lệnh `hieu-chinh` so điểm của máy với điểm của người, rồi đề xuất sửa `rubric.yaml`; lệnh này không tự sửa.
+
+**Chạy thật ngày 2026-11-16** (`cham-lai`, `hieu-chinh`):
+
+| Video | QA cũ (kỹ thuật) | QA mới | Hook | Đúng | Nhịp | Chân thực | Phụ đề | Thương hiệu | CTA | Kỹ thuật | Chặn |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| vx-005-a1-xe-150cc | — | bỏ qua | | | | | | | | | không có `ke_hoach.json` (dựng trước khi có máy) |
+| vx-006-giao-nhau-khong-bao-hieu | 91 | 76 | 17/20 | 13/15 | 7/10 | 5/15 (43% cảnh thật) | 7/10 | 10/10 | 8/10 | 9,1/10 | Điều 22, khoản 2 |
+| vx-007-vong-xuyen | 87 | 70 (trần tổng) | 18/20 | 12/15 | 7/10 | 5/15 (40% cảnh thật) | 8/10 | 10/10 | 10/10 | 8,7/10 | Điều 22, khoản 2, 3 |
+
+- **Cả hai video bị chặn vì cùng một lý do:** `nguon_doi_chieu` của chủ đề chỉ ghi "Luật 36/2024/QH15 (điều về đi qua nơi giao nhau)", không ghi số điều. Agent đã mở link và trích nguyên văn Điều 22. Có hai cách gỡ, **người dùng chọn**:
+  - ghi rõ điều khoản vào `nguon_doi_chieu` trong `chu-de.md` rồi nạp lại kho;
+  - bật `nguon_luat_da_mo` trong `rubric.yaml`.
+- **Agent tìm ra lỗi thật mà điểm kỹ thuật bỏ sót:** ở vx-006, khoảng giây 20, sơ đồ đè lên thẻ chữ làm chữ bị cụt ("Có xe thì n").
+- **Thời gian mỗi video:** agent khoảng 36 giây (claude báo khoảng 0,45 USD), cộng thời gian PhoWhisper chép lời âm thanh cuối. Lời chép được lưu theo sha1 của video, nên lần chấm lại sau không phải chép nữa.
+- **Sau khi sửa `nguon_doi_chieu`** (cùng ngày, xem `QUYET-DINH.md` câu 14), chạy lại `cham-lai`:
+  - **Kết quả:** vx-006 và vx-007 hết bị chặn. vx-006 được 72, vx-007 được 70 (trần tổng vì cảnh tạm). Cả hai vẫn dưới ngưỡng 75; lý do nặng nhất là "Chân thực", với 43% và 40% cảnh thật.
+  - **Điểm agent của vx-006 dao động giữa các lần chấm** (76 → 79 → 72). Lần cuối, agent cho "Đúng" 7/15 vì cho rằng sơ đồ ở giây 20,2 vẽ sai thứ tự xe. Điều này **chưa xác minh**: người cần xem khung đó. Độ dao động khoảng ±7 điểm cho thấy nên dùng `hieu-chinh` khi đã có `diem_cua_toi`, trước khi tin điểm sát ngưỡng.
+- **`hieu-chinh`:** chưa có `diem_cua_toi` nào nên chưa đề xuất. Hai cột này được `sheet init` thêm vào Sheet ngày 2026-11-16, vì trên Sheet thật lúc đó chưa có.
+
+## 2026-11-15 (2): dựng một video từ đầu đến cuối (Việc 1)
+
+Commit `b4451d4`. Từ `KE-HOACH.md` mục 8.
+
+- **Dự án:** `projects/vx-005-a1-xe-150cc`, cùng chủ đề với vx-demo-01, dựng bằng manifest `pipeline_defs/may-reels.yaml`.
+  - Có checkpoint ở cả 7 stage.
+  - Có file `renders/final.mp4`: 1080×1920, 30 fps, 49,3 giây, −14,0 LUFS.
+  - `final_review` đạt `pass`.
+  - Stage publish chỉ dùng `export_bundle` và dừng ở `awaiting_human`.
+  - Cổng idea ghi `human_approved=True` kèm tham chiếu ô `duyet_chu_de = "Làm"` trên Sheet.
+- **Thời gian từng stage** (lần chạy cuối):
+
+  | Stage | Thời gian |
+  |---|---|
+  | idea | 2,4 giây |
+  | script | 0,1 giây |
+  | scene_plan | 0,1 giây |
+  | assets | khoảng 12 phút ở lần sinh giọng thật (29 lần sinh và nghe lại); 31 giây khi dùng lại cache |
+  | edit | 0,2 giây |
+  | compose | khoảng 2,5 phút (render 147 giây) |
+  | publish | 0,2 giây |
+
+- **Các chỗ agent còn muốn hỏi người**, kèm cách đã xử lý:
+  1. Chọn runtime: chốt trong `san-xuat.yaml`.
+  2. Chọn giọng: chốt trong `san-xuat.yaml`.
+  3. Có nhạc không: chốt trong `san-xuat.yaml`.
+  4. Đổi cảnh trùng ở s6: thành luật "không lặp cảnh trong video".
+  5. Thời lượng giữ màn kết: thành `khung_hinh.giu_man_ket_giay`.
+  6. Bản giọng nào đúng: PhoWhisper nghe lại, thay cho việc người nghe.
+  7. Âm lượng sau khi HyperFrames trộn lại (−12,2 LUFS): thêm bước chuẩn hóa sau render.
+  8. Hook dài 6,2 giây: thành luật "hook trong 3 giây". Luật này có sau khi `vx-005` đã dựng, nên `vx-005` vẫn vi phạm.
+- **Đã sửa trong quá trình dựng:**
+  - Giọng VieNeu đôi khi nuốt số hoặc đọc sai, nên bước sinh giọng có nghe lại tự động (`may_reels/giong.py`).
+  - Bản đầu ghi checkpoint compose là `completed` dù `final_review` = `revise`; đã sửa thành chỉ ghi `completed` khi kết quả là `pass`.
+- **Kiểm tra bộ dựng chung `may_reels/dung/`:** dự án `projects/vx-thu-may` (cùng nội dung, hook rút còn 2,7 giây) đạt điểm QA 100, dài 45,3 giây.
+
+## 2026-11-15 (1): hiện trạng lúc lập kế hoạch, kết quả test nền
+
+Commit `30b50c9`, `0c73d66`. Từ `KE-HOACH.md` mục 1 và 7.
+
+**Hiện trạng ngày 2026-11-15, trước khi viết code Máy Reels:**
+
+| Thành phần | Hiện trạng |
+|---|---|
+| Dữ liệu kênh | `brand/vanxuan/brand.json` do `tools_local/nap_kenh.py` sinh ra. Có 16 chủ đề (`chu_de`, 4 đã làm, 12 chưa làm), 24 cảnh trong kho (`kho_canh`, 20 dùng được: 8 video, 12 ảnh), quy tắc cấm (`cam`), quyền hình (`quyen_hinh`), CTA, hashtag theo nền tảng, màu, font, logo. |
+| Dự án mẫu | `projects/vx-demo-01/` (bị gitignore, chỉ có trên máy này). Dùng pipeline `hybrid` + HyperFrames + giọng VieNeu "Hải Đăng" + PhoWhisper, chi phí 0 đ. Chỉ có checkpoint của `idea`, `script`, `scene_plan`. Thư mục `renders/` đang trống. **Chưa có bản dựng cuối nào được kiểm chứng từ đầu đến cuối.** Các bước sau `scene_plan` chạy bằng script riêng trong thư mục dự án, không ghi checkpoint. |
+| Giọng đọc | `nhat-ky.md` của vx-demo-01 ghi "TTS 0/19 trong registry". VieNeu đang được gọi thẳng từ script, không phải tool của registry. |
+| Publisher | Chỉ có `tools/publishers/export_bundle.py` (đóng gói tại máy, không tải lên đâu). |
+| Số liệu sau khi đăng | Chưa thấy tool nào trong `tools/` lấy lượt xem hay tương tác từ các nền tảng (đã tìm "analytics", "insights", "view_count"; chỉ thấy trong tool phân tích video tham khảo). |
+
+**Test nền:**
+
+Chạy ngày 2026-11-15 bằng `.\.venv\Scripts\python.exe -m pytest -q` trên nhánh `kenh-vanxuan` (commit `dc52b79` cộng hai tài liệu này). Phải cài `requirements-dev.txt` trước, vì `.venv` chưa có pytest.
+
+**2913 passed, 19 skipped, 2 failed** (khoảng 8 phút). Hai test hỏng đều nằm ở code upstream mà nhánh này không sửa:
+
+- `tests/lib/test_terminal_frame_pacing.py::test_trace_matches_the_actual_terminal_scene_cursor`
+- `tests/tools/test_fal_resume_output_format.py::test_checkpoint_only_resume_preserves_media_format[webp]`: file `.webp` bị gắn nhãn `data:image/png`.
+
+Chưa tìm nguyên nhân, và chưa xác minh hai test này có hỏng trên máy khác hay không. Code của Máy Reels không được làm tăng con số 2 này.
+
+Các test quét tài liệu (`test_skill_execute_examples.py`, `test_phase0_contracts.py`, `test_taste_governance_contracts.py`) đều qua sau khi thêm hai tài liệu.
+
+**Lần chạy sau khi sửa `nap_kenh.py` (2026-11-15):**
+
+Chạy bằng `tools_local\py.cmd -m pytest -q` (có `PYTHONUTF8=1`):
+
+**2925 passed, 19 skipped, 1 failed** (khoảng 9 phút).
+
+- Vẫn hỏng: `test_checkpoint_only_resume_preserves_media_format[webp]`, giống lần trước.
+- Lần này qua: `test_trace_matches_the_actual_terminal_scene_cursor`. Chưa rõ nó qua là nhờ `PYTHONUTF8=1` hay vì test lúc qua lúc hỏng, nên **chưa xác minh**.
+- Số test qua tăng 12 so với lần trước. Trong đó có 9 test mới ở `tests/may_reels/` và 1 test vừa nêu. Chưa đối chiếu nguồn gốc của 2 test còn lại.

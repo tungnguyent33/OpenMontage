@@ -1,59 +1,123 @@
 # Máy Reels: trạng thái
 
-Đọc file này đầu mỗi phiên phát triển. Chi tiết thiết kế ở `KE-HOACH.md`, nguyên tắc ở `NGUYEN-TAC.md`, lịch sử thay đổi ở `NHAT-KY-PHAT-TRIEN.md`. Cập nhật file này trước mỗi commit.
+**Cửa vào duy nhất.** Đọc file này đầu mỗi phiên phát triển, rồi `NGUYEN-TAC.md`. Cập nhật trước mỗi commit (quy tắc kết thúc phiên, `NGUYEN-TAC.md` mục 9).
 
-## Cập nhật lần cuối: 2026-11-21 (C0 commit)
+Máy Reels biến nhánh `kenh-vanxuan` của OpenMontage thành máy tự sản xuất video dọc 9:16 (Facebook Reels, YouTube Shorts, TikTok) cho từng kênh trong `brand/`.
+Agent (`claude -p`) chỉ viết kế hoạch video; Python dựng (HyperFrames, giọng VieNeu), chấm điểm theo rubric và đưa vào Hàng chờ trên Google Sheet.
+Người chỉ duyệt ở hai chỗ trên Sheet: duyệt chủ đề (cổng A) và duyệt video trước khi đăng (cổng B).
+
+Đọc thêm: [NGUYEN-TAC.md](NGUYEN-TAC.md) (nguyên tắc), [QUYET-DINH.md](QUYET-DINH.md) (quyết định đã chốt), [KE-HOACH.md](KE-HOACH.md) (kế hoạch, rủi ro), [NHAT-KY-PHAT-TRIEN.md](NHAT-KY-PHAT-TRIEN.md) (lịch sử), `CHIEN-LUOC-NOI-DUNG.md` (chiến lược nội dung, chỉ có ở máy, không commit). Cách dùng cho người vận hành: `HUONG-DAN-SU-DUNG.md` mục 10.
 
 Thứ tự các bước tiếp theo: xem LO-TRINH.md (chỉ có ở máy).
 
-**File chỉ có trên máy, không có trên GitHub** (bị `.gitignore`, xem `NGUYEN-TAC.md` mục 11):
-- `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`: chiến lược nội dung, nguồn sự thật về nội dung (đổi tên từ "Chiến lược nội dung ra học viên – Đào tạo lái xe Vạn Xuân.md" ngày 2026-11-20).
-- `brand/vanxuan/doi-tuong.yaml`, `dinh-vi.yaml`, `ban-hang.yaml`: dữ liệu kinh doanh thật. Repo chỉ có bản mẫu `*.mau.yaml`; máy khác phải tạo từ bản mẫu.
+## Cập nhật lần cuối: 2026-11-21 (bước M: trí nhớ dự án)
 
-File này được tạo ngày 2026-11-19. Trước đó trạng thái chỉ nằm trong `KE-HOACH.md` (các mục "Việc còn lại / chưa làm").
+## Các prompt đã chạy
 
-### Đã có và chạy được
+Lấy từ git log và `LO-TRINH.md`. Chi tiết từng phiên: `NHAT-KY-PHAT-TRIEN.md`.
 
-| Phần | Lệnh / file |
-|---|---|
-| Ý tưởng, Sheet | `sheet init`, tab Chủ đề / Hàng chờ / Cần quay / Quyền hình / Nhật ký |
-| Nguồn luật | `nguon-luat`, `ap-dung` (máy đề xuất, người xác nhận; ưu tiên văn bản hợp nhất) |
-| Sản xuất không hỏi | `san-xuat` (agent viết ke_hoach.json, pipeline HyperFrames, giọng VieNeu) |
-| Chấm điểm | `may_reels/cham_diem.py` theo `brand/<kênh>/rubric.yaml`, chặn cứng, `cham-lai`, `hieu-chinh` |
-| Bố cục cảnh sơ đồ | **Mới 2026-11-20.** `hf.py`: trong cảnh sơ đồ ngã tư / vòng xuyến, dòng phụ + nguồn luật hiện 2,6 s rồi mờ, xe chạy sau đó; sơ đồ thu phóng bằng viewBox vào khoảng trống giữa tiêu đề và phụ đề; phụ đề hạ xuống y 1075; vòng xuyến: xe trong vòng rời vòng trước khi xe chờ vào, số đặt cạnh xe chờ |
-| Cỡ chữ và vùng an toàn | **Mới 2026-11-19.** `may_reels/co_chu.py`: mọi chữ trên màn hình từ 42px (đọc từ nguồn HyperFrames), không ra ngoài vùng an toàn (hyperframes check). Áp trần tiêu chí `phu_de`, ghi `canh_bao` |
-| Chiến lược nội dung (C0) | **Mới 2026-11-20.** `brand/<kênh>/doi-tuong.yaml`, `dinh-vi.yaml`, `ban-hang.yaml` (chỉ trên máy), `dinh-dang.yaml`, `lich.yaml`; schema trong `schemas/may-reels/`; `may_reels/chien_luoc.py`, lệnh `chien-luoc kiem-tra --kenh <mã>`. Chưa có code nào khác dùng các file này (sản xuất vẫn theo `san-xuat.yaml khung_nhip`) |
-| Hàng chờ, sửa | `hang-cho them`, `sua`, `thay-canh`, `dung-lai --ma <mã>` (mới 2026-11-20: dựng lại theo mẫu, giữ kế hoạch) |
-| Đăng | `dang [--that]` (FB Reels, YT Shorts qua API; TikTok bàn giao qua Drive để đăng tay) |
-| Kho cảnh (Prompt 6) | `kho nap` (tự nạp, gắn nhãn, quyền hình, số lần dùng, viết lại KHO.md), `kho thieu` (danh sách quay theo buổi) |
-| Dọn dẹp | `dung-luong`, `don-dep` |
+| Prompt | Ngày | Commit | Kết quả |
+|---|---|---|---|
+| 0: Khảo sát, chốt nguyên tắc | 2026-11-15 | `30b50c9`, `0c73d66` | `NGUYEN-TAC.md`, `KE-HOACH.md`; câu 1–19 trong `QUYET-DINH.md`; bỏ đường dẫn tuyệt đối khỏi `brand.json` |
+| 1: Sheet điều khiển | 2026-11-15 | `189f521` | `sheet init`, tab Ý tưởng / Hàng chờ / Cần quay / Nhật ký; schema job |
+| 2: Đăng bài | 2026-11-15 | `0772c9b` | Code publisher có, **chưa đăng thật**; để sau, các bước khác không đụng publisher |
+| 3A: Sản xuất không cần hỏi | 2026-11-15, 16 | `b4451d4`, `fe5428a`, `82aff7f` | `san-xuat`, `dung`, cảnh tạm bằng sơ đồ, `thay-canh` |
+| Phụ: Tối ưu dung lượng | 2026-11-16 | `dd58d53` | `dung-luong`, `don-dep`, bản xem thử 720p |
+| 4A: Chấm nội dung, hiệu chỉnh | 2026-11-16 | `ef6232b` | `rubric.yaml`, chặn cứng, `cham-lai`, `hieu-chinh` |
+| Phụ: Nguồn luật | 2026-11-16, 17 | `3ed17ea`, `3b2d04b`, `89e50dd` | `nguon-luat`, `ap-dung`; tới mức khoản |
+| 6: Kho cảnh và gợi ý quay | 2026-11-18, 19 | `226ee1b`, `87e6ea5`, `fdc6e75` | `kho nap`, `kho thieu`, KHO.md tự sinh; giữ PhoWhisper |
+| Kiểm tra cỡ chữ | 2026-11-19, 20 | `9b04abf`, `7a0e086`, `bdbd47c` | Chữ ≥ 42px, vùng an toàn; dòng nguồn chỉ khi trích luật |
+| Phụ: `dung-lai` | 2026-11-20 | `e8f1ca4` | Dựng lại theo mẫu, giữ kế hoạch |
+| 5, 5A | — | — | Bỏ, thay bằng bộ C (`QUYET-DINH.md` B6) |
+| C0: Nạp chiến lược | 2026-11-21 | `e6c9288` (.gitignore `81798b7`) | `dinh-dang.yaml`, `lich.yaml`, schema, `chien-luoc kiem-tra` |
+| M: Trí nhớ dự án | 2026-11-21 | commit của phiên này | File này, `QUYET-DINH.md`, tách `KE-HOACH.md`, `test_tai_lieu.py` |
+| C0b-1: Trạm phân tích | 2026-11-20 | repo riêng | Xong phần thử nghiệm (ở repo `tram-phan-tich`) |
+| C2b: Bộ biên kịch | — | — | chưa chạy (tạm dừng 2026-11-20, chưa tạo file nào) |
+| C1: Chủ đề theo nhóm, lịch tuần | — | — | chưa chạy |
+| C2: Kịch bản chuyển đổi, mã VX | — | — | chưa chạy |
+| C3: Video giọng thật của thầy | — | — | chưa chạy |
+| C0b-2: Nối kết quả trạm | — | — | chưa chạy |
+| C4: Mẫu trả lời Zalo | — | — | chưa chạy |
+| C5: Xem lại hằng tuần | — | — | chưa chạy |
+| C6: Trường nguồn trong Odoo | — | — | chưa chạy (repo Odoo, không thuộc repo này) |
+| 7: Lịch chạy tự động | — | — | chưa chạy |
 
-### Đang dở
+**Trạm phân tích video** là repo riêng `tram-phan-tich`. OpenMontage không cài rea-video, không gọi trạm, chỉ đọc kết quả ở `<KENH_GOC_DIR>/vanxuan/mau/ket-qua/`.
 
-- **C2b (biên kịch, biên tập kịch bản) tạm dừng** ngày 2026-11-20 để làm C0 trước; C0 đã commit 2026-11-21, C2b là bước 3 của LO-TRINH.md. Ở C2b, kịch bản mẫu cần số liệu chưa xác nhận để ô `[chờ anh xác nhận]`.
-- Trạm phân tích video (`Claude code/tram-phan-tich`, repo riêng) chưa có kết quả mẫu nào: chờ người dùng chép video vào `channels/vanxuan/mau/video/`.
+## Lệnh `python -m may_reels`
 
-- **vx-007: "Chờ duyệt", bản xem thử `vx-007-vong-xuyen-v3.mp4`** (2026-11-20 21:27, `dung-lai`): đã có sửa xe chồng nhau, xe 2 không bị che, bố cục cảnh sơ đồ, khoảng cách từ phụ đề, dòng nguồn chỉ ở s2 và s5. Điểm 70 (dưới 75) vì trần tổng "phần lớn là cảnh tạm" (cảnh thật 40%); kỹ thuật 96. Agent chấm còn nêu tiêu đề thẻ chữ xuống dòng để lại một chữ mồ côi: đã thêm `text-wrap:balance` cho tiêu đề **sau** khi dựng v3.
-- Dựng lại khi chỉ đổi mẫu: đã có lệnh `dung-lai` (2026-11-20).
-- vx-006: người dùng đã đổi sang "Duyệt" (2026-11-20), dựng ngày 2026-11-16 theo mẫu cũ (chữ dưới 42px).
-- Prompt 6 (kho cảnh và danh sách quay): **phần máy làm được đã xong**. Việc cuối là so sánh model chép lời, có kết luận ngày 2026-11-19 (giữ PhoWhisper, `KE-HOACH.md` mục 10). Còn lại đều cần người quyết, xem mục dưới.
+Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi tiết tham số: `--help` hoặc `HUONG-DAN-SU-DUNG.md`.
 
-### Chờ người dùng
+- `sheet init`: tạo tab và cột còn thiếu trên Sheet.
+- `sheet nap-chu-de --kenh <mã>`: đẩy chủ đề của kênh lên tab Ý tưởng.
+- `hang-cho them`: đưa một video có sẵn vào Hàng chờ.
+- `dang [--that]`: đăng các dòng đã Duyệt (mặc định chạy thử; chưa đăng thật lần nào).
+- `dung --du-an <mã>`: dựng một dự án từ `ke_hoach.json`.
+- `san-xuat --kenh <mã>`: agent viết kế hoạch, dựng, chấm, đưa vào Hàng chờ.
+- `sua`: sửa và dựng lại các video chọn Sửa trên Hàng chờ.
+- `dung-lai --ma <mã>`: dựng lại theo mẫu hiện tại, giữ kế hoạch.
+- `thay-canh`: thay cảnh tạm bằng cảnh thật khi Cần quay ghi "Đã quay".
+- `chien-luoc kiem-tra --kenh <mã>`: kiểm dữ liệu chiến lược của kênh.
+- `cham-lai --kenh <mã>`: chấm lại video trong Hàng chờ theo rubric.
+- `hieu-chinh --kenh <mã>`: so điểm máy với `diem_cua_toi`, đề xuất sửa rubric.
+- `nguon-luat [ap-dung] --kenh <mã>`: máy đề xuất điều khoản luật; `ap-dung` chép nguồn đã xác nhận.
+- `kho nap --kenh <mã>`: nạp clip mới quay vào kho cảnh.
+- `kho thieu --kenh <mã>`: danh sách cần quay theo buổi.
+- `dung-luong`: báo dung lượng media (chỉ đọc).
+- `don-dep [--that]`: dọn media theo trạng thái duyệt.
+- `dang-nhap drive|youtube`: đăng nhập OAuth Google một lần.
 
-0. **`brand/vanxuan/ban-hang.yaml`** (chỉ trên máy): đã có học phí A1/A, ưu đãi, lý thuyết, lịch thi, đánh giá (2026-11-21). Còn thiếu: khoản gồm/không gồm (lệ phí thi, cấp bằng, khám sức khỏe, thi lại), ngày hết hạn ưu đãi, xác nhận sân thực hành và câu "không phát sinh", số buổi, quy trình, giấy tờ, lịch khai giảng, mồi nhử, người đồng ý lên hình. Kho cảnh chưa có "thầy nói trước máy" (7 định dạng cần), "học viên nói trước máy", "nhận bằng".
+## Bản đồ file
 
-1. Gợi ý tự động hóa (hook, cấu hình) cho Máy Reels: đã đưa người dùng ngày 2026-11-20, chưa cài, chờ chọn.
-2. Facebook: đã có quyền admin Fanpage (người dùng xác nhận ngày 2026-11-19). Còn thiếu `fb_reels.page_id` trong `brand/vanxuan/dang-bai.yaml` và `VANXUAN_FB_PAGE_TOKEN` trong `.env` (cách lấy: `CAI-DAT-DANG-BAI.md` mục A). `dang` chạy thử khô ngày 2026-11-19: FB và YT bị chặn vì thiếu cấu hình, chỉ TikTok bàn giao được.
-3. YouTube: `yt_shorts.kenh_id`, `made_for_kids`, `contains_synthetic_media`.
-4. Giờ đăng (11:30 hay 19:30), số video mỗi ngày (`KE-HOACH.md` câu 6).
+- `may_reels/`: code Python của máy (Sheet, job, sản xuất, chấm điểm, kho, nguồn luật, đăng, dọn dẹp). Điểm vào `__main__.py`.
+- `may_reels/dung/`: bộ dựng tất định (kiểm kế hoạch, giọng, cảnh, HyperFrames `hf.py`, tự kiểm).
+- `skills/may-reels/`: skill cho agent `claude -p` (sản xuất, chấm điểm, tra nguồn luật, gắn nhãn cảnh, gợi ý quay).
+- `brand/<kênh>/`: dữ liệu từng kênh. `brand.json` do `tools_local/nap_kenh.py` sinh; cấu hình `san-xuat.yaml`, `rubric.yaml`, `dang-bai.yaml`, `dinh-dang.yaml`, `lich.yaml`; bản mẫu `*.mau.yaml`.
+- `brand/<kênh>/ban-hang.yaml`, `doi-tuong.yaml`, `dinh-vi.yaml`: dữ liệu kinh doanh thật (chỉ có ở máy, không commit).
+- `brand/<kênh>/_local/`: toàn văn context của kênh (chỉ có ở máy, không commit).
+- `schemas/may-reels/`: schema JSON (kế hoạch video, job, điểm, dữ liệu chiến lược).
+- `tests/may_reels/`: test của Máy Reels.
+- `tools/publishers/`: publisher Facebook Reels, YouTube Shorts, TikTok bàn giao; `export_bundle.py` của upstream.
+- `pipeline_defs/may-reels.yaml`: manifest chạy không dừng (`QUYET-DINH.md` B1).
+- `tools_local/`: `nap_kenh.py` (sinh `brand.json`), `py.cmd`.
+- `docs/may-reels/`: tài liệu (file này, nguyên tắc, quyết định, kế hoạch, nhật ký, cài đặt Google, cài đặt đăng bài, API).
+- `docs/may-reels/CHIEN-LUOC-NOI-DUNG.md`, `docs/may-reels/LO-TRINH.md`: chiến lược nội dung, thứ tự các bước (chỉ có ở máy, không commit).
+- `.env`, `secrets/`: khóa, token, service account (chỉ có ở máy, không commit).
+- `<KENH_GOC_DIR>/<kênh>/`: thư mục kênh gốc ngoài repo (kho cảnh `canh-quay/`, `mau/`).
+
+## Đang dở
+
+- **Bước tiếp theo: C2b (bộ biên kịch)**, tạm dừng từ 2026-11-20. Kịch bản mẫu cần số liệu chưa xác nhận thì để ô `[chờ anh xác nhận]`.
+- **vx-007 "Chờ duyệt"**, bản `vx-007-vong-xuyen-v3.mp4` (2026-11-20, `dung-lai`): điểm 70 (dưới 75) vì trần tổng "phần lớn là cảnh tạm" (40% cảnh thật); kỹ thuật 96. `text-wrap:balance` cho tiêu đề thêm **sau** khi dựng v3.
+- vx-006: người dùng đã đổi sang "Duyệt" (2026-11-20); dựng ngày 2026-11-16 theo mẫu cũ (chữ dưới 42px).
+- Dữ liệu C0 chưa có code sản xuất nào dùng (sản xuất vẫn theo `san-xuat.yaml khung_nhip`); C1, C2 sẽ dùng.
+
+## Lỗi đã biết
+
+- Test upstream hỏng từ trước, không liên quan Máy Reels: `tests/tools/test_fal_resume_output_format.py::test_checkpoint_only_resume_preserves_media_format[webp]`.
+- Điểm agent chấm dao động khoảng ±7 giữa các lần (vx-006: 76 → 79 → 72); cần `diem_cua_toi` để `hieu-chinh`.
+- GPU không dùng được cho faster-whisper (thiếu CUDA 12), chép lời chạy CPU; Hugging Face không tạo symlink cache (`WinError 1314`). Xem `KE-HOACH.md` mục 5.5.
+- Cảnh báo `content_overlap` của hyperframes check (số trên xe đè thẻ chữ khi xe đi qua) còn, là chồng lớp có chủ ý.
+- Lịch sử git (commit `dc52b79`, đã lên GitHub) còn `brand.json` có đường dẫn tuyệt đối. Không viết lại lịch sử khi chưa hỏi.
+
+## Chờ người dùng
+
+1. `brand/vanxuan/ban-hang.yaml` (chỉ có ở máy): còn thiếu khoản gồm/không gồm, ngày hết hạn ưu đãi, xác nhận sân thực hành và câu "không phát sinh", số buổi, quy trình, giấy tờ, lịch khai giảng, mồi nhử, người đồng ý lên hình. Chặn một phần C1, và C2, C4.
+2. Kho cảnh chưa có "thầy nói trước máy" (7 định dạng cần), "học viên nói trước máy", "nhận bằng". Chặn C3 phần 2.
+3. Duyệt kịch bản mẫu sau khi C2b chạy (`cho_duyet` → `da_duyet`).
+4. Facebook: `fb_reels.page_id` trong `brand/vanxuan/dang-bai.yaml` và token trong `.env` (`CAI-DAT-DANG-BAI.md` mục A). YouTube: `kenh_id`, `made_for_kids`, `contains_synthetic_media`. Giờ đăng, số video mỗi ngày (`QUYET-DINH.md` câu 6).
 5. Giấy phép thương mại của VieNeu và PhoWhisper: chưa xác minh.
-6. Lịch sử git (commit `dc52b79`, đã đẩy lên GitHub) còn bản `brand.json` có đường dẫn tuyệt đối. Không viết lại lịch sử khi chưa hỏi.
-7. vx-006: người xem khung giây 20,2 để xác nhận agent chấm có đúng không khi cho rằng sơ đồ vẽ sai thứ tự xe.
-8. Nghe 0–16 s của `canh-quay/Nhieu_hoc_vien_nu_Cancanh.mp4` (thầy có nói "vừa xoay bánh đi vòng quay lại chứ"?), để biết rãnh giọng tách bằng rea-video giúp chép lời hay khiến model bịa.
+6. Bốn quyết định chấm điểm của máy (`QUYET-DINH.md` B3); gợi ý tự động hóa (2026-11-20) chưa chọn.
+7. vx-006: xem khung giây 20,2 (agent cho rằng sơ đồ vẽ sai thứ tự xe). Đổi vx-006 sang Sửa kèm ghi chú nếu cần.
+8. Nghe 0–16 s của `canh-quay/Nhieu_hoc_vien_nu_Cancanh.mp4` (thầy có nói "vừa xoay bánh đi vòng quay lại chứ"?).
+9. Thả 15–20 video mẫu vào `<KENH_GOC_DIR>/vanxuan/mau/video/` và chạy trạm (chặn C0b-2).
 
-### Test
+## Việc tiếp theo
 
-- 2026-11-21 (C0 commit): `tests/may_reels` 306/306. Toàn bộ repo: 3237 qua, 19 bỏ qua, 1 hỏng (test upstream bên dưới, số hỏng không tăng).
-- 2026-11-20 (sau `dung-lai`): `tests/may_reels` 292/292. Toàn bộ repo: 3218 qua, 19 bỏ qua, 1 hỏng (test upstream bên dưới).
-- 2026-11-19: `tests/may_reels` 288/288. Toàn bộ repo: 3212 qua, 19 bỏ qua, 1 hỏng (test upstream bên dưới).
-- Một test upstream hỏng từ trước, không liên quan Máy Reels: `tests/tools/test_fal_resume_output_format.py::test_checkpoint_only_resume_preserves_media_format[webp]` (đã kiểm: vẫn hỏng khi cất các thay đổi của Máy Reels).
+C2b (bộ biên kịch), rồi C1, C2, C3 phần 1. Thứ tự đầy đủ và điều kiện từng bước: LO-TRINH.md (chỉ có ở máy).
+
+## Test
+
+- 2026-11-21 (bước M): `tests/may_reels` 312/312. Toàn bộ repo: 3258 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
+- 2026-11-21 (C0 commit): `tests/may_reels` 306/306. Toàn bộ repo: 3237 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
+- 2026-11-20 (sau `dung-lai`): `tests/may_reels` 292/292. Toàn bộ repo: 3218 qua, 19 bỏ qua, 1 hỏng.
