@@ -1,0 +1,30 @@
+ma_dinh_dang: tra-loi-binh-luan
+ten: "Trả lời bình luận"
+giong: thay
+nhom_doi_tuong: n1
+noi_lo: "Lớn tuổi rồi, học có kịp không"
+cong_thuc_hook: cau-hoi-nguyen-van
+chu_de_vi_du: "Câu hỏi thật của khách trong bình luận (ẩn tên)"
+hook:
+  hinh: "Thẻ bình luận đã ẩn tên và ảnh đại diện, chữ to, hiện từ giây 0"
+  noi: "Có bạn hỏi: [câu hỏi thật của khách]?"
+  chu: "BẠN HỎI, THẦY ĐÁP / Trả lời bình luận"
+doan:
+  - {id: s1, vai: hook, loi: "Có bạn hỏi: [câu hỏi thật của khách]?", the: "BẠN HỎI, THẦY ĐÁP / Trả lời bình luận"}
+  - {id: s2, vai: than, loi: "Câu này nhiều người muốn hỏi mà ngại. Nên thầy trả lời thẳng luôn, bằng video này.", the: "TRẢ LỜI THẲNG / Câu nhiều người ngại hỏi"}
+  - {id: s3, vai: than, loi: "Thầy trả lời ngắn thế này: [câu trả lời đúng, có nguồn nếu là luật]. [Nhắc lại ý chính bằng một câu khác].", the: "TRẢ LỜI / [ý chính]"}
+  - {id: s4, vai: than, loi: "Vì sao thì thế này: [một lý do cụ thể]. Thầy gặp nhiều học viên giống bạn, [một chi tiết thật từ sân tập].", the: "VÌ SAO / [lý do]"}
+  - {id: s5, vai: than, loi: "Việc bạn làm được ngay là [một việc nhỏ, làm được ngay]. [Một câu nói cách làm cho thật cụ thể, ví dụ ở đâu, lúc nào].", the: "LÀM NGAY / [việc cần làm]"}
+  - {id: s6, vai: chot, loi: "Bạn còn thắc mắc gì, cứ để lại bình luận. Thầy trả lời bằng video.", the: "CÒN THẮC MẮC? / Bình luận, thầy trả lời"}
+  - {id: s7, vai: cta, loi: "Bạn chọn A hay B? Bình luận để thầy chấm.", the: null}
+cta_sau_nay: "Mời hỏi tiếp hoặc nhắn mã của video (C2)."
+vi_sao_hay:
+  - "Hook đọc nguyên câu khách hỏi: người có cùng câu hỏi nhận ra mình ngay; chữ trên màn hình nói thể loại, không chép câu hỏi."
+  - "s3 trả lời trong 10 giây đầu (phần thưởng sớm), s4 mới giải thích."
+  - "Câu chốt mời bình luận, nối thẳng sang video trả lời tiếp theo: bình luận thành nguồn chủ đề."
+  - "Khung này là MẪU CẤU TRÚC: các ô [..] thay bằng câu hỏi và câu trả lời thật khi sản xuất."
+can_xac_nhan:
+  - "Cần câu hỏi thật của khách (tab Câu hỏi khách, C1). Chụp bình luận phải ẩn tên và ảnh người viết."
+  - "CTA 'Bạn chọn A hay B?' chỉ hợp khi câu hỏi có hai lựa chọn; không thì dùng câu khác trong brand.json cta."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

@@ -58,18 +58,25 @@ class KetQuaJob:
     chi_phi_agent_usd: float = 0.0  # claude -p tự báo total_cost_usd (chỉ ghi lại; trần 0 USD là cho công cụ dựng)
     thieu_canh: list[dict] = field(default_factory=list)
     vong: int = 0
+    diem_kich_ban: int | None = None   # biên tập trước khi dựng (may_reels/bien_tap.py)
+    cong_thuc_hook: str = ""
+    vong_kich_ban: int = 0
+    canh_bao_kich_ban: list[str] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------- công cụ chạy ngoài
 def goi_agent(prompt: str, *, du_an: Path, goc: Path = GOC, giay: int = GIAY_AGENT,
-              ghi: tuple[str, ...] = ("ke_hoach.json",), web: bool = True, he_thong: str = LOI_NHAC_HE_THONG) -> dict:
+              ghi: tuple[str, ...] = ("ke_hoach.json",), web: bool = True, he_thong: str = LOI_NHAC_HE_THONG,
+              doc: tuple[str, ...] | None = None) -> dict:
     """claude -p không tương tác. Chỉ được ghi các file `ghi` (tương đối trong dự án).
-    Trả về JSON kết quả (result, num_turns, duration_ms, is_error...)."""
+    `doc`: nếu có, CHỈ được Read đúng các file này (tương đối từ gốc repo; không Glob/Grep). Biên tập dùng để không
+    đọc được lập luận của người viết. Trả về JSON kết quả (result, num_turns, duration_ms, is_error...)."""
     claude = shutil.which("claude")
     if not claude:
         raise RuntimeError("Không thấy lệnh claude (Claude Code CLI)")
     rel = du_an.relative_to(goc).as_posix()
-    cong_cu = ["Read", "Glob", "Grep"] + (["WebFetch", "WebSearch"] if web else [])
+    cong_cu = ([f"Read(./{p})" for p in doc] if doc is not None else ["Read", "Glob", "Grep"]) + \
+        (["WebFetch", "WebSearch"] if web else [])
     for f in ghi:
         cong_cu += [f"Write(./{rel}/{f})", f"Edit(./{rel}/{f})"]
     cmd = [claude, "-p", prompt, "--output-format", "json", "--permission-mode", "dontAsk",
@@ -181,7 +188,8 @@ def so_tiep_theo(kenh: str, goc: Path = GOC) -> tuple[str, int]:
 
 # ---------------------------------------------------------------- một job
 def _yeu_cau(P: Path, job: dict, chu_de: dict, brand: dict, sx: dict, phan_hoi: str | None, ghi_chu_sua: str | None,
-             goc: Path) -> None:
+             goc: Path, them: dict | None = None) -> None:
+    from may_reels.bien_tap import dinh_dang_cua, doc_thu_vien
     from may_reels.kho import thong_ke_dung_canh
     tk = thong_ke_dung_canh(goc, job["kenh"], job["ma_video"])
     khung = next((k for k, v in (sx.get("khung_nhip") or {}).items() if v.get("tru_cot") == chu_de.get("tru_cot")),
@@ -191,10 +199,17 @@ def _yeu_cau(P: Path, job: dict, chu_de: dict, brand: dict, sx: dict, phan_hoi: 
           "so_lan_dung_canh": {m: t["so_lan"] for m, t in tk.items()},
           "ngay_dung_canh_gan_nhat": {m: t["ngay_gan_nhat"] for m, t in tk.items() if t["ngay_gan_nhat"]},
           "ngay_hom_nay": datetime.now(TZ_VN).date().isoformat()}
+    # Bộ biên kịch (skills/may-reels/bien-kich.md): định dạng của chủ đề và nhóm đối tượng gợi ý.
+    dd = dinh_dang_cua(doc_thu_vien(job["kenh"], goc), chu_de, khung)
+    if dd:
+        yc["dinh_dang"] = {k: dd.get(k) for k in ("ma", "ten", "tang", "nhom_chinh", "hook_mau", "giong")}
+    # Câu hỏi khách (tab Câu hỏi khách, C1). Chưa có tab thì để rỗng: người viết dùng noi_lo trong doi-tuong.yaml.
+    yc["cau_hoi_khach"] = list(chu_de.get("cau_hoi_khach") or [])
     if phan_hoi:
         yc["phan_hoi"] = phan_hoi
     if ghi_chu_sua:
         yc["ghi_chu_sua"] = ghi_chu_sua
+    yc.update(them or {})
     (P / "yeu_cau.json").write_text(json.dumps(yc, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
@@ -230,6 +245,62 @@ def cap_nhat_su_dung_an_toan(kenh: str, goc: Path, log: Callable[[str], None] = 
         log(f"  ! không cập nhật được số lần dùng cảnh: {e}")
 
 
+def bien_tap_mac_dinh(P: Path, *, goc: Path = GOC, log: Callable[[str], None] = print):
+    from may_reels.bien_tap import bien_tap
+    return bien_tap(P, goc=goc, log=log)
+
+
+def prompt_viet(P: Path, goc: Path, phan_hoi: str | None = None) -> str:
+    rel = P.relative_to(goc).as_posix()
+    return (f"Đọc và làm đúng theo {SKILL}. Dự án: {rel}. Đọc {rel}/yeu_cau.json rồi viết {rel}/ke_hoach.json."
+            + (" Đây là vòng sửa: xem mục phan_hoi." if phan_hoi else ""))
+
+
+def qua_bien_tap(P: Path, kq: KetQuaJob, *, kenh: str, goc: Path, agent: Callable[..., dict],
+                 bien_tap: Callable, ghi_yeu_cau: Callable[[str], None], log: Callable[[str], None] = print,
+                 bang=None):
+    """Biên tập kịch bản trước khi dựng: dưới ngưỡng thì trả về người viết sửa, tối đa rubric-kich-ban.yaml
+    so_vong_sua vòng, rồi vẫn đi tiếp (kèm cảnh báo). Kênh chưa có rubric-kich-ban.yaml: bỏ qua bước này."""
+    from may_reels.bien_tap import CANH_BAO_DUOI_NGUONG as CB_KB, co_rubric, doc_rubric_kb
+    if not co_rubric(kenh, goc):
+        log(f"  [{P.name}] bỏ qua biên tập: chưa có brand/{kenh}/rubric-kich-ban.yaml")
+        return None
+    so_vong = int(doc_rubric_kb(kenh, goc).get("so_vong_sua", 2))
+    kb = None
+    for v in range(so_vong + 1):
+        kq.vong_kich_ban = v
+        log(f"  [{P.name}] biên tập kịch bản vòng {v}")
+        kb = bien_tap(P, goc=goc, log=log)
+        kq.so_luot_agent += kb.so_luot_agent
+        kq.giay_agent += kb.giay_agent
+        kq.chi_phi_agent_usd += kb.chi_phi_agent_usd
+        if bang is not None:
+            try:
+                them_nhat_ky(bang, NHAT_KY, [{
+                    "thoi_gian": bay_gio_vn(), "kenh": kenh, "ma": kq.ma_video, "buoc": "bien_tap", "che_do": "that",
+                    "ket_qua": "ok" if kb.dat else "loi",
+                    "chi_tiet": (f"kịch bản {kb.diem}/{kb.nguong}; vòng {v}; hook {kb.cong_thuc_hook}; "
+                                 f"agent {kb.giay_agent:.0f}s" + (f"; CHẶN: {'; '.join(kb.chan)}" if kb.chan else ""))[:500],
+                    "chi_phi_vnd": "0", "thoi_gian_chay_giay": str(kb.giay), "so_luot_tro_ly": str(kb.so_luot_agent)}])
+            except Exception:  # pragma: no cover
+                pass
+        if kb.dat or v == so_vong:
+            break
+        ph = kb.phan_hoi()
+        ghi_yeu_cau(ph)
+        log(f"  [{P.name}] viết lại kịch bản: {ph[:200]}")
+        ra = agent(prompt_viet(P, goc, ph), du_an=P, goc=goc)
+        kq.so_luot_agent += 1
+        kq.giay_agent += (ra.get("duration_ms") or 0) / 1000
+        kq.chi_phi_agent_usd += float(ra.get("total_cost_usd") or 0)
+        if ra.get("is_error") or not (P / "ke_hoach.json").is_file():
+            raise RuntimeError(f"agent không viết lại được ke_hoach.json: {str(ra.get('result'))[:300]}")
+    kq.diem_kich_ban, kq.cong_thuc_hook = kb.diem, kb.cong_thuc_hook
+    if not kb.dat:
+        kq.canh_bao_kich_ban = [f"{CB_KB} ({kb.diem}/{kb.nguong})"]
+    return kb
+
+
 def cham_mac_dinh(ma_video: str, *, goc: Path = GOC, log: Callable[[str], None] = print, tom: dict | None = None):
     from may_reels.cham_diem import cham_video
     return cham_video(ma_video, goc=goc, log=log, tom=tom)
@@ -256,7 +327,8 @@ def canh_bao_duoi_nguong(kc, nguong: int) -> list[str]:
 
 def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GOC,
                  agent: Callable[..., dict] = goi_agent, dung: Callable[..., tuple[int, dict]] = chay_dung,
-                 cham: Callable | None = None, log: Callable[[str], None] = print) -> KetQuaJob:
+                 cham: Callable | None = None, bien_tap: Callable | None = None,
+                 log: Callable[[str], None] = print) -> KetQuaJob:
     from may_reels.dung.ke_hoach import doc_brand, doc_san_xuat
     from may_reels.hang_cho import dua_vao_hang_cho
     t0 = time.monotonic()
@@ -283,6 +355,7 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
     _luu_job(P, job)
     _cap_nhat_y_tuong(bang, kenh, ma, NHAN_TRANG_THAI["dang_san_xuat"])
     cham = cham or cham_mac_dinh
+    bien_tap = bien_tap or bien_tap_mac_dinh
     nguong = int((sx.get("cham_diem") or {}).get("nguong", 75))
     so_vong = int((sx.get("cham_diem") or {}).get("so_vong_sua", 2))
     tom: dict = {}
@@ -290,15 +363,18 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
         for vong in range(so_vong + 1):
             kq.vong = vong
             _yeu_cau(P, job, cd, brand, sx, phan_hoi, None, goc)
-            prompt = (f"Đọc và làm đúng theo {SKILL}. Dự án: projects/{ma_video}. Đọc projects/{ma_video}/yeu_cau.json "
-                      f"rồi viết projects/{ma_video}/ke_hoach.json." + (" Đây là vòng sửa: xem mục phan_hoi." if phan_hoi else ""))
             log(f"  [{ma_video}] agent vòng {vong}")
-            ra = agent(prompt, du_an=P, goc=goc)
+            ra = agent(prompt_viet(P, goc, phan_hoi), du_an=P, goc=goc)
             kq.so_luot_agent += 1
             kq.giay_agent += (ra.get("duration_ms") or 0) / 1000
             kq.chi_phi_agent_usd += float(ra.get("total_cost_usd") or 0)
             if ra.get("is_error") or not (P / "ke_hoach.json").is_file():
                 raise RuntimeError(f"agent không viết được ke_hoach.json: {str(ra.get('result'))[:300]}")
+            if vong == 0:
+                # Biên tập kịch bản trước khi tốn công sinh giọng và dựng. Chỉ chạy một lần (bản đầu); các vòng sửa
+                # sau là sửa lỗi kế hoạch / QA video, không biên tập lại.
+                qua_bien_tap(P, kq, kenh=kenh, goc=goc, agent=agent, bien_tap=bien_tap, log=log, bang=bang,
+                             ghi_yeu_cau=lambda ph: _yeu_cau(P, job, cd, brand, sx, ph, None, goc))
             log(f"  [{ma_video}] dựng")
             ma_thoat, tom = dung(ma_video, goc=goc, stages=["idea", "script", "scene_plan", "assets", "edit", "compose",
                                                            "publish"])
@@ -339,10 +415,14 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
             break
 
         kh = json.loads((P / "ke_hoach.json").read_text(encoding="utf-8"))
+        kq.canh_bao = kq.canh_bao_kich_ban + kq.canh_bao
+        cot_them = {"diem_kich_ban": "" if kq.diem_kich_ban is None else str(kq.diem_kich_ban),
+                    "cong_thuc_hook": kq.cong_thuc_hook}
         hq = dua_vao_hang_cho(bang, video=P / "renders" / "final.mp4", kenh=kenh, ma_video=ma_video, tieu_de=kh["tieu_de"],
                               caption=kh["caption"], nen_tang=job["nen_tang_dich"], brand=brand,
                               diem_qa=str(kq.diem_qa if kq.diem_qa is not None else ""), canh_bao=kq.canh_bao,
-                              thu_muc_xuat=P / "exports", goc=goc, thong_tin_them={"du_an": f"projects/{ma_video}"})
+                              thu_muc_xuat=P / "exports", goc=goc, thong_tin_them={"du_an": f"projects/{ma_video}"},
+                              cot_them=cot_them)
         if hq.loi:
             raise RuntimeError("không đưa được vào Hàng chờ: " + "; ".join(hq.loi))
         kq.canh_bao = hq.canh_bao
@@ -371,7 +451,8 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
             them_nhat_ky(bang, NHAT_KY, [{
                 "thoi_gian": bay_gio_vn(), "kenh": kenh, "ma": ma_video, "buoc": "san_xuat", "che_do": "that",
                 "ket_qua": "ok" if kq.trang_thai in ("cho_duyet", "cho_quay") else "loi",
-                "chi_tiet": (f"{kq.trang_thai}; QA {kq.diem_qa}; vòng sửa {kq.vong}; agent {kq.giay_agent:.0f}s "
+                "chi_tiet": (f"{kq.trang_thai}; QA {kq.diem_qa}; kịch bản {kq.diem_kich_ban}; vòng sửa {kq.vong}; "
+                             f"agent {kq.giay_agent:.0f}s "
                              f"(claude báo {kq.chi_phi_agent_usd:.2f} USD); "
                              f"{'; '.join(kq.canh_bao)} {kq.loi}")[:500],
                 "chi_phi_vnd": "0", "thoi_gian_chay_giay": str(kq.giay), "so_luot_tro_ly": str(kq.so_luot_agent)}])
@@ -401,6 +482,7 @@ def san_xuat(bang: BangNguon, kenh: str, so_luong: int, *, goc: Path = GOC, log:
             i_moi += 1
         log(f"== {ma_video}: {cd.get('chu_de')}")
         kq = san_xuat_mot(bang, cd, ma_video, goc=goc, log=log, **kw)
-        log(f"   -> {kq.trang_thai} | QA {kq.diem_qa} | {kq.giay:.0f}s | {'; '.join(kq.canh_bao)} {kq.loi}")
+        log(f"   -> {kq.trang_thai} | QA {kq.diem_qa} | kịch bản {kq.diem_kich_ban} | {kq.giay:.0f}s | "
+            f"{'; '.join(kq.canh_bao)} {kq.loi}")
         ket_qua.append(kq)
     return ket_qua

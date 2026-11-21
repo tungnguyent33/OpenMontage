@@ -1,0 +1,29 @@
+ma_dinh_dang: ngay-thi-nhan-bang
+ten: "Ngày thi, ngày nhận bằng"
+giong: may
+nhom_doi_tuong: moi_nhom
+noi_lo: "Không biết ngày thi diễn ra thế nào"
+cong_thuc_hook: tinh-huong-quen
+chu_de_vi_du: "Một buổi sáng ngày thi sát hạch"
+hook:
+  hinh: "Hàng học viên xếp hàng chờ vào phòng thi lúc sáng sớm (đã đồng ý lên hình)"
+  noi: "Sáng ngày thi bằng A1 diễn ra thế nào?"
+  chu: "NGÀY THI A1 / Từ lúc xếp hàng tới lúc xong"
+doan:
+  - {id: s1, vai: hook, loi: "Sáng ngày thi bằng A1 diễn ra thế nào?", the: "NGÀY THI A1 / Từ lúc xếp hàng tới lúc xong"}
+  - {id: s2, vai: than, loi: "Sáng sớm, học viên có mặt, mang theo giấy tờ tùy thân. Rồi xếp hàng chờ gọi tên vào thi.", the: "SÁNG SỚM / Xếp hàng chờ gọi tên"}
+  - {id: s3, vai: than, loi: "Phần lý thuyết thi trên máy trước. Đạt lý thuyết rồi mới được vào thi thực hành.", the: "THI LÝ THUYẾT TRƯỚC / Đạt mới thi thực hành"}
+  - {id: s4, vai: than, loi: "Ngoài sân, từng người chạy bài thi của mình. Người chờ đứng ngoài xem. Nhiều bạn còn đứng cổ vũ nhau.", the: "THI THỰC HÀNH / Từng người một"}
+  - {id: s5, vai: than, loi: "Thi xong thì ngồi chờ đọc kết quả. Hôm nhận bằng là ngày ai cũng muốn chụp một tấm ảnh.", the: "NGÀY NHẬN BẰNG / Ai cũng muốn chụp ảnh"}
+  - {id: s6, vai: chot, loi: "Chuẩn bị kỹ ở sân tập thì ngày thi chỉ là làm lại một lần nữa những gì mình đã quen tay.", the: "TẬP KỸ Ở SÂN / Ngày thi chỉ là làm lại"}
+  - {id: s7, vai: cta, loi: "Lưu video lại, trước hôm thi xem lại một lần.", the: null}
+cta_sau_nay: "Theo khung hau-truong: một câu cảm nhận, rồi CTA."
+vi_sao_hay:
+  - "Chuỗi cảnh thật theo thứ tự buổi sáng ngày thi, ít chữ; giọng máy chỉ dẫn mạch."
+  - "s3 nói đúng thứ tự thi (đạt lý thuyết mới được thi thực hành), đúng ý chính đã đối chiếu ở chủ đề cau-diem-liet."
+  - "Câu chốt gỡ nỗi sợ ngày thi bằng việc làm được: tập kỹ ở sân."
+can_xac_nhan:
+  - "Thứ tự và địa điểm thi thật (anh kiểm lại; nếu thi ở nơi khác thì đổi s2)."
+  - "Người trong cảnh đã đồng ý lên hình."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

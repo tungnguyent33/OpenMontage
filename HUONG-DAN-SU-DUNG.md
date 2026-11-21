@@ -296,6 +296,24 @@ tools_local\py.cmd -m may_reels chien-luoc kiem-tra --kenh vanxuan --chi-tiet   
 
 Báo cáo gồm: thiếu file, lỗi cấu trúc, tham chiếu sai (mã nhóm, mã định dạng, khung nhịp), mùa đang chạy, ưu đãi hết hạn, định dạng chưa làm được vì thiếu số liệu, định dạng thiếu cảnh trong kho (ví dụ chưa có cảnh "thầy nói trước máy"), ô trống, số chờ xác nhận, giả thuyết chưa xác nhận. Lệnh trả mã 1 nếu có lỗi cấu trúc hoặc tham chiếu.
 
+**Bộ biên kịch: kịch bản được biên tập trước khi dựng (từ 2026-11-21).** Mỗi video `san-xuat` qua các bước sau:
+
+1. Agent viết lời theo `skills/may-reels/bien-kich.md`:
+   - chọn nhóm đối tượng và nỗi lo;
+   - viết 3 góc kể;
+   - viết 5 hook theo 5 công thức trong `brand/vanxuan/hook.yaml`, mỗi hook có hình, câu nói, chữ;
+   - viết bản 1, đọc to, sửa thành bản 2.
+2. Máy kiểm chữ: hook dài, câu dài, cụm từ cấm, câu sáo, kiểu câu văn AI.
+3. Một biên tập riêng chấm kịch bản theo `brand/vanxuan/rubric-kich-ban.yaml`. Biên tập không đọc được lập luận của người viết.
+4. Dưới 75 điểm thì người viết sửa, tối đa 2 vòng, rồi mới sinh giọng và dựng.
+
+Hàng chờ có thêm cột `diem_kich_ban` (điểm biên tập) và `cong_thuc_hook` (công thức hook đã dùng). Chạy `sheet init` một lần để thêm 2 cột này. Dưới ngưỡng thì cột `canh_bao` ghi "Kịch bản dưới ngưỡng".
+
+- **Kịch bản mẫu chờ bạn duyệt:** `brand/vanxuan/kich-ban-mau/`, mỗi định dạng một file.
+  - Bạn sửa lời và điền các ô `[chờ anh xác nhận]` ngay trong file, nhưng **không ghi số bán hàng thật vào đây** (file lên GitHub), chỉ ghi lời.
+  - Xong thì đổi `trang_thai: cho_duyet` thành `da_duyet`. Máy chỉ học theo mẫu đã duyệt.
+- **Thư viện tay nghề** (sửa tay): `hook.yaml`, `giong-noi.yaml` (xưng hô, từ tránh, cách nói số), `giu-chan.yaml`, `rubric-kich-ban.yaml` (tiêu chí, ngưỡng, giới hạn âm tiết). Mọi mục đều là `gia_thuyet` cho tới khi buổi xem lại hằng tuần có số liệu.
+
 **Nguồn luật: máy tra, bạn xác nhận.** `san-xuat` từ chối chủ đề có nội dung luật mà `nguon_doi_chieu` chưa ghi tới mức khoản. Với QCVN, mức cần đạt là mục, phụ lục hoặc số hiệu biển/vạch. Mỗi lần nhắc một Điều đều phải có khoản. Lý do từ chối ghi ở cột `ghi_chu_may` của tab Ý tưởng. Chủ đề ghi "Không cần nguồn luật" thì không bị kiểm tra.
 
 ```powershell

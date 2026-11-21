@@ -1,0 +1,30 @@
+ma_dinh_dang: luat-hau-truong
+ten: "Hậu trường"
+giong: may
+nhom_doi_tuong: n4
+noi_lo: "Không biết sân tập trông thế nào, ngại đến"
+cong_thuc_hook: tinh-huong-quen
+chu_de_vi_du: "Một buổi tập ở sân tập Vạn Xuân (chủ đề hau-truong-san-tap)"
+hook:
+  hinh: "Sân tập buổi sáng, ba xe máy lần lượt vào vòng số 8"
+  noi: "Bảy giờ sáng ở sân tập Vạn Xuân."
+  chu: "SÂN TẬP VẠN XUÂN / Một buổi sáng thật"
+doan:
+  - {id: s1, vai: hook, loi: "Bảy giờ sáng ở sân tập Vạn Xuân.", the: "SÂN TẬP VẠN XUÂN / Một buổi sáng thật"}
+  - {id: s2, vai: than, loi: "Xe đã dựng sẵn ở đầu sân. Học viên đến nơi, đội mũ bảo hiểm là vào tập luôn.", the: "XE DỰNG SẴN / Đến là vào tập"}
+  - {id: s3, vai: than, loi: "Vòng số 8, đường thẳng, đường gồ ghề. Vạch kẻ trên sân giống bài thi thật, nên tập ở đây là tập đúng bài.", the: "VẠCH KẺ / Giống bài thi thật"}
+  - {id: s4, vai: than, loi: "Người mới thì chạy chậm từng vòng. Người đã quen thì chạy cả bài, từ vạch xuất phát tới vạch đích.", the: "MỚI THÌ CHẬM / Quen rồi chạy cả bài"}
+  - {id: s5, vai: than, loi: "Thầy đứng ngay bên vạch. Sai chỗ nào thì thầy nhắc đúng chỗ đó. Vòng sau làm lại cho đúng.", the: "THẦY ĐỨNG BÊN VẠCH / Sai đâu nhắc đó"}
+  - {id: s6, vai: chot, loi: "Quen sân này rồi, ngày thi chỉ là đi lại những vòng mình đã chạy rất nhiều lần.", the: "QUEN SÂN / Ngày thi chỉ là đi lại"}
+  - {id: s7, vai: cta, loi: "Tag đứa bạn sắp thi bằng xe máy vào đây.", the: null}
+cta_sau_nay: "Nhắn mã của video để hẹn ra xem sân tập (C2, mồi nhử chờ anh quyết)."
+vi_sao_hay:
+  - "Hook là một khoảnh khắc thật có giờ, có nơi: người xem 'đứng' ở sân ngay giây đầu; chữ trên màn hình nói đây là cảnh thật."
+  - "Ít chữ, mỗi đoạn một cảnh thật; giọng máy chỉ dẫn đường cho mắt."
+  - "Câu chốt gỡ nỗi lo ngày thi bằng điều người xem vừa thấy."
+can_xac_nhan:
+  - "Giờ tập thật (s1 'bảy giờ sáng') và các bài có trên sân (s3)."
+  - "s4: đúng là thầy đứng kèm bên vạch thì mới giữ."
+  - "Không quay mặt học viên hoặc biển số khi chưa xin phép."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

@@ -6,7 +6,7 @@ Skill cho agent chạy không tương tác (`claude -p`), do `python -m may_reel
 
 ## Việc của agent: chỉ viết MỘT file
 
-Agent chỉ viết `projects/<ma_video>/ke_hoach.json`, theo schema `schemas/may-reels/ke_hoach_video.schema.json`. File này là phần **sáng tạo**: lời đọc, thẻ chữ, nguồn luật, cảnh chọn từ kho, caption và các quyết định đã tự đưa ra.
+Agent chỉ viết `projects/<ma_video>/ke_hoach.json`, theo schema `schemas/may-reels/ke_hoach_video.schema.json`. File này là phần **sáng tạo**: lời đọc, thẻ chữ, quy trình viết (`kich_ban`), nguồn luật, cảnh chọn từ kho, caption và các quyết định đã tự đưa ra.
 
 Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/`): sinh giọng, nghe lại, cắt cảnh, dựng HyperFrames, tự kiểm, đóng gói, ghi Sheet. Agent **không** gọi tool OpenMontage, không chạy lệnh, không ghi file nào khác, không đăng bài.
 
@@ -19,7 +19,9 @@ Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/
 - `khung_nhip`: khóa trong `san-xuat.yaml`;
 - `so_lan_dung_canh`: số video trước (đã dựng xong) đã dùng mỗi cảnh;
 - `ngay_dung_canh_gan_nhat`: ngày gần nhất mỗi cảnh được dùng (`YYYY-MM-DD`). Cảnh không có trong hai mục này là cảnh chưa dùng;
-- `phan_hoi`: lỗi kiểm tra hoặc điểm QA của vòng trước. Có mục này nghĩa là đang ở vòng sửa: sửa đúng các lỗi được nêu.
+- `dinh_dang`: định dạng của chủ đề trong `dinh-dang.yaml` (`ma`, `ten`, `tang`, `nhom_chinh`, `hook_mau`, `giong`), nếu xác định được;
+- `cau_hoi_khach`: câu hỏi thật của khách cho chủ đề này (rỗng khi chưa có tab Câu hỏi khách);
+- `phan_hoi`: lỗi kiểm tra, điểm kịch bản của biên tập (bắt đầu bằng "Điểm kịch bản") hoặc điểm QA của vòng trước. Có mục này nghĩa là đang ở vòng sửa: sửa đúng các lỗi được nêu.
 - `ghi_chu_sua`: chỉ có khi chạy bằng lệnh `sua`. Ý kiến của người duyệt, phải làm theo.
 
 Đọc thêm:
@@ -28,21 +30,20 @@ Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/
   - `context` → `ban_local`: giọng văn và chân dung khách hàng, nếu file local có trên máy.
 - `brand/<kenh>/san-xuat.yaml` (`khung_nhip`, `am_tiet_moi_giay`, `canh`) và `brand/<kenh>/quy-tac-rieng.yaml`.
 
-## Quy tắc nội dung (bắt buộc)
+## Bước 1: viết lời theo `skills/may-reels/bien-kich.md`
 
-1. **Nhịp cố định** theo `san-xuat.yaml` → `khung_nhip[<khóa>]`:
-   - `hook` → các đoạn `than` → `chot` → `cta`;
-   - id đoạn đánh số `s1`, `s2`, …;
-   - **hook phải đọc xong trong 3 giây**: khoảng 13 âm tiết trở xuống, vì giọng đọc nhanh cỡ `am_tiet_moi_giay`;
-   - tổng thời lượng phải nằm trong `khung_hinh.thoi_luong_giay` (30–50 giây).
-2. **Lời đọc chính là phụ đề.** Viết đúng chính tả, câu ngắn, số viết bằng chữ số (2025, 125). Máy tự đổi sang cách đọc. Chỉ dùng `doc_rieng` khi máy chắc chắn sẽ đọc sai.
-3. **Luật phải có nguồn.**
-   - Mọi ý về luật đều gắn `nguon_ids`. Mỗi nguồn phải có văn bản, `ten_ngan` (dòng hiện trên màn hình), Điều/khoản, link, ngày mở và **trích nguyên văn**.
-   - Agent phải **mở link bằng WebFetch** trong lần chạy này và trích đúng câu chữ. Ưu tiên văn bản trên `chinhphu.vn`, `vbpl.vn`, `quochoi.vn`. `nguon_doi_chieu` của chủ đề là gợi ý ban đầu.
-   - Không mở được nguồn hoặc không chắc điều khoản → không nói ý đó. Không bịa số liệu, không hứa kết quả thi.
-4. **Cụm từ cấm:** không dùng bất kỳ cụm nào trong `brand.json` → `cam.cum_tu_cam` và `cam.cum_tu_cam_du_an`, ở lời đọc, thẻ chữ và caption. Tránh cả câu sáo đã chốt (`cam.cau_sao_da_chot`).
-5. **CTA:** đoạn `cta` là **nguyên văn** một câu trong `brand.json` → `cta`. Chọn câu khác với video gần nhất nếu biết. Đoạn này có `canh = null` và `the = null`, vì máy dựng màn kết có logo và hotline.
-6. **Thẻ chữ** (`the`): `dong1` tối đa 22 ký tự, viết hoa; `dong2` tối đa 34 ký tự. Chọn `mau` là `cam` (nhấn mạnh) hoặc `xanh` (thông tin), và `kieu` là `hook`, `wipe`, `word` hoặc `scale`. Dòng nguồn trên thẻ do máy tự ghép từ `nguon_ids`, nhưng **chỉ hiện ở đoạn mà lời đọc đang trích luật** ("Luật…", "Điều…", "khoản…", "Nghị định…", "QCVN…") và mỗi nguồn chỉ hiện một lần, để không che cảnh. Vẫn gắn `nguon_ids` cho mọi ý về luật (máy dùng để chặn cứng), và **caption phải ghi nguồn đầy đủ** (tên văn bản, Điều, khoản).
+Phần **lời** (lời đọc, thẻ chữ, hook, câu chốt, CTA) và phần `kich_ban` của kế hoạch viết theo skill `skills/may-reels/bien-kich.md`. Skill đó gồm: nhóm đối tượng, nỗi lo, 3 góc kể, 5 hook theo 5 công thức, bản 1 rồi bản 2, cùng các quy tắc nhịp, phụ đề, giọng, cụm từ cấm, CTA, thẻ chữ.
+
+Đọc và làm đủ skill đó trước, rồi mới chọn cảnh và viết caption theo các mục dưới đây.
+
+Ghi xong `ke_hoach.json`, máy chạy **biên tập** (`skills/may-reels/bien-tap.md`) trên chữ, trước khi sinh giọng và dựng. Dưới ngưỡng thì bạn nhận `phan_hoi` "Điểm kịch bản …" và sửa lời theo mục "Vòng sửa kịch bản" của `bien-kich.md`.
+
+## Luật phải có nguồn (bắt buộc)
+
+- Mọi ý về luật đều gắn `nguon_ids`. Mỗi nguồn phải có văn bản, `ten_ngan` (dòng hiện trên màn hình), Điều/khoản, link, ngày mở và **trích nguyên văn**.
+- Agent phải **mở link bằng WebFetch** trong lần chạy này và trích đúng câu chữ. Ưu tiên văn bản trên `chinhphu.vn`, `vbpl.vn`, `quochoi.vn`. `nguon_doi_chieu` của chủ đề là gợi ý ban đầu.
+- Không mở được nguồn hoặc không chắc điều khoản → không nói ý đó. Không bịa số liệu, không hứa kết quả thi.
+- Dòng nguồn trên thẻ chữ do máy tự ghép từ `nguon_ids`, nhưng **chỉ hiện ở đoạn mà lời đọc đang trích luật** ("Luật…", "Điều…", "khoản…", "Nghị định…", "QCVN…") và mỗi nguồn chỉ hiện một lần, để không che cảnh. Vẫn gắn `nguon_ids` cho mọi ý về luật (máy dùng để chặn cứng), và **caption phải ghi nguồn đầy đủ** (tên văn bản, Điều, khoản).
 
 ## Chọn cảnh (chỉ từ kho kênh)
 

@@ -1,0 +1,29 @@
+ma_dinh_dang: luat-mot-phut-luat-moi
+ten: "1 phút luật mới"
+giong: may
+nhom_doi_tuong: n1
+noi_lo: "Sợ bị phạt vì bằng không đúng hạng xe"
+cong_thuc_hook: con-so-cu-the
+chu_de_vi_du: "Có bằng A1 thì lái xe 150cc được không? (chủ đề a1-xe-150cc, đã đối chiếu ở vx-005)"
+hook:
+  hinh: "Xe côn tay 150 phân khối đi vào vòng số 8 ở sân tập"
+  noi: "Bằng A1 lái xe 150 phân khối được không?"
+  chu: "TÙY NĂM CẤP BẰNG / Xem ngày cấp trên bằng"
+doan:
+  - {id: s1, vai: hook, loi: "Bằng A1 lái xe 150 phân khối được không?", the: "TÙY NĂM CẤP BẰNG / Xem ngày cấp trên bằng"}
+  - {id: s2, vai: than, loi: "Câu trả lời tùy bằng của bạn cấp trước hay sau ngày 1 tháng 1 năm 2025.", the: "MỐC 01/01/2025 / Luật giao thông mới"}
+  - {id: s3, vai: than, loi: "Bằng A1 cấp từ năm 2025 chỉ lái xe đến 125 phân khối. Điều 57 ghi như vậy.", the: "A1 CẤP TỪ 2025 / Đến 125 phân khối"}
+  - {id: s4, vai: than, loi: "Vậy xe 150 phân khối thì bạn cần bằng hạng A.", the: "XE 150 PHÂN KHỐI / Cần bằng hạng A"}
+  - {id: s5, vai: than, loi: "Còn bằng A1 cấp trước năm 2025 thì sao? Bạn vẫn lái được xe dưới 175 phân khối, theo thời hạn ghi trên bằng.", the: "A1 CẤP TRƯỚC 2025 / Dưới 175 phân khối"}
+  - {id: s6, vai: chot, loi: "Trước khi mua xe, lật bằng ra xem ngày cấp.", the: "TRƯỚC KHI MUA XE / Xem ngày cấp trên bằng"}
+  - {id: s7, vai: cta, loi: "Nhắn Zalo 0823 279 999 để nhận bộ câu ôn thi A1.", the: null}
+cta_sau_nay: "Câu nối: 'Chưa có bằng thì nhắn mã … thầy gửi lộ trình học' (C2)."
+vi_sao_hay:
+  - "Con số cụ thể (150 phân khối) là đúng câu người xem đang thắc mắc; chữ trên màn hình hé đáp án (tùy năm cấp), câu nói giữ câu hỏi."
+  - "So với bản cũ (vx-005): hook chỉ còn câu hỏi, 9 âm tiết thay vì hai câu 21 âm tiết; mốc luật dời sang s2."
+  - "Mỗi trường hợp một đoạn: cấp từ 2025, cấp trước 2025; số điều luật nói sau ý (giong-noi.yaml cach_noi_so)."
+  - "Câu chốt là việc làm được ngay, khép vòng 'được không' bằng 'xem ngày cấp'."
+can_xac_nhan:
+  - "Ý luật đã đối chiếu ở vx-005 (Điều 57 khoản 1 điểm a, b; Điều 89 khoản 1, 2 điểm a). Khi sản xuất vẫn mở lại nguồn."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

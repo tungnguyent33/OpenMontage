@@ -1,0 +1,54 @@
+# Kỹ thuật giữ người xem cho video 30-50 giây (C2b, 2026-11-21). SỬA TAY; máy chỉ đọc.
+# Đọc bởi: skills/may-reels/bien-kich.md (agent viết lời) và skills/may-reels/bien-tap.md (biên tập chấm theo).
+# Nguyên liệu: docs/may-reels/tham-khao/marketingskills/ (hook-system.md mục On-Ramp; short-form-video.md;
+# marketing-psychology/SKILL.md mục Zeigarnik), viết lại cho video luật và video chuyển đổi của kênh.
+# Mỗi kỹ thuật: ma, ten, cach_dung (một dòng), trang_thai (gia_thuyet | da_xac_nhan), ngay_cap_nhat.
+
+phien_ban: 1
+
+ky_thuat:
+  - ma: mo-dong-vong
+    ten: "Mở vòng ở hook, đóng ở chốt"
+    cach_dung: "Hook để lại một câu hỏi chưa trả lời; đoạn chốt trả lời đúng câu đó bằng chữ gần giống, người xem thấy vòng đã khép."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+  - ma: cau-noi-sau-hook
+    ten: "Đoạn ngay sau hook đi tiếp đúng ý hook"
+    cach_dung: "Hook hỏi gì thì đoạn s2 bắt đầu trả lời ngay điều đó; không chuyển sang giới thiệu trung tâm hay kể bối cảnh dài."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+  - ma: moi-doan-mot-y
+    ten: "Mỗi đoạn một ý"
+    cach_dung: "Một đoạn thân chỉ mang một ý, đi với một cảnh và một thẻ chữ; hai ý thì tách hai đoạn."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+  - ma: cu-the
+    ten: "Cụ thể thay vì chung chung"
+    cach_dung: "Thay 'chú ý an toàn' bằng việc làm được ngay: 'nhìn sang phải trước khi qua ngã tư'; thay 'nhiều lỗi' bằng tên lỗi."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+  - ma: cau-noi-doan
+    ten: "Câu nối giữa các đoạn"
+    cach_dung: "Đầu đoạn mới có một cụm nối với đoạn trước ('Tức là...', 'Còn nếu...', 'Vậy khi thi...') để người nghe không bị hẫng."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+  - ma: doi-nhip
+    ten: "Đổi nhịp mỗi 3-4 giây"
+    cach_dung: "Viết đoạn thân dài 3-8 giây đọc; đoạn dài hơn 4 giây thì thêm một nhấn (thẻ chữ đổi, từ khóa tô màu, câu ngắn chen vào)."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+  - ma: chot-de-nhac
+    ten: "Câu chốt dễ nhắc lại"
+    cach_dung: "Câu chốt ngắn (dưới 15 âm tiết), có nhịp hoặc đối ('Có biển: bên trái. Không biển: bên phải.') để người xem nói lại được cho người khác."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+  - ma: tra-thuong-som
+    ten: "Trả một phần thưởng sớm"
+    cach_dung: "Trong 10 giây đầu đã cho người xem một mẩu đáp án thật, phần còn lại là vì sao và cách làm; đừng giữ toàn bộ đáp án tới cuối."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+  - ma: cta-noi-tiep
+    ten: "Lời kêu gọi nối tiếp nội dung"
+    cach_dung: "Chọn câu CTA hợp với điều vừa học (video thi thử: nhận bộ câu ôn; video so sánh A hay B: bình luận để thầy chấm), không chọn ngẫu nhiên."
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21

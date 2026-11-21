@@ -196,6 +196,16 @@ Thiết kế và kết quả chạy: `NHAT-KY-PHAT-TRIEN.md`, mục 2026-11-16. 
 - Mỗi nguồn hiện một lần, ở đoạn lời đọc trích luật đầu tiên. Caption vẫn ghi nguồn đầy đủ. Commit `bdbd47c`.
 - Lý do: dòng nguồn xuất hiện thường xuyên che cảnh chính.
 
+### B11. Bộ biên kịch: biên tập kịch bản trước khi dựng (2026-11-21, C2b; con số là máy đề xuất, **chờ người xác nhận**)
+
+- **Tách người viết và biên tập.** Người viết (`skills/may-reels/bien-kich.md`) ghi 3 góc kể, 5 hook theo 5 công thức, bản 1, những gì đã sửa ở bản 2 vào `ke_hoach.json` → `kich_ban`. Biên tập (`skills/may-reels/bien-tap.md`) chạy bằng một phiên `claude -p` riêng và chỉ được Read đúng 2 file: skill và `bien_tap/dau_vao.json` (`goi_agent(doc=...)`). File đầu vào do Python lọc sẵn, không có lập luận của người viết. Lý do: biên tập phải đọc như người xem lần đầu.
+- **Máy kiểm trước, biên tập sau.** Python kiểm: hook tối đa 13 âm tiết, câu dài nhất tối đa 26 âm tiết, cụm từ cấm, câu sáo, hook sáo, 7 kiểu câu văn AI, từ tránh, cấu trúc `kich_ban`. Lỗi chặn thì không gọi biên tập và điểm bằng 0. Lỗi đo được thì áp trần lên tiêu chí. Rubric 10 tiêu chí, tổng 100, ngưỡng 75, tối đa 2 vòng sửa; hết vòng vẫn dựng kèm cảnh báo "Kịch bản dưới ngưỡng". Mọi con số nằm trong `brand/<kenh>/rubric-kich-ban.yaml` và đều là giả thuyết.
+- **Chỉ biên tập bản đầu.** Biên tập chạy một lần, sau bản kế hoạch đầu tiên. Các vòng sửa sau (lỗi kế hoạch, QA video dưới ngưỡng) không biên tập lại. Lệnh `sua` và `thay-canh` cũng không biên tập. Kênh chưa có `rubric-kich-ban.yaml` thì bỏ qua bước này.
+- **Kịch bản mẫu chỉ dùng khi đã duyệt.** `brand/<kenh>/kich-ban-mau/*.yaml` máy soạn ở trạng thái `cho_duyet`; người viết chỉ dùng mẫu `da_duyet` làm ví dụ. Mẫu được commit lên repo công khai nên số liệu bán hàng luôn để ô `[chờ anh xác nhận]`.
+- **Hàng chờ có thêm 2 cột máy:** `diem_kich_ban` và `cong_thuc_hook`, nối vào cuối. Mục đích: buổi xem lại hằng tuần (C5) so được công thức hook nào thắng.
+- **Nguồn tham khảo** marketingskills (MIT, commit `5b2b400`) chép vào `docs/may-reels/tham-khao/marketingskills/`, không cài thành skill.
+- File: `may_reels/bien_tap.py`, `may_reels/san_xuat.py` (`qua_bien_tap`), `brand/vanxuan/hook.yaml`, `giong-noi.yaml`, `giu-chan.yaml`, `rubric-kich-ban.yaml`.
+
 ---
 
 ## C. Còn chưa chốt

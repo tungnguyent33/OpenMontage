@@ -1,0 +1,31 @@
+ma_dinh_dang: lich-khai-giang
+ten: "Lịch khai giảng tháng này"
+giong: thay
+nhom_doi_tuong: n5
+noi_lo: "Không có thời gian, sợ mất nhiều ngày công"
+cong_thuc_hook: goi-dung-nguoi
+chu_de_vi_du: "Lớp A1 tháng này mở ngày nào, ai hợp lớp này?"
+hook:
+  hinh: "Thầy chỉ vào tờ lịch treo ở văn phòng, ngày khai giảng khoanh đỏ"
+  noi: "Đi làm ca, muốn học A1 tháng này?"
+  chu: "LỚP A1 THÁNG NÀY / Mở ngày [chờ anh xác nhận]"
+doan:
+  - {id: s1, vai: hook, loi: "Đi làm ca, muốn học A1 tháng này?", the: "LỚP A1 THÁNG NÀY / Mở ngày [chờ anh xác nhận]"}
+  - {id: s2, vai: than, loi: "Lớp A1 tháng này khai giảng ngày [chờ anh xác nhận]. Thầy nói luôn lịch học để bạn xếp ca.", the: "KHAI GIẢNG / [chờ anh xác nhận]"}
+  - {id: s3, vai: than, loi: "Học vào [chờ anh xác nhận giờ học], tổng cộng [chờ anh xác nhận số buổi] buổi. Thầy báo trước từng buổi.", the: "LỊCH HỌC / [chờ anh xác nhận]"}
+  - {id: s4, vai: than, loi: "Lớp này hợp với bạn đi làm ca. Hoặc bạn nghỉ Tết về quê, muốn tranh thủ học cho xong.", the: "AI HỢP LỚP NÀY / Đi làm ca, về quê dịp Tết"}
+  - {id: s5, vai: than, loi: "Lý thuyết thì ôn trên điện thoại được, lúc nghỉ giữa ca cũng ôn được vài câu.", the: "ÔN LÝ THUYẾT / Trên điện thoại, giữa ca"}
+  - {id: s6, vai: chot, loi: "Biết lịch sớm thì xin đổi ca sớm, không mất ngày công.", the: "BIẾT LỊCH SỚM / Đổi ca sớm, không mất công"}
+  - {id: s7, vai: cta, loi: "Nhắn Zalo 0823 279 999 để nhận bộ câu ôn thi A1.", the: null}
+cta_sau_nay: "Nhắn mã của video để hỏi lịch hoặc giữ chỗ (C2). Hạn đăng ký chỉ nói khi có ngày thật."
+vi_sao_hay:
+  - "Gọi đúng nhóm n5 (đi làm ca) thay vì 'ai muốn học lái xe'; chữ trên màn hình đưa ngày, câu nói đưa người."
+  - "Trả ngay ngày khai giảng ở s2, lịch học ở s3: thông tin thật là phần thưởng."
+  - "Câu chốt gỡ đúng nỗi lo 'mất ngày công' bằng việc làm được: xin đổi ca sớm."
+  - "Không tạo gấp gáp giả: không 'còn ít suất', không 'hết hôm nay'."
+can_xac_nhan:
+  - "Ngày khai giảng, giờ học, số buổi (ban-hang.yaml lich_khai_giang). Định dạng chỉ làm khi có ngày thật chưa qua."
+  - "Câu 'nghỉ Tết về quê' hợp mùa trước Tết (lich.yaml); ngoài mùa thì bỏ vế này."
+  - "s5 'ôn trên điện thoại': chỉ giữ khi bộ câu ôn hoặc công cụ ôn trên website gửi được cho học viên."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

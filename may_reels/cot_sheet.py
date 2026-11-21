@@ -127,6 +127,9 @@ HANG_CHO = Tab(
         # Không đặt dropdown: cột người dùng đã tự tạo, máy không áp ràng buộc lên ô người nhập (đọc lỏng 1-10).
         _n("diem_cua_toi", mo_ta="điểm của người duyệt 1-10; dùng cho lệnh hieu-chinh"),
         _n("nhan_xet", mo_ta="nhận xét của người duyệt; hieu-chinh đọc để đề xuất sửa rubric"),
+        # Bộ biên kịch (C2b): thêm sau cột cũ, sheet init chỉ nối cột thiếu vào cuối.
+        _m("diem_kich_ban", "điểm kịch bản 0-100 của biên tập, chấm trên chữ trước khi dựng (rubric-kich-ban.yaml)"),
+        _m("cong_thuc_hook", "mã công thức hook đã dùng (hook.yaml); buổi xem lại hằng tuần so công thức nào thắng"),
     ),
     khoa=("ma_video", "nen_tang"),
     tu_dong_cap_nhat="cap_nhat_luc",

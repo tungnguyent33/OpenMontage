@@ -4,6 +4,44 @@ Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết 
 
 File tạo ngày 2026-11-19. Các mục từ 2026-11-15 đến 2026-11-18 (cuối file) chuyển nguyên văn từ `KE-HOACH.md` mục 1, 7–10 ngày 2026-11-21; các phiên đó còn ở lịch sử git của nhánh `kenh-vanxuan`. Quyết định đã chốt: `QUYET-DINH.md`.
 
+## 2026-11-21 (2): C2b, bộ biên kịch
+
+**Mục tiêu:** kịch bản đạt mức người viết nội dung chuyên nghiệp; lỗi kịch bản bị bắt trước khi tốn công sinh giọng và dựng. Chạy theo `LO-TRINH.md` bước 3, trước C1 và C2.
+
+**Đã làm:**
+- **Việc 1.** `skills/may-reels/bien-kich.md` (mới) nhận toàn bộ phần viết lời: nhịp, phụ đề, giọng, cụm từ cấm, CTA, thẻ chữ, quy trình viết. `san-xuat-khong-hoi.md` trỏ sang skill này ở bước 1; phần chọn cảnh, caption, nguồn luật giữ nguyên. `yeu_cau.json` có thêm `dinh_dang` (định dạng của chủ đề), `cau_hoi_khach` (rỗng tới C1).
+- **Việc 2.** Chép 6 file và LICENSE của marketingskills (MIT, commit `5b2b400eec1e…`) vào `docs/may-reels/tham-khao/marketingskills/`, có README; không cài thành skill. Viết lại cho tiếng Việt và luật của kênh, thành 4 file trong `brand/vanxuan/`:
+  - `hook.yaml`: 12 công thức hook, mỗi công thức 2 ví dụ đủ ba phần, kèm `hook_sao`;
+  - `giong-noi.yaml`: xưng hô theo giọng máy / giọng thầy, độ dài câu, 25 từ tránh, cách nói số và điều luật;
+  - `giu-chan.yaml`: 9 kỹ thuật giữ người xem;
+  - `rubric-kich-ban.yaml`: 10 tiêu chí, tổng 100, ngưỡng 75, 2 vòng sửa, giới hạn máy kiểm, 7 kiểu câu văn AI (từ mục No AI Tells), bảng trần điểm.
+
+  Mọi mục đều `gia_thuyet`.
+- **Việc 3.** `brand/vanxuan/kich-ban-mau/`: 16 kịch bản mẫu, mỗi định dạng của `dinh-dang.yaml` một file, đều `cho_duyet`, kèm `vi_sao_hay` và `can_xac_nhan`.
+  - Mọi số liệu bán hàng để ô `[chờ anh xác nhận]`, vì repo công khai.
+  - Ý luật chỉ lấy từ `y_chinh` đã có nguồn.
+  - Ước lượng 30–36 giây mỗi mẫu.
+  - Trạm phân tích mới có 1 mẫu khác ngành, chưa có `ket-qua/`: chỉ dùng bài học chung (mỗi ý một cảnh, chữ chỉ giữ ý chính).
+- **Việc 4.** Schema `ke_hoach_video` thêm `kich_ban`, không bắt buộc nên kế hoạch cũ vẫn hợp lệ: nhóm, nỗi lo, 3 góc kể, `hook_chon` và 4 `phuong_an_hook` (mỗi hook có công thức, hình 0–3 giây, câu nói, chữ), `ban_1`, `sua_ban_2`.
+- **Việc 5.** `may_reels/bien_tap.py`:
+  - Máy kiểm chữ trước khi gọi biên tập. Lỗi chặn thì không gọi biên tập, điểm 0.
+  - Biên tập (`skills/may-reels/bien-tap.md`) chạy `claude -p` riêng, chỉ được Read đúng 2 file: skill và `bien_tap/dau_vao.json`. File đầu vào không có góc kể, lý do chọn, phương án hook, bản 1, `quyet_dinh`. Thêm tham số `doc=` cho `goi_agent`.
+  - Python cộng điểm và áp trần.
+  - `san_xuat.qua_bien_tap`: sau bản kế hoạch đầu, dưới ngưỡng thì trả về người viết, tối đa 2 vòng, rồi vẫn dựng kèm cảnh báo "Kịch bản dưới ngưỡng".
+  - Hàng chờ thêm 2 cột máy `diem_kich_ban`, `cong_thuc_hook`; Nhật ký thêm bước `bien_tap`.
+- **Việc 6 (so sánh trước sau): chưa xong.** Lần chạy đầu hỏng vì hết hạn mức Claude. Code dở để ngoài commit việc 1–5, chạy lại ở phiên sau.
+- Quyết định: `QUYET-DINH.md` B11.
+
+**Số đo:** chưa có, chờ việc 6.
+
+**Test** (chạy trên đúng bản commit, xuất từ index; không có việc 6): `tests/may_reels` 355/355, trong đó 4 test `.gitignore` chạy trong repo thật vì cần git. Toàn bộ repo: 3305 qua, 18 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết"). Đã sửa bản đồ file trong `TRANG-THAI.md` (tên file thiếu tiền tố `brand/<kênh>/` làm `test_tai_lieu` hỏng).
+
+**Chưa làm / để sau:**
+- Lệnh `sua` và `thay-canh` không chạy biên tập.
+- Vòng sửa QA video không biên tập lại.
+- Tab Câu hỏi khách (C1) chưa có nên `cau_hoi_khach` luôn rỗng.
+- Mã VX và CTA theo mồi nhử để C2.
+
 ## 2026-11-21: bước M, trí nhớ dự án
 
 **Mục tiêu:** phiên Claude Code mới đọc đúng trạng thái Máy Reels trong vài phút, không cần người dùng dán lại bối cảnh.

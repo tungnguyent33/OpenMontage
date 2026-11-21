@@ -203,8 +203,10 @@ def dua_vao_hang_cho(bang: BangNguon, *, video: Path, kenh: str, ma_video: str, 
                      nen_tang: list[str], brand: dict, diem_qa: str = "", canh_bao: list[str] | None = None,
                      thu_muc_xuat: Path | None = None, thu: bool = False, goc: Path | None = None,
                      do=None, thong_tin_them: dict | None = None, phien_ban: str = "",
-                     cho_phep_cap_nhat_duyet: bool = False, ban_moi: bool = False) -> KetQuaThem:
-    """Kiểm tra rồi đưa video vào Hàng chờ. Có lỗi thì không ghi gì (kq.loi khác rỗng)."""
+                     cho_phep_cap_nhat_duyet: bool = False, ban_moi: bool = False,
+                     cot_them: dict[str, str] | None = None) -> KetQuaThem:
+    """Kiểm tra rồi đưa video vào Hàng chờ. Có lỗi thì không ghi gì (kq.loi khác rỗng).
+    cot_them: thêm các cột của máy vào mọi dòng (ví dụ diem_kich_ban, cong_thuc_hook)."""
     goc = goc or GOC
     do = do or do_thong_so
     video = Path(video).resolve()
@@ -266,7 +268,7 @@ def dua_vao_hang_cho(bang: BangNguon, *, video: Path, kenh: str, ma_video: str, 
                      "duyet": GIA_TRI_CHO,
                      "ghi_chu_may": f"Thư mục đăng tay: {xuat_hien}",
                      # Bản video mới (sua / thay-canh): lỗi của lần trước không còn đúng nữa.
-                     **({"loi": ""} if ban_moi else {})})
+                     **({"loi": ""} if ban_moi else {}), **(cot_them or {})})
     ban_ghi = {"ma_video": ma_video, "kenh": kenh, "video": str(video), "sha1": sha, "nen_tang": list(nen_tang),
                "link_xem_thu": kq.link_xem_thu, "tieu_de": tieu_de,
                "thong_so": {"rong": ts.rong, "cao": ts.cao, "giay": ts.giay, "fps": ts.fps}, **(thong_tin_them or {})}

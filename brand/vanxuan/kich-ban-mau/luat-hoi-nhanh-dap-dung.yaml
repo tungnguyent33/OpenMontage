@@ -1,0 +1,29 @@
+ma_dinh_dang: luat-hoi-nhanh-dap-dung
+ten: "Hỏi nhanh đáp đúng"
+giong: may
+nhom_doi_tuong: n1
+noi_lo: "Sợ bị phạt vì hiểu sai đèn tín hiệu"
+cong_thuc_hook: ket-qua-truoc
+chu_de_vi_du: "Đèn vàng nhấp nháy: được đi hay cấm đi? (chủ đề den-vang)"
+hook:
+  hinh: "Đèn vàng nhấp nháy ở ngã ba trong kho cảnh"
+  noi: "Đèn vàng nhấp nháy: được đi, nhưng phải nhường."
+  chu: "ĐÈN VÀNG NHẤP NHÁY / Đi thế nào cho đúng"
+doan:
+  - {id: s1, vai: hook, loi: "Đèn vàng nhấp nháy: được đi, nhưng phải nhường.", the: "ĐÈN VÀNG NHẤP NHÁY / Đi thế nào cho đúng"}
+  - {id: s2, vai: than, loi: "Đèn vàng nhấp nháy không cấm bạn đi. Nó báo bạn đi chậm lại, chỗ này cần để ý.", the: "KHÔNG CẤM ĐI / Báo bạn đi chậm lại"}
+  - {id: s3, vai: than, loi: "Khi tới gần ngã ba, ngã tư, bạn giảm tốc độ. Mắt nhìn sang hai bên đường.", the: "QUAN SÁT, GIẢM TỐC / Khi tới gần"}
+  - {id: s4, vai: than, loi: "Có người đi bộ hay xe khác đang đi qua thì dừng lại. Nhường họ đi trước, rồi bạn mới đi. Đừng cố vượt lên.", the: "CÓ NGƯỜI, CÓ XE / Dừng lại nhường trước"}
+  - {id: s5, vai: than, loi: "Luật Trật tự, an toàn giao thông đường bộ, Điều 11, ghi rõ cách đi khi gặp đèn này. Đi thi lý thuyết cũng hay gặp câu này.", the: "LUẬT GHI RÕ / Điều 11"}
+  - {id: s6, vai: chot, loi: "Nhớ nhé: gặp vàng nhấp nháy thì đi chậm, nhìn kỹ, nhường người.", the: "VÀNG NHẤP NHÁY / Đi chậm, nhìn kỹ, nhường"}
+  - {id: s7, vai: cta, loi: "Theo dõi kênh để mỗi ngày ôn một câu.", the: null}
+cta_sau_nay: "Câu nối sang nhóm liên quan kèm mã của video (C2)."
+vi_sao_hay:
+  - "Kết quả trước: câu đầu trả ngay đáp án, chữ trên màn hình mở câu hỏi tiếp theo (đi thế nào), hai phần không lặp nhau."
+  - "Mỗi đoạn một việc người lái làm được: giảm tốc, quan sát, nhường."
+  - "Đoạn luật để riêng, nói tên luật bằng lời dễ nghe, số hiệu văn bản để ở dòng nguồn và caption."
+  - "Câu chốt có nhịp ba vế ngắn, dễ nhắc lại cho người khác."
+can_xac_nhan:
+  - "Khi sản xuất: mở Luật 36/2024/QH15 Điều 11 và QCVN 41:2024, trích nguyên văn khoản về đèn vàng nhấp nháy; lời đọc không được nói quá câu luật."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

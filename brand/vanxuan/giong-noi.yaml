@@ -1,0 +1,90 @@
+# Cách nói của kênh (C2b, 2026-11-21). SỬA TAY; máy chỉ đọc.
+# Lời đọc của video là LỜI NÓI, không phải văn viết: viết như thầy đang nói với một người trước mặt.
+# Đọc bởi: skills/may-reels/bien-kich.md (agent viết lời), skills/may-reels/bien-tap.md (biên tập),
+#          may_reels/bien_tap.py (dò tu_tranh trong lời đọc và thẻ chữ).
+# Nguồn: brand/vanxuan/_local/context/voice-analysis.md (bản nháp, viết cho bài Facebook; chỉ có ở máy),
+#        docs/may-reels/CHIEN-LUOC-NOI-DUNG.md (chỉ có ở máy), mục Sweep 2 và AI-Tell Check của
+#        docs/may-reels/tham-khao/marketingskills/skills/copy-editing/SKILL.md.
+# voice-analysis.md ghi rõ là nháp vì chưa có bài đăng thật: mọi mục ở đây đều gia_thuyet cho tới khi có số liệu.
+
+phien_ban: 1
+
+xung_ho:
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: 2026-11-21
+  giong_may: "Người dẫn trung tính. Gọi người xem là 'bạn'. KHÔNG xưng 'thầy' hay 'mình' (giọng máy không phải thầy). Được nhắc thầy ở ngôi thứ ba ('bình luận để thầy chấm')."
+  giong_thay: "Thầy xưng 'thầy', gọi người xem là 'bạn'. Nói với nhóm n1 (25-55 tuổi) có thể gọi 'anh chị'; chọn một cách gọi và giữ cho hết video."
+  hoc_vien: "Học viên kể bằng lời của chính họ, xưng theo thói quen của họ. Không sửa lời thật cho 'hay hơn'."
+  tranh: "Không 'quý khách', 'kính gửi', 'các bạn ơi', teencode, tiếng lóng giới trẻ."
+
+do_dai_cau:
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: 2026-11-21
+  mot_cau_mot_y: "Mỗi câu một ý. Hai ý thì tách hai câu."
+  am_tiet_nen: 18          # câu nói thoải mái nhất khoảng 10-18 âm tiết
+  # Câu dài nhất bị máy chặn: rubric-kich-ban.yaml kiem_tra_may.cau_am_tiet_toi_da.
+  goi_y: "Câu trích luật dài thì tách: câu 1 nêu văn bản và điều khoản, câu 2 là nội dung đã nói lại cho dễ hiểu."
+  nhip: "Xen câu ngắn (3-6 âm tiết) sau câu dài để người nghe thở: 'Nhớ nhé.', 'Vậy là sai.'"
+
+tu_nen_dung:
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: 2026-11-21
+  danh_sach:
+    - "xe, lái xe, đi đường, ra đường"
+    - "bị phạt, mất điểm, trừ điểm"
+    - "nhớ nhé, vậy là, tức là, nghĩa là"
+    - "học mấy buổi, thi ở đâu, mang gì"
+    - "phân khối (thay cho cm3), xi-nhan, vạch, vòng số 8"
+    - "minh bạch học phí, không phát sinh (chỉ nói khi ban-hang.yaml đã xác nhận)"
+
+# Từ nên tránh trong lời đọc và thẻ chữ: từ Hán Việt nặng, văn viết, giọng hành chính, tính từ quảng cáo rỗng.
+# may_reels/bien_tap.py dò các từ ở cột 'tu' (đúng dấu) trong lời đọc và thẻ chữ, TRỪ phần trích nguyên văn luật
+# (câu có 'ghi:' hoặc nằm trong ngoặc kép). Có từ thì báo biên tập; từ rubric-kich-ban.yaml
+# kiem_tra_may.tu_tranh_toi_da lần trở lên thì áp trần tiêu chí dung_giong.
+tu_tranh:
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: 2026-11-21
+  danh_sach:
+    - {tu: "tham gia giao thông", thay: "đi đường, ra đường"}
+    - {tu: "phương tiện", thay: "xe"}
+    - {tu: "điều khiển phương tiện", thay: "lái xe"}
+    - {tu: "người điều khiển", thay: "người lái"}
+    - {tu: "tuân thủ", thay: "làm đúng, làm theo"}
+    - {tu: "chấp hành", thay: "làm theo"}
+    - {tu: "tiến hành", thay: "(bỏ)"}
+    - {tu: "thực hiện", thay: "làm"}
+    - {tu: "nhằm", thay: "để"}
+    - {tu: "đối với", thay: "với"}
+    - {tu: "do đó", thay: "vì vậy, nên"}
+    - {tu: "bên cạnh đó", thay: "(bỏ, hoặc 'thêm nữa')"}
+    - {tu: "ngoài ra", thay: "(bỏ, hoặc 'còn')"}
+    - {tu: "lưu ý rằng", thay: "nhớ là"}
+    - {tu: "quy định pháp luật", thay: "luật"}
+    - {tu: "hiện nay", thay: "bây giờ (hoặc nói mốc ngày cụ thể)"}
+    - {tu: "vô cùng", thay: "(bỏ; nói điều cụ thể)"}
+    - {tu: "cực kỳ", thay: "(bỏ; nói điều cụ thể)"}
+    - {tu: "tuyệt vời", thay: "(bỏ; nói điều cụ thể)"}
+    - {tu: "uy tín", thay: "(bỏ; đưa bằng chứng)"}
+    - {tu: "chất lượng", thay: "(bỏ; đưa bằng chứng)"}
+    - {tu: "hàng đầu", thay: "(bỏ)"}
+    - {tu: "chuyên nghiệp", thay: "(bỏ; nói thầy làm gì)"}
+    - {tu: "hãy cùng", thay: "(bỏ)"}
+    - {tu: "các bạn hãy", thay: "bạn (nói thẳng việc cần làm)"}
+
+cach_noi_so:
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: 2026-11-21
+  quy_tac:
+    - "Lời đọc là phụ đề: viết số bằng chữ số (2025, 125, 0823 279 999). Máy tự đổi sang cách đọc (may_reels/giong.py)."
+    - "Một câu tối đa một con số quan trọng. Hai con số thì tách hai câu."
+    - "Nói ý trước, số điều khoản sau: 'Nhường xe bên phải. Khoản 2 Điều 22 ghi như vậy.' Không mở câu bằng 'Căn cứ Điều...'."
+    - "Số hiệu văn bản dài (36/2024/QH15) chỉ để ở dòng nguồn và caption; lời đọc nói 'Luật Trật tự, an toàn giao thông đường bộ' hoặc 'luật giao thông mới'."
+    - "Phân khối thay cm3; 'từ 1 tháng 1 năm 2025' thay '01/01/2025'."
+    - "Mã hạng bằng viết hoa liền: A1, A, B. Máy tự đọc 'a một'."
+    - "Số tiền, số buổi, ngày khai giảng: CHỈ dùng số đã xác nhận trong ban-hang.yaml; chưa có thì để ô '[chờ anh xác nhận]', không đoán."
+    - "Không làm tròn hay phóng đại ('gần như ai cũng đỗ'). Không có số thì nói định tính: 'hay gặp', 'nhiều bạn'."
+
+cau_tran_an:
+  trang_thai: gia_thuyet
+  ngay_cap_nhat: 2026-11-21
+  ghi_chu: "Khi nói về thi cử: không hứa kết quả. Câu dùng được: 'Kết quả còn tùy bạn luyện tập.' (theo voice-analysis.md mục 8). Vế 'thầy kèm từng buổi' là trụ của lời hứa trong dinh-vi.yaml: chỉ nói khi trụ đó da_xac_nhan."

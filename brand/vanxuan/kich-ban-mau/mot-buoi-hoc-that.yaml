@@ -1,0 +1,31 @@
+ma_dinh_dang: mot-buoi-hoc-that
+ten: "Một buổi học thật"
+giong: thay
+nhom_doi_tuong: n4
+noi_lo: "Sợ học không vào, sợ bị chê chậm"
+cong_thuc_hook: tinh-huong-quen
+chu_de_vi_du: "Buổi đầu học xe máy ở Vạn Xuân diễn ra thế nào?"
+hook:
+  hinh: "Học viên dắt xe vào sân lúc sáng sớm, thầy đứng chờ ở vạch đầu sân"
+  noi: "Buổi đầu ra sân tập, học viên làm những gì?"
+  chu: "BUỔI ĐẦU HỌC XE / Từ lúc đến tới lúc về"
+doan:
+  - {id: s1, vai: hook, loi: "Buổi đầu ra sân tập, học viên làm những gì?", the: "BUỔI ĐẦU HỌC XE / Từ lúc đến tới lúc về"}
+  - {id: s2, vai: than, loi: "Đến sân, việc đầu tiên là thầy chỉnh lại gương và tư thế ngồi cho từng người. Chân đặt đâu, tay cầm thế nào.", the: "CHỈNH GƯƠNG, TƯ THẾ / Từng người một"}
+  - {id: s3, vai: than, loi: "Sau đó chạy thẳng vài vòng cho quen tay ga và tay phanh. Chưa vào bài thi vội.", the: "CHẠY THẲNG TRƯỚC / Quen tay ga đã"}
+  - {id: s4, vai: than, loi: "Khi đã quen, thầy mới cho đi vòng số 8. Đi chậm thôi, sai đâu thầy sửa đó. Chưa cần nhanh.", the: "VÒNG SỐ 8 / Đi chậm, sai đâu sửa đó"}
+  - {id: s5, vai: than, loi: "Ai chậm thì tập thêm vòng. Không ai phải chạy theo người khác, cũng không ai bị chê.", the: "AI CHẬM TẬP THÊM / Không ai bị bỏ lại"}
+  - {id: s6, vai: chot, loi: "Buổi đầu chỉ cần quen xe, quen sân. Còn bài thi thì để dành cho những buổi sau.", the: "BUỔI ĐẦU / Chỉ cần quen xe"}
+  - {id: s7, vai: cta, loi: "Tag đứa bạn sắp thi bằng xe máy vào đây.", the: null}
+cta_sau_nay: "Nhắn mã của video để hẹn ra xem sân tập (C2, mồi nhử chờ anh quyết)."
+vi_sao_hay:
+  - "Hook đặt câu hỏi mà người ngại đi học đang tò mò: buổi đầu thật ra làm gì; hình là khoảnh khắc thật đầu buổi."
+  - "Chuỗi đoạn theo đúng thứ tự buổi học, mỗi đoạn một việc, ít chữ: người xem tự hình dung mình ở đó."
+  - "s5 gỡ nỗi lo 'bị chê chậm' của nhóm n4 bằng cách tập thật, không bằng lời hứa."
+  - "Câu chốt ngắn, hai câu đối nhau, dễ nhắc lại."
+can_xac_nhan:
+  - "Trình tự buổi đầu (s2 đến s5) có đúng cách thầy dạy không."
+  - "s5 'ai chậm thì tập thêm vòng': chỉ giữ nếu đúng thật ở sân."
+  - "Học viên trong cảnh đã đồng ý lên hình (dinh-dang.yaml dieu_kien)."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

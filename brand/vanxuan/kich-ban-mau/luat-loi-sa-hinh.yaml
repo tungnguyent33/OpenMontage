@@ -1,0 +1,33 @@
+ma_dinh_dang: luat-loi-sa-hinh
+ten: "Lỗi khi thi sa hình"
+giong: may
+nhom_doi_tuong: n4
+noi_lo: "Sợ sa hình"
+cong_thuc_hook: canh-bao-loi
+chu_de_vi_du: "Những lỗi hay bị trừ điểm khi thi sa hình A1 (chủ đề loi-sa-hinh-a1)"
+hook:
+  hinh: "Chân học viên chống xuống đất giữa vòng số 8 ở sân tập"
+  noi: "Chống chân giữa vòng số 8 là mất điểm ngay."
+  chu: "3 LỖI HAY GẶP / Bài thi sa hình A1"
+doan:
+  - {id: s1, vai: hook, loi: "Chống chân giữa vòng số 8 là mất điểm ngay.", the: "3 LỖI HAY GẶP / Bài thi sa hình A1"}
+  - {id: s2, vai: than, loi: "Lỗi thứ nhất là chống chân. Lỗi này hay gặp khi đi quá chậm ở chỗ vòng gắt.", the: "LỖI 1: CHỐNG CHÂN / Hay gặp ở chỗ vòng gắt"}
+  - {id: s3, vai: than, loi: "Cách tránh: giữ ga đều, mắt nhìn trước nửa vòng, đừng nhìn xuống bánh xe.", the: "CÁCH TRÁNH / Ga đều, nhìn trước nửa vòng"}
+  - {id: s4, vai: than, loi: "Lỗi thứ hai là bánh xe chạm vạch. Mức trừ: [chờ anh xác nhận theo thông tư sát hạch].", the: "LỖI 2: CHẠM VẠCH / [mức trừ: chờ xác nhận]"}
+  - {id: s5, vai: than, loi: "Cách tránh: vào vòng rộng ra một chút, đừng ôm sát vạch trong.", the: "CÁCH TRÁNH / Vào vòng rộng, đừng ôm vạch"}
+  - {id: s6, vai: than, loi: "Lỗi thứ ba là [chờ anh xác nhận lỗi thứ ba]. Tập chậm đúng bài, từng vòng một, thì tránh được lỗi này.", the: "LỖI 3 / [chờ anh xác nhận]"}
+  - {id: s7, vai: chot, loi: "Nhớ ba điều thôi: ga đều, nhìn xa, đi đúng vạch.", the: "GA ĐỀU, NHÌN XA / Đi đúng vạch"}
+  - {id: s8, vai: cta, loi: "Lưu video lại, trước hôm thi xem lại một lần.", the: null}
+cta_sau_nay: "Câu nối sang nhóm n4 kèm mã của video (C2)."
+vi_sao_hay:
+  - "Hook cảnh báo một lỗi cụ thể bằng hình của chính lỗi đó; chữ trên màn hình báo trước có 3 lỗi (vòng mở: người xem chờ đủ 3)."
+  - "Lỗi nào cũng có cách tránh làm được ngay; không dọa suông."
+  - "Không bịa tỉ lệ hay mức trừ: chỗ chưa có nguồn để ô chờ xác nhận."
+  - "Câu chốt gom cách tránh của cả bài thành một câu ngắn."
+can_xac_nhan:
+  - "Nguồn chính thức về bài thi và cách trừ điểm (chủ đề loi-sa-hinh-a1 đang ghi 'cần nguồn chính thức')."
+  - "s1 'mất điểm ngay': đúng mức trừ thật thì mới giữ câu này."
+  - "Lỗi thứ ba hay gặp nhất theo kinh nghiệm của thầy."
+  - "Các mẹo tránh lỗi (s3, s5: ga đều, nhìn trước nửa vòng, vào vòng rộng) là mẹo máy soạn: thầy sửa theo cách thầy dạy."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

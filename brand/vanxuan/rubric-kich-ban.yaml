@@ -1,0 +1,85 @@
+# Rubric KỊCH BẢN của kênh (C2b, 2026-11-21). SỬA TAY. Chấm trên CHỮ (lời đọc + thẻ chữ), TRƯỚC khi sinh giọng và
+# dựng, để bắt lỗi kịch bản khi sửa còn rẻ. Khác brand/<kenh>/rubric.yaml: rubric đó chấm VIDEO đã render.
+#
+# Luồng (may_reels/bien_tap.py):
+#   1. Python kiểm trước (kiem_tra_may): âm tiết của hook, câu dài nhất, cụm từ cấm, câu sáo, hook sáo, kiểu câu văn AI,
+#      từ tránh (giong-noi.yaml), cấu trúc phần kich_ban của ke_hoach.json. Lỗi chặn -> trả về người viết, không gọi biên tập.
+#   2. Biên tập: một phiên claude -p riêng (skills/may-reels/bien-tap.md), chỉ đọc kịch bản, chủ đề, nhóm đối tượng và
+#      rubric này; không đọc lập luận của người viết. Chấm từng tiêu chí, mỗi tiêu chí một câu lý do.
+#   3. Python cộng điểm, áp trần theo lỗi máy đo được (tran), so ngưỡng. Dưới ngưỡng: trả về người viết sửa, tối đa
+#      so_vong_sua vòng, rồi vẫn sinh giọng (kèm cảnh báo "Kịch bản dưới ngưỡng").
+# Tổng trọng số = 100 = diem_kich_ban (cột diem_kich_ban của Hàng chờ).
+# Mọi con số ở đây là GIẢ THUYẾT ban đầu (2026-11-21); sửa sau khi có diem_cua_toi và số liệu buổi xem lại.
+
+phien_ban: 1
+nguong: 75
+so_vong_sua: 2
+
+tieu_chi:
+  hook_dung_nguoi:
+    ten: "Hook gọi đúng người hoặc đúng nỗi lo"
+    trong_so: 15
+    mo_ta: "Câu nói đầu gọi đúng nhóm đối tượng hoặc đúng nỗi lo của họ; ba phần hook (hình, câu nói, chữ) bổ sung cho nhau, không lặp một câu."
+  mot_y_cau_ngan:
+    ten: "Mỗi câu một ý, không câu nào dài khi đọc"
+    trong_so: 10
+    mo_ta: "Đọc to không hụt hơi; không câu ghép nhiều mệnh đề; câu trích luật dài đã tách."
+  cu_the:
+    ten: "Cụ thể"
+    trong_so: 10
+    mo_ta: "Có việc làm được ngay, tên lỗi, mốc ngày, con số có nguồn; không câu chung chung ('chú ý an toàn')."
+  vong_mo_dong:
+    ten: "Có vòng mở và đóng"
+    trong_so: 10
+    mo_ta: "Hook để lại câu hỏi; đoạn chốt trả lời đúng câu đó."
+  chuyen_doan:
+    ten: "Chuyển đoạn trơn"
+    trong_so: 5
+    mo_ta: "Đoạn sau hook đi tiếp đúng ý hook; giữa các đoạn có câu nối, không nhảy ý."
+  cau_chot:
+    ten: "Câu chốt dễ nhắc lại"
+    trong_so: 10
+    mo_ta: "Câu chốt ngắn, có nhịp hoặc đối, người xem nói lại được cho người khác."
+  cta_khop_moi:
+    ten: "Lời kêu gọi khớp mồi nhử"
+    trong_so: 5
+    mo_ta: "Câu CTA (nguyên văn brand.json cta) hợp với nội dung và nhóm đối tượng; mồi nhử là thứ nhóm đó cần. Mồi nhử riêng theo nhóm (ban-hang.yaml) chưa xác nhận thì chấm theo độ hợp của câu CTA đã chọn."
+  dung_giong:
+    ten: "Đúng giọng nói"
+    trong_so: 10
+    mo_ta: "Đúng giong-noi.yaml: xưng hô theo loại giọng, lời nói chứ không phải văn viết, không từ Hán Việt nặng, cách nói số và điều luật dễ nghe."
+  khong_sao_khong_ai:
+    ten: "Không câu sáo, không hook sáo, không văn AI"
+    trong_so: 15
+    mo_ta: "Không câu sáo (brand.json cam), không hook sáo (hook.yaml hook_sao), không kiểu câu văn AI (mau_van_ai dưới đây)."
+  dung_y_chinh_nguon:
+    ten: "Đúng ý chính và nguồn"
+    trong_so: 10
+    mo_ta: "Trả lời đúng câu hỏi của chủ đề, khớp y_chinh; mọi ý luật có nguồn và không nói quá điều nguồn trích; không số liệu không nguồn, không hứa kết quả."
+
+# Kiểm bằng Python trước khi gọi biên tập.
+kiem_tra_may:
+  hook_am_tiet_toi_da: 13        # = 3 giây ở 4,45 âm tiết/giây (san-xuat.yaml am_tiet_moi_giay)
+  cau_am_tiet_toi_da: 26         # câu dài nhất trong lời đọc (tách câu ở . ? !), sau khi đổi số sang cách đọc
+  tu_tranh_toi_da: 2             # từ lần thứ 2 dùng từ tránh (giong-noi.yaml tu_tranh) thì áp trần dung_giong
+  hook_giong_nhau: 0.8           # hai phần của hook giống nhau từ tỉ lệ này (difflib, không dấu) = lặp một câu
+  # Kiểu câu "văn AI" (chuyển từ mục No AI Tells / AI-Tell Check của tham khảo sang tiếng Việt). Regex trên chữ
+  # thường NFC. Trích nguyên văn luật (câu có 'ghi:' hoặc trong ngoặc kép) không bị dò.
+  mau_van_ai:
+    - {ma: phu-dinh-lat, mau: "\\bkhông phải\\b[^.?!]{0,60}\\bmà (là|chính là)\\b", vi_du: "Không phải xe to được đi trước, mà là xe bên phải.", sua: "Nói thẳng điều đúng kèm lý do."}
+    - {ma: khong-chi-ma-con, mau: "\\bkhông chỉ\\b[^.?!]{0,60}\\bmà còn\\b", vi_du: "Không chỉ dễ mà còn nhanh.", sua: "Nói một ý cụ thể."}
+    - {ma: tu-hoi-tu-dap, mau: "\\b(kết quả|lý do|bí quyết|câu trả lời|mấu chốt|điều quan trọng)( là gì)?\\s*\\?", vi_du: "Kết quả? Đỗ ngay lần đầu.", sua: "Bỏ câu hỏi, giữ câu trả lời."}
+    - {ma: hai-cham-tiet-lo, mau: "^(điều quan trọng|điểm hay|mấu chốt|bí quyết|sự thật)( nhất)?( là)?\\s*:", vi_du: "Mấu chốt là: nhìn sang phải.", sua: "Viết thành câu bình thường."}
+    - {ma: liet-ke-phu-dinh, mau: "\\bkhông [^,.?!]{1,20}, không [^,.?!]{1,20}, không\\b", vi_du: "Không lo thủ tục, không lo đi lại, không lo phát sinh.", sua: "Nói điều xảy ra; giữ tối đa một vế phủ định."}
+    - {ma: mo-dau-sao, mau: "\\b(trong thời đại|hãy tưởng tượng|nói một cách đơn giản|điều thú vị là|bạn có bao giờ)\\b", vi_du: "Hãy tưởng tượng bạn đang ở ngã tư.", sua: "Mở thẳng bằng tình huống."}
+    - {ma: gach-dai, mau: "—", vi_du: "Đèn vàng — được đi.", sua: "Dùng dấu chấm, phẩy hoặc hai chấm."}
+
+# Trần theo lỗi máy đo được: biên tập chấm cao hơn thì Python hạ xuống (không cho chấm bù).
+tran:
+  hook_dai: {tieu_chi: hook_dung_nguoi, toi_da: 6, ly_do: "Hook quá số âm tiết đọc trong 3 giây"}
+  hook_lap: {tieu_chi: hook_dung_nguoi, toi_da: 8, ly_do: "Ba phần hook lặp cùng một câu"}
+  hook_sao: {tieu_chi: khong_sao_khong_ai, toi_da: 5, ly_do: "Có hook sáo"}
+  cau_dai: {tieu_chi: mot_y_cau_ngan, toi_da: 4, ly_do: "Có câu dài quá khi đọc"}
+  cau_sao: {tieu_chi: khong_sao_khong_ai, toi_da: 7, ly_do: "Có câu sáo chờ duyệt (brand.json cam.cau_sao_cho_duyet)"}
+  van_ai: {tieu_chi: khong_sao_khong_ai, toi_da: 5, ly_do: "Có kiểu câu văn AI"}
+  tu_tranh: {tieu_chi: dung_giong, toi_da: 5, ly_do: "Dùng nhiều từ tránh (văn viết, Hán Việt nặng)"}

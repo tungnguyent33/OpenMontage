@@ -5,6 +5,17 @@
   "description": "Phần SÁNG TẠO của một video Máy Reels, do agent viết theo skills/may-reels/san-xuat-khong-hoi.md. Mọi bước dựng sau đó là Python tất định (may_reels/dung/). Kiểm tra nội dung (cụm từ cấm, nguồn luật, cảnh, nhịp) nằm ở may_reels/dung/ke_hoach.py.",
   "type": "object",
   "additionalProperties": false,
+  "$defs": {
+    "hook": {
+      "type": "object", "additionalProperties": false, "required": ["cong_thuc", "hinh_0_3s", "cau_noi", "chu_man_hinh"],
+      "properties": {
+        "cong_thuc": {"type": "string", "minLength": 1, "description": "Mã công thức trong brand/<kenh>/hook.yaml"},
+        "hinh_0_3s": {"type": "string", "minLength": 5, "description": "Hình 0-3 giây"},
+        "cau_noi": {"type": "string", "minLength": 2, "description": "Câu nói đầu"},
+        "chu_man_hinh": {"type": "string", "minLength": 2, "description": "Chữ trên màn hình, dạng 'DÒNG 1 / dòng 2'"}
+      }
+    }
+  },
   "required": ["phien_ban", "ma_video", "kenh", "ma_chu_de", "tieu_de", "khung_nhip", "nguon_luat", "doan", "caption", "thieu_canh", "quyet_dinh"],
   "properties": {
     "phien_ban": {"const": 1},
@@ -90,6 +101,29 @@
       "items": {"type": "object", "additionalProperties": false, "required": ["doan", "y_can_canh", "mo_ta_canh", "goi_y_quay", "ly_do"],
                 "properties": {"doan": {"type": "string"}, "y_can_canh": {"type": "string"}, "mo_ta_canh": {"type": "string"},
                                "goi_y_quay": {"type": "string"}, "ly_do": {"type": "string"}}}
+    },
+    "kich_ban": {
+      "type": "object", "additionalProperties": false,
+      "description": "Quy trình viết lời (skills/may-reels/bien-kich.md, C2b). Không bắt buộc với kế hoạch cũ; san-xuat bắt buộc (may_reels/bien_tap.py kiểm). Biên tập KHÔNG đọc phần này.",
+      "required": ["nhom_doi_tuong", "noi_lo", "nguon_noi_lo", "dinh_dang", "goc_ke", "goc_chon", "ly_do_goc",
+                   "hook_chon", "ly_do_hook", "phuong_an_hook", "ban_1", "sua_ban_2"],
+      "properties": {
+        "nhom_doi_tuong": {"type": "string", "minLength": 1, "description": "Mã nhóm trong doi-tuong.yaml (n1..n5), hoặc 'moi_nhom'"},
+        "noi_lo": {"type": "string", "minLength": 3, "description": "Nỗi lo được gỡ, ưu tiên chữ của khách"},
+        "nguon_noi_lo": {"enum": ["cau_hoi_khach", "doi_tuong", "chu_de"]},
+        "dinh_dang": {"type": "string", "minLength": 1, "description": "Mã trong dinh-dang.yaml"},
+        "goc_ke": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "string", "minLength": 5}},
+        "goc_chon": {"type": "integer", "minimum": 1, "maximum": 3},
+        "ly_do_goc": {"type": "string", "minLength": 5},
+        "hook_chon": {"$ref": "#/$defs/hook"},
+        "ly_do_hook": {"type": "string", "minLength": 5},
+        "phuong_an_hook": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/hook"},
+                           "description": "4 hook còn lại, giữ để thử sau"},
+        "ban_1": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["id", "loi"],
+          "properties": {"id": {"type": "string", "pattern": "^s[0-9]+$"}, "loi": {"type": "string"}}}},
+        "sua_ban_2": {"type": "array", "items": {"type": "string"}, "description": "Đã sửa gì sau khi đọc to bản 1"}
+      }
     },
     "quyet_dinh": {
       "type": "array",

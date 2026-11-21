@@ -1,0 +1,30 @@
+ma_dinh_dang: thi-thu-3-cau
+ten: "Thi thử 3 câu"
+giong: may
+nhom_doi_tuong: n1
+noi_lo: "Sợ trượt lý thuyết"
+cong_thuc_hook: thach-tu-cham
+chu_de_vi_du: "3 câu điểm liệt hay sai nhất"
+hook:
+  hinh: "Màn chữ to: 3 ô trống đánh số 1, 2, 3 hiện lần lượt trên nền sân tập"
+  noi: "Ba câu điểm liệt hay sai, bạn đúng mấy câu?"
+  chu: "THI THỬ 3 CÂU / Tự chấm điểm mình"
+doan:
+  - {id: s1, vai: hook, loi: "Ba câu điểm liệt hay sai, bạn đúng mấy câu?", the: "THI THỬ 3 CÂU / Tự chấm điểm mình"}
+  - {id: s2, vai: than, loi: "Câu 1: [câu hỏi từ bộ đề chính thức]. Dừng một nhịp. Đáp án là [đáp án], vì [lý do ngắn].", the: "CÂU 1 / [đáp án]"}
+  - {id: s3, vai: than, loi: "Câu 2: [câu hỏi từ bộ đề chính thức]. Đáp án là [đáp án], vì [lý do ngắn].", the: "CÂU 2 / [đáp án]"}
+  - {id: s4, vai: than, loi: "Câu 3: [câu hỏi từ bộ đề chính thức]. Đáp án là [đáp án], vì [lý do ngắn].", the: "CÂU 3 / [đáp án]"}
+  - {id: s5, vai: than, loi: "Đúng cả ba câu thì bạn đã nắm phần khó nhất. Sai một câu cũng đừng lo, vì giờ bạn đã biết câu đó.", the: "ĐÚNG MẤY CÂU? / Sai thì giờ đã biết"}
+  - {id: s6, vai: chot, loi: "Sai câu nào thì ôn lại đúng câu đó. Điểm liệt sai một câu là không đạt lý thuyết.", the: "SAI CÂU NÀO / Ôn lại đúng câu đó"}
+  - {id: s7, vai: cta, loi: "Nhắn Zalo 0823 279 999 để nhận bộ câu ôn thi A1.", the: null}
+cta_sau_nay: "Câu nối sang nhóm liên quan kèm mã của video (C2), ví dụ 'Chưa có bằng thì nhắn mã … nhận bộ câu ôn'."
+vi_sao_hay:
+  - "Hook thách người xem tự chấm: họ ở lại tới câu 3 để biết mình đúng mấy câu (vòng mở)."
+  - "Mỗi câu một đoạn, cùng một nhịp: câu hỏi, dừng một nhịp, đáp án, vì sao."
+  - "Câu chốt khép vòng 'đúng mấy câu' bằng việc cần làm, và nhắc đúng ý luật đã đối chiếu: sai câu điểm liệt là không đạt lý thuyết."
+  - "CTA nhận bộ câu ôn khớp đúng điều người xem vừa làm."
+can_xac_nhan:
+  - "Ba câu hỏi lấy từ bộ đề chính thức, có nguồn (dinh-dang.yaml dieu_kien)."
+  - "Quy định điểm liệt chỉ đúng tới hết 28/02/2027 (xem y_chinh của chủ đề cau-diem-liet); sau ngày đó phải kiểm lại."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

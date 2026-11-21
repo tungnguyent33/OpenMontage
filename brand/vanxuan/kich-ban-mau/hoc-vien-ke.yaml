@@ -1,0 +1,30 @@
+ma_dinh_dang: hoc-vien-ke
+ten: "Học viên kể"
+giong: thay
+nhom_doi_tuong: n4
+noi_lo: "Sợ học không vào"
+cong_thuc_hook: loi-thu-nhan
+chu_de_vi_du: "Một học viên (đã đồng ý lên hình) kể lại từ lúc lo đến lúc thi"
+hook:
+  hinh: "Học viên đứng cạnh xe ở sân tập, nói thẳng vào máy"
+  noi: "[câu nói thật đắt nhất của học viên]"
+  chu: "HỌC VIÊN KỂ / [tên gọi, tuổi: chờ anh xác nhận]"
+doan:
+  - {id: s1, vai: hook, loi: "[câu nói thật đắt nhất của học viên]", the: "HỌC VIÊN KỂ / [tên gọi, tuổi: chờ anh xác nhận]"}
+  - {id: s2, vai: than, loi: "Trước khi học, [học viên kể điều họ lo nhất, bằng lời của họ]. [Vì sao họ lo, một chi tiết thật].", the: "TRƯỚC KHI HỌC / [nỗi lo của học viên]"}
+  - {id: s3, vai: than, loi: "Buổi đầu ra sân, [một khoảnh khắc cụ thể ở sân tập mà học viên còn nhớ]. [Lúc đó học viên nghĩ gì].", the: "BUỔI ĐẦU / [khoảnh khắc thật]"}
+  - {id: s4, vai: than, loi: "Lúc học, [điều thầy làm khiến học viên bớt lo, kể bằng lời học viên]. [Ngày đi thi ra sao, một chi tiết].", the: "LÚC HỌC / [điều giúp bớt lo]"}
+  - {id: s5, vai: than, loi: "Bây giờ, [học viên kể giờ ra sao: đi đâu, làm gì bằng xe]. [Một câu cảm nhận ngắn của học viên về chuyện đó].", the: "BÂY GIỜ / [kết quả thật]"}
+  - {id: s6, vai: chot, loi: "[lời khuyên của học viên cho người giống mình, một câu ngắn].", the: "LỜI KHUYÊN / [câu của học viên]"}
+  - {id: s7, vai: cta, loi: "Tag đứa bạn sắp thi bằng xe máy vào đây.", the: null}
+cta_sau_nay: "Mồi nhử hợp nhóm của người kể, kèm mã của video (C2)."
+vi_sao_hay:
+  - "Khung trước, trong, sau (voice-analysis.md mục 8, Câu chuyện học viên): người xem đi cùng một người giống mình."
+  - "Lời thú nhận ở hook (học viên nói điều mình từng sợ) làm người xem tin hơn lời khen."
+  - "Mọi lời là lời thật của học viên: KHÔNG viết hộ, không sửa cho 'hay hơn', không bịa kết quả."
+  - "Khung này là MẪU CẤU TRÚC: chỉ làm khi đã quay được học viên kể."
+can_xac_nhan:
+  - "Học viên đã đồng ý lên hình (ban-hang.yaml nguoi_dong_y_len_hinh)."
+  - "Lời thật của học viên sau buổi quay (C3)."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

@@ -1,0 +1,267 @@
+# Thư viện công thức hook của kênh (C2b, 2026-11-21). SỬA TAY; máy chỉ đọc.
+# Đọc bởi: skills/may-reels/bien-kich.md (agent viết lời), may_reels/bien_tap.py (kiểm mã công thức, hook sáo).
+# Nguyên liệu: docs/may-reels/tham-khao/marketingskills/ (hook-system.md, short-form-video.md), viết lại cho tiếng Việt,
+# cho luật của kênh (brand.json cam) và CHIEN-LUOC-NOI-DUNG.md (chỉ có ở máy). Đã bỏ mọi mẫu tạo gấp gáp giả,
+# hứa kết quả, số liệu không nguồn.
+#
+# Hook là BA PHẦN cùng lúc trong 0-3 giây, bổ sung cho nhau, KHÔNG lặp cùng một câu:
+#   hinh:  hình 0-3 giây (cái người xem thấy: giữ ngón tay lại)
+#   noi:   câu nói đầu (mở vòng; đọc xong trong 3 giây, tối đa rubric-kich-ban.yaml kiem_tra_may.hook_am_tiet_toi_da)
+#   chu:   chữ trên màn hình, dạng "DÒNG 1 / dòng 2" (cho người xem tắt tiếng; neo ý, không chép lại câu nói)
+# Thứ tự viết: nhóm đối tượng -> nỗi lo (ưu tiên chữ của chính khách) -> định dạng -> rồi mới đến câu hook.
+#
+# Mỗi công thức:
+#   ma, ten, mo_ta, khi_dung, nhom_hop (mã n1..n5 trong doi-tuong.yaml; [] = mọi nhóm),
+#   dinh_dang_hop (mã trong dinh-dang.yaml; [] = mọi định dạng), vi_du (2 hook đủ ba phần, giọng Vạn Xuân),
+#   loi_hay_gap, trang_thai (gia_thuyet | da_xac_nhan), ngay_cap_nhat.
+# trang_thai chỉ đổi sang da_xac_nhan khi buổi xem lại hằng tuần (C5) có số liệu thắng của chính kênh.
+# Mỗi video ghi công thức đã dùng (ke_hoach.json kich_ban.hook_chon.cong_thuc; cột cong_thuc_hook ở Hàng chờ).
+
+phien_ban: 1
+
+# Hook sáo: câu mở chung chung, ai cũng dùng, không gọi đúng ai. Máy dò trong câu hook và chữ hook (không dấu cũng khớp).
+# Câu sáo của kênh (brand.json cam.cau_sao_da_chot, cau_sao_cho_duyet) vẫn áp dụng riêng.
+hook_sao:
+  - "dừng lướt"
+  - "khoan lướt"
+  - "xem hết video"
+  - "xem đến cuối"
+  - "pov"
+  - "điều không ai nói với bạn"
+  - "sự thật đằng sau"
+  - "bí mật"
+  - "ít ai biết"
+  - "sẽ khiến bạn"
+  - "đây là lý do"
+  - "chắc chắn bạn chưa biết"
+  - "99% mọi người"
+
+cong_thuc:
+  - ma: goi-dung-nguoi
+    ten: "Gọi đúng người"
+    mo_ta: "Câu đầu nêu đúng hoàn cảnh của một nhóm, để người trong nhóm nhận ra mình ngay."
+    khi_dung: "Video chuyển đổi cho một nhóm rõ ràng; khi nỗi lo gắn với hoàn cảnh hơn là với một câu luật."
+    nhom_hop: [n1, n3, n5]
+    dinh_dang_hop: [di-xe-chua-co-bang, dang-ky-mang-gi, lich-khai-giang]
+    vi_du:
+      - hinh: "Thầy đứng ở sân tập nhìn thẳng máy, phía sau là xe số dựng chân chống"
+        noi: "Đi xe máy mười năm mà chưa có bằng?"
+        chu: "CHƯA CÓ BẰNG? / Đi học bây giờ có muộn không"
+      - hinh: "Tay cầm chiếc bằng cũ bằng giấy đã mờ chữ (cảnh thật, che số)"
+        noi: "Bằng giấy cũ của bạn sắp hết hạn chưa?"
+        chu: "BẰNG GIẤY CŨ / Đổi ở đâu, mang gì"
+    loi_hay_gap:
+      - "Gọi cả một đám đông ('ai đang học lái xe') thay vì một hoàn cảnh cụ thể"
+      - "Gọi đúng người rồi nhưng phần thân lại nói chuyện khác (gãy cầu nối)"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: hoi-dung-noi-lo
+    ten: "Hỏi đúng điều người đó đang lo"
+    mo_ta: "Đặt nguyên câu hỏi mà người xem đang tự hỏi trong đầu, bằng chữ của họ."
+    khi_dung: "Khi có nỗi lo cụ thể trong doi-tuong.yaml hoặc tab Câu hỏi khách; hợp mọi tầng."
+    nhom_hop: []
+    dinh_dang_hop: [so-truot-thay-tra-loi, hoc-phi-gom-gi, di-xe-chua-co-bang, luat-hoi-nhanh-dap-dung]
+    vi_du:
+      - hinh: "Cận tay học viên run run trên tay lái ở vạch xuất phát sa hình"
+        noi: "Đi thi sa hình mà run tay thì làm sao?"
+        chu: "RUN TAY KHI THI / Thầy chỉ cách giữ bình tĩnh"
+      - hinh: "Thầy cầm tờ giấy ghi các khoản học phí, chưa lật mặt chữ"
+        noi: "Học bằng A1 thì tốn những khoản nào?"
+        chu: "HỌC PHÍ A1 / Gồm gì, không gồm gì"
+    loi_hay_gap:
+      - "Hỏi bằng chữ của trung tâm ('quy trình đào tạo') thay vì chữ của khách ('học mấy buổi')"
+      - "Hỏi điều không ai lo, chỉ vì nó dễ trả lời"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: noi-nguoc
+    ten: "Nói ngược suy nghĩ phổ biến"
+    mo_ta: "Nêu một điều nhiều người tin là đúng, rồi đặt nghi vấn; phần thân phải chốt rõ đúng hay sai, có nguồn."
+    khi_dung: "Định dạng Đúng hay sai; khi có một quan niệm sai phổ biến mà luật trả lời được."
+    nhom_hop: [n1, n2]
+    dinh_dang_hop: [luat-dung-hay-sai, bao-dau-co-that-khong]
+    vi_du:
+      - hinh: "Đèn đỏ ở ngã tư, một xe máy đang nhích bánh rẽ phải (cảnh kho, không thấy biển số)"
+        noi: "Đèn đỏ vẫn được rẽ phải, đúng không?"
+        chu: "RẼ PHẢI KHI ĐÈN ĐỎ / Nhiều người đang hiểu sai"
+      - hinh: "Thầy lắc đầu nhẹ, tay chỉ về sân sa hình phía sau"
+        noi: "Trung tâm nào hứa chắc đỗ, bạn có tin không?"
+        chu: "HỨA CHẮC ĐỖ? / Thầy nói thật"
+    loi_hay_gap:
+      - "Phủ định một điều không ai nói (kiểu 'không phải X mà là Y'): đó là dấu hiệu văn AI"
+      - "Đặt nghi vấn rồi không chốt, người xem thấy bị lừa"
+      - "Nêu tên hoặc chê trung tâm khác (brand.json cam.noi_dung_cam)"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: con-so-cu-the
+    ten: "Con số cụ thể"
+    mo_ta: "Mở bằng một con số có thật: mức phạt, số phân khối, số câu điểm liệt, số buổi học. Con số phải có nguồn."
+    khi_dung: "Khi con số chính là câu trả lời và đã có trong nguon_luat, y_chinh hoặc ban-hang.yaml (da_xac_nhan)."
+    nhom_hop: [n1, n2, n4]
+    dinh_dang_hop: [luat-mot-phut-luat-moi, luat-hoi-nhanh-dap-dung, thi-thu-3-cau]
+    vi_du:
+      - hinh: "Xe côn tay 150 phân khối đi vào vòng số 8 ở sân tập"
+        noi: "Bằng A1 lái xe 150 phân khối được không?"
+        chu: "150 PHÂN KHỐI / Bằng A1 có đủ không"
+      - hinh: "Màn chữ to: 3 ô trống đánh số 1, 2, 3 hiện lần lượt"
+        noi: "Ba câu điểm liệt này, bạn đúng mấy câu?"
+        chu: "THI THỬ 3 CÂU / Tự chấm điểm mình"
+    loi_hay_gap:
+      - "Dùng con số không nguồn hoặc phần trăm ước chừng ('90% người thi trượt vì...')"
+      - "Nhồi nhiều con số vào một câu, người nghe không nhớ được số nào"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: tinh-huong-quen
+    ten: "Tình huống quen ngoài đời"
+    mo_ta: "Tả một khoảnh khắc rất cụ thể mà người xem đã gặp trên đường hay ở sân thi."
+    khi_dung: "Video luật về tình huống đi đường (ngã tư, vòng xuyến, đèn vàng); video sợ trượt."
+    nhom_hop: []
+    dinh_dang_hop: [luat-hoi-nhanh-dap-dung, luat-loi-sa-hinh, so-truot-thay-tra-loi]
+    vi_du:
+      - hinh: "Ngã tư nhỏ ở quê, không đèn, hai xe máy cùng đến (cảnh kho hoặc sơ đồ giao_nhau)"
+        noi: "Hai xe cùng đến ngã tư, ai đi trước?"
+        chu: "NGÃ TƯ KHÔNG ĐÈN / Không biển, không người điều khiển"
+      - hinh: "Bánh xe chạm vạch trắng ở vòng số 8, quay chậm"
+        noi: "Bánh xe vừa chạm vạch là bị trừ điểm à?"
+        chu: "CHẠM VẠCH VÒNG SỐ 8 / Trừ mấy điểm"
+    loi_hay_gap:
+      - "Tình huống chung chung ('khi tham gia giao thông') thay vì một khoảnh khắc nhìn thấy được"
+      - "Hình 0-3 giây không khớp tình huống được nói"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: loi-thu-nhan
+    ten: "Lời thú nhận"
+    mo_ta: "Người thật (thầy hoặc học viên đã đồng ý) nói một điều yếu hay một lần sai của chính mình. Thừa nhận điểm yếu làm người xem tin hơn."
+    khi_dung: "CHỈ với giọng thật (dinh-dang.yaml giong: thay) và lời người đó thật sự nói. Không viết lời thú nhận cho giọng máy, không bịa lời học viên."
+    nhom_hop: [n1, n4]
+    dinh_dang_hop: [hoc-vien-ke, so-truot-thay-tra-loi, bao-dau-co-that-khong]
+    vi_du:
+      - hinh: "Thầy ngồi trên yên xe ở sân tập, nói thẳng vào máy"
+        noi: "Thầy nói thật: không ai hứa chắc bạn đỗ được."
+        chu: "THẦY NÓI THẬT / Vạn Xuân làm gì thay cho lời hứa"
+      - hinh: "Học viên (đã đồng ý lên hình) đứng cạnh xe, cười ngượng"
+        noi: "Lần đầu lên xe, em run đến mức tắt máy."
+        chu: "BUỔI ĐẦU TẬP XE / [chờ anh xác nhận lời học viên]"
+    loi_hay_gap:
+      - "Lời thú nhận không có chi tiết thật nên nghe giả"
+      - "Thú nhận xong không gỡ: người xem chỉ nhớ điểm yếu"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: ket-qua-truoc
+    ten: "Kết quả trước, lý do sau"
+    mo_ta: "Nói ngay đáp án hoặc kết cục trong câu đầu, rồi phần thân giải thích vì sao. Hợp người xem muốn câu trả lời nhanh."
+    khi_dung: "Hỏi nhanh đáp đúng khi đáp án ngắn và bất ngờ vừa đủ; 1 phút luật mới khi mốc luật là tin chính."
+    nhom_hop: []
+    dinh_dang_hop: [luat-hoi-nhanh-dap-dung, luat-mot-phut-luat-moi, luat-dung-hay-sai]
+    vi_du:
+      - hinh: "Đèn vàng nhấp nháy ở ngã ba (cảnh kho)"
+        noi: "Đèn vàng nhấp nháy: được đi, nhưng phải nhường."
+        chu: "ĐÈN VÀNG NHẤP NHÁY / Đi thế nào cho đúng"
+      - hinh: "Xe số chạy vào vòng xuyến, nhìn từ trên cao (sơ đồ vong_xuyen nếu thiếu cảnh)"
+        noi: "Vào vòng xuyến có biển, nhường bên trái."
+        chu: "VÒNG XUYẾN CÓ BIỂN / Không có biển thì sao"
+    loi_hay_gap:
+      - "Nói hết đáp án lẫn lý do ngay câu đầu: không còn gì giữ người xem"
+      - "Chữ trên màn hình chép lại nguyên câu nói"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: chon-mot-trong-hai
+    ten: "Chọn một trong hai"
+    mo_ta: "Đặt hai lựa chọn mà người xem thật sự phân vân; phần thân phải chọn một và nói vì sao."
+    khi_dung: "Câu luật có hai đáp án dễ nhầm (trái hay phải, đi hay dừng); hợp với CTA 'Bạn chọn A hay B?'."
+    nhom_hop: [n1, n2, n4]
+    dinh_dang_hop: [luat-hoi-nhanh-dap-dung, luat-dung-hay-sai, thi-thu-3-cau]
+    vi_du:
+      - hinh: "Sơ đồ vòng xuyến, hai mũi tên trái và phải nhấp nháy"
+        noi: "Vào vòng xuyến, nhường bên trái hay bên phải?"
+        chu: "TRÁI HAY PHẢI? / Chọn trước khi xem đáp án"
+      - hinh: "Hai xe máy dừng ở vạch, một xe bật xi-nhan"
+        noi: "Gặp đèn vàng: dừng lại hay đi tiếp?"
+        chu: "DỪNG HAY ĐI? / Đèn vàng không nhấp nháy"
+    loi_hay_gap:
+      - "Hai lựa chọn mà một cái rõ là sai, không ai phân vân"
+      - "Không chốt lựa chọn nào"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: thach-tu-cham
+    ten: "Thách tự chấm"
+    mo_ta: "Mời người xem tự trả lời rồi so đáp án; đáp án phải có thật ở cuối."
+    khi_dung: "Thi thử 3 câu; câu điểm liệt; mọi video có nhiều câu hỏi ngắn."
+    nhom_hop: [n1, n2, n4]
+    dinh_dang_hop: [thi-thu-3-cau, luat-hoi-nhanh-dap-dung]
+    vi_du:
+      - hinh: "Câu hỏi thi lý thuyết hiện chữ to, ba đáp án A B C"
+        noi: "Câu này hay sai nhất, bạn chọn đáp án nào?"
+        chu: "CÂU ĐIỂM LIỆT / A, B hay C?"
+      - hinh: "Đồng hồ đếm 3 giây trên nền sân tập"
+        noi: "Ba giây, trả lời trước khi thầy nói đáp án."
+        chu: "3 GIÂY / Bạn trả lời được không"
+    loi_hay_gap:
+      - "Thách xong đáp án nằm ở video khác (người xem thấy bị lừa)"
+      - "Câu hỏi không lấy từ bộ đề chính thức"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: canh-bao-loi
+    ten: "Cảnh báo lỗi hay gặp"
+    mo_ta: "Gọi tên một lỗi cụ thể làm mất điểm hoặc bị phạt. Nói mức độ bằng lời ('hay gặp'), không bịa phần trăm."
+    khi_dung: "Lỗi khi thi sa hình; lỗi đi đường bị phạt (mức phạt có nguồn)."
+    nhom_hop: [n1, n4]
+    dinh_dang_hop: [luat-loi-sa-hinh, luat-mot-phut-luat-moi]
+    vi_du:
+      - hinh: "Chân học viên chống xuống đất giữa vòng số 8"
+        noi: "Chống chân giữa vòng số 8 là mất điểm ngay."
+        chu: "CHỐNG CHÂN / Lỗi hay gặp nhất bài 1"
+      - hinh: "Tay gạt xi-nhan, cận cảnh"
+        noi: "Quên xi-nhan khi qua vạch là bị trừ điểm."
+        chu: "QUÊN XI-NHAN / Mất điểm dù lái đúng"
+    loi_hay_gap:
+      - "Bịa tỉ lệ ('80% học viên trượt vì...'); dùng 'phần lớn', 'hay gặp' nếu không có số"
+      - "Cảnh báo dọa người xem mà không chỉ cách tránh"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: cu-va-moi
+    ten: "Cũ và mới"
+    mo_ta: "Đặt quy định cũ cạnh quy định mới (hoặc bằng cũ cạnh bằng mới); phần thân nói rõ ai bị ảnh hưởng."
+    khi_dung: "1 phút luật mới khi luật vừa đổi; mùa 'quy định mới' trong lich.yaml."
+    nhom_hop: [n1, n3]
+    dinh_dang_hop: [luat-mot-phut-luat-moi, dang-ky-mang-gi]
+    vi_du:
+      - hinh: "Hai chiếc bằng đặt cạnh nhau: bằng giấy cũ và thẻ mới (che số)"
+        noi: "Bằng A1 cũ và mới khác nhau chỗ nào?"
+        chu: "MỐC 01/01/2025 / Lái được xe bao nhiêu phân khối"
+      - hinh: "Thẻ chữ hai cột: TRƯỚC / BÂY GIỜ"
+        noi: "Luật mới đổi một điều với người đi xe máy."
+        chu: "LUẬT MỚI / Người đi xe máy cần biết"
+    loi_hay_gap:
+      - "Nói 'luật mới' mà không có ngày hiệu lực và nguồn"
+      - "Câu mở mập mờ ('luật mới đổi một điều') mà phần thân lâu mới nói điều gì"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21
+
+  - ma: cau-hoi-nguyen-van
+    ten: "Câu hỏi nguyên văn của khách"
+    mo_ta: "Đọc nguyên một câu khách đã hỏi trong bình luận hoặc tin nhắn (bỏ tên người hỏi), rồi trả lời."
+    khi_dung: "Trả lời bình luận; khi tab Câu hỏi khách có câu được hỏi lặp lại."
+    nhom_hop: []
+    dinh_dang_hop: [tra-loi-binh-luan, hoc-phi-gom-gi, dang-ky-mang-gi]
+    vi_du:
+      - hinh: "Thẻ bình luận đã ẩn tên và ảnh đại diện, chữ to"
+        noi: "Có bạn hỏi: bốn mươi tuổi học có kịp không?"
+        chu: "BẠN HỎI, THẦY ĐÁP / [câu hỏi thật của khách]"
+      - hinh: "Thầy cầm điện thoại, quay màn hình tin nhắn đã che tên về phía máy"
+        noi: "Nhiều bạn nhắn hỏi: học mấy buổi thì thi?"
+        chu: "HỌC MẤY BUỔI? / [chờ anh xác nhận số buổi]"
+    loi_hay_gap:
+      - "Tự đặt câu hỏi rồi gán là của khách: chỉ dùng câu hỏi thật"
+      - "Để lộ tên, ảnh người hỏi"
+    trang_thai: gia_thuyet
+    ngay_cap_nhat: 2026-11-21

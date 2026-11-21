@@ -1,0 +1,32 @@
+ma_dinh_dang: dang-ky-mang-gi
+ten: "Đăng ký cần mang gì"
+giong: thay
+nhom_doi_tuong: n3
+noi_lo: "Không biết thủ tục, sợ đi lại nhiều lần"
+cong_thuc_hook: goi-dung-nguoi
+chu_de_vi_du: "Đi đăng ký học A1, cần mang đủ những gì?"
+hook:
+  hinh: "Bàn văn phòng, một tập hồ sơ mẫu (đã che thông tin) được đặt xuống"
+  noi: "Sắp đi đăng ký học A1, mang gì cho đủ?"
+  chu: "ĐI MỘT LẦN LÀ XONG / Danh sách giấy tờ"
+doan:
+  - {id: s1, vai: hook, loi: "Sắp đi đăng ký học A1, mang gì cho đủ?", the: "ĐI MỘT LẦN LÀ XONG / Danh sách giấy tờ"}
+  - {id: s2, vai: than, loi: "Nhiều bạn phải về nhà lấy thêm giấy, đi lại hai ba lần. Thầy đọc từng thứ để bạn mang một lần.", the: "ĐỪNG ĐI LẠI NHIỀU LẦN / Mang đủ ngay lần đầu"}
+  - {id: s3, vai: than, loi: "Thứ nhất: [chờ anh xác nhận giấy tờ 1]. Thứ hai: [chờ anh xác nhận giấy tờ 2].", the: "MANG THEO / [chờ anh xác nhận]"}
+  - {id: s4, vai: than, loi: "Còn ảnh và giấy khám sức khỏe: [chờ anh xác nhận bên nào lo].", the: "ẢNH, GIẤY KHÁM / [chờ anh xác nhận]"}
+  - {id: s5, vai: than, loi: "Nộp xong, các bước tiếp theo là [chờ anh xác nhận quy trình đăng ký]. Thầy báo lịch học qua Zalo.", the: "SAU KHI NỘP / [chờ anh xác nhận]"}
+  - {id: s6, vai: than, loi: "Đổi hay cấp lại bằng thì giấy tờ khác một chút: [chờ anh xác nhận giấy tờ đổi, cấp lại].", the: "ĐỔI, CẤP LẠI BẰNG / [chờ anh xác nhận]"}
+  - {id: s7, vai: chot, loi: "Mang đủ từ đầu thì đi một lần là xong.", the: "MANG ĐỦ TỪ ĐẦU / Đi một lần là xong"}
+  - {id: s8, vai: cta, loi: "Lưu video lại, trước hôm thi xem lại một lần.", the: null}
+cta_sau_nay: "Nhắn mã của video để nhận danh sách giấy tờ và các bước (C2, mồi nhử chờ anh soạn)."
+vi_sao_hay:
+  - "Câu đầu gọi người sắp đi đăng ký; chữ trên màn hình nói lợi ích (đi một lần là xong), không chép lại câu hỏi."
+  - "s2 gọi đúng nỗi lo 'đi lại nhiều lần' bằng một chuyện quen (về nhà lấy thêm giấy)."
+  - "Đếm 'thứ nhất, thứ hai' cho người nghe dễ theo; mỗi đoạn một nhóm giấy tờ."
+  - "Câu chốt khép vòng với chữ của hook."
+can_xac_nhan:
+  - "Danh sách giấy tờ, ai lo ảnh và giấy khám, các bước sau khi nộp, giấy tờ đổi và cấp lại (ban-hang.yaml giay_to, quy_trinh_dang_ky)."
+  - "s5 'thầy báo lịch học qua Zalo': chỉ giữ nếu đúng cách làm hiện tại."
+  - "CTA tạm là câu 'Lưu video lại…' vì video là danh sách để xem lại; C2 đổi sang mồi nhử danh sách giấy tờ."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

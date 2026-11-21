@@ -1,0 +1,32 @@
+ma_dinh_dang: bao-dau-co-that-khong
+ten: "\"Bao đậu\" có thật không?"
+giong: thay
+nhom_doi_tuong: moi_nhom
+noi_lo: "Sợ đóng tiền rồi vẫn trượt, không biết tin nơi nào"
+cong_thuc_hook: noi-nguoc
+chu_de_vi_du: "Trung tâm hứa chắc đỗ, nên tin không?"
+hook:
+  hinh: "Thầy lắc đầu nhẹ, tay chỉ về sân sa hình phía sau"
+  noi: "Nơi nào hứa chắc đỗ, bạn có tin không?"
+  chu: "HỨA CHẮC ĐỖ? / Thầy nói thật"
+doan:
+  - {id: s1, vai: hook, loi: "Nơi nào hứa chắc đỗ, bạn có tin không?", the: "HỨA CHẮC ĐỖ? / Thầy nói thật"}
+  - {id: s2, vai: than, loi: "Thầy nói thật: không ai hứa được thay bạn. Người cầm lái lúc thi là bạn.", the: "KHÔNG AI HỨA THAY / Người cầm lái là bạn"}
+  - {id: s3, vai: than, loi: "Bài thi do hội đồng sát hạch chấm. Trung tâm không chấm bài của bạn.", the: "AI CHẤM BÀI THI? / Hội đồng sát hạch"}
+  - {id: s4, vai: than, loi: "Việc thầy làm được là cho bạn tập đúng bài thi. Lý thuyết thì ôn đến khi bạn tự làm đúng các câu hay sai.", the: "TẬP ĐÚNG BÀI THI / Ôn đến khi tự làm đúng"}
+  - {id: s5, vai: than, loi: "Sa hình thì chạy đi chạy lại trên sân có vạch giống bài thi. Tự tin rồi mới đi thi.", the: "SA HÌNH / Tự tin rồi mới đi thi"}
+  - {id: s6, vai: chot, loi: "Đừng tin lời hứa. Hãy hỏi: mình được tập bao nhiêu, tập thế nào.", the: "ĐỪNG TIN LỜI HỨA / Hỏi xem được tập thế nào"}
+  - {id: s7, vai: cta, loi: "Nhắn Zalo 0823 279 999 để nhận bộ câu ôn thi A1.", the: null}
+cta_sau_nay: "Mồi nhử ôn thi, kèm mã của video (C2)."
+vi_sao_hay:
+  - "Cụm 'bao đậu', 'bao đỗ' bị cấm trong lời và chữ, nên hook nói 'hứa chắc đỗ': vẫn đúng câu người xem đang tự hỏi."
+  - "Lời thú nhận 'không ai hứa được' làm người xem tin hơn mọi lời hứa (hiệu ứng thừa nhận điểm yếu)."
+  - "s3 đưa lý do thật (ai chấm bài), s4 nói điều Vạn Xuân làm được, không nêu tên trung tâm nào."
+  - "Câu chốt trao cho người xem một câu hỏi để tự kiểm mọi nơi, kể cả Vạn Xuân."
+can_xac_nhan:
+  - "s3: 'bài thi do hội đồng sát hạch chấm' có đúng quy trình sát hạch hiện hành không (cần nguồn trước khi dùng)."
+  - "s6 có chữ 'Hãy hỏi': biên tập có thể chê là mệnh lệnh; anh quyết giữ hay đổi."
+  - "s4, s5: cách ôn và tập ở Vạn Xuân có đúng như vậy không."
+  - "Không nêu tên, không gợi ý trung tâm nào (dinh-dang.yaml dieu_kien)."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

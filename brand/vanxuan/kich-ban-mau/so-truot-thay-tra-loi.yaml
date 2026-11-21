@@ -1,0 +1,30 @@
+ma_dinh_dang: so-truot-thay-tra-loi
+ten: "Sợ trượt? Thầy trả lời"
+giong: thay
+nhom_doi_tuong: n4
+noi_lo: "Sợ sa hình, sợ run tay khi thi"
+cong_thuc_hook: hoi-dung-noi-lo
+chu_de_vi_du: "Sợ đi thi sa hình run tay thì làm sao?"
+hook:
+  hinh: "Cận tay học viên nắm tay lái ở vạch xuất phát sa hình (không thấy mặt)"
+  noi: "Đi thi sa hình mà run tay thì làm sao?"
+  chu: "RUN TAY KHI THI / Thầy chỉ cách giữ bình tĩnh"
+doan:
+  - {id: s1, vai: hook, loi: "Đi thi sa hình mà run tay thì làm sao?", the: "RUN TAY KHI THI / Thầy chỉ cách giữ bình tĩnh"}
+  - {id: s2, vai: than, loi: "Run là chuyện bình thường. Nhiều cô chú lần đầu ra sân còn run hơn thế, rồi vẫn tập quen được.", the: "RUN LÀ BÌNH THƯỜNG / Ai lần đầu cũng vậy"}
+  - {id: s3, vai: than, loi: "Run nhất là khi không biết bài. Nên thầy cho đi đi lại lại đúng các bài thi trên sân tập, đến khi nhắm mắt cũng nhớ đường.", the: "TẬP ĐÚNG BÀI THI / Quen bài thì bớt run"}
+  - {id: s4, vai: than, loi: "Trước khi xuất phát, thở chậm ba hơi, mắt nhìn xa phía trước, không nhìn xuống bánh xe.", the: "THỞ CHẬM 3 HƠI / Nhìn xa, không nhìn bánh xe"}
+  - {id: s5, vai: than, loi: "Lỡ chống chân hay chạm vạch thì đi tiếp, đừng dừng lại nghĩ. Một lỗi nhỏ chưa phải là trượt.", the: "LỠ SAI MỘT LỖI / Đi tiếp, đừng dừng lại"}
+  - {id: s6, vai: chot, loi: "Kết quả còn tùy bạn luyện tập. Quen bài rồi thì tay bớt run.", the: "QUEN BÀI / Tay bớt run"}
+  - {id: s7, vai: cta, loi: "Lưu video lại, trước hôm thi xem lại một lần.", the: null}
+cta_sau_nay: "Nhắn mã của video để hẹn ra xem sân tập (C2, mồi nhử chờ anh quyết)."
+vi_sao_hay:
+  - "Hỏi đúng nỗi sợ cụ thể của nhóm n4 bằng chữ của họ (run tay), hình là bàn tay chứ không phải mặt."
+  - "s2 bình thường hóa nỗi sợ trước khi chỉ cách; s3 nói nguyên nhân thật (không biết bài)."
+  - "Mỗi mẹo một đoạn, làm được ngay: thở chậm ba hơi, nhìn xa, lỡ sai thì đi tiếp."
+  - "Không hứa đỗ: câu chốt nói rõ 'kết quả còn tùy bạn luyện tập'."
+can_xac_nhan:
+  - "s5 'lỡ sai thì đi tiếp': anh kiểm lại với cách chấm bài thi hiện hành (có lỗi nào bắt buộc dừng không)."
+  - "Cảnh tay học viên ở vạch xuất phát: cần quay hoặc tìm trong kho."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

@@ -1,0 +1,29 @@
+ma_dinh_dang: luat-dung-hay-sai
+ten: "Đúng hay sai?"
+giong: may
+nhom_doi_tuong: n2
+noi_lo: "Sợ bị phạt vì làm theo thói quen của người khác"
+cong_thuc_hook: noi-nguoc
+chu_de_vi_du: "Đèn đỏ có được rẽ phải không? (chủ đề re-phai-den-do)"
+hook:
+  hinh: "Ngã tư đèn đỏ, một xe máy nhích bánh định rẽ phải (cảnh kho, không thấy biển số)"
+  noi: "Đèn đỏ vẫn được rẽ phải, đúng không?"
+  chu: "RẼ PHẢI KHI ĐÈN ĐỎ / Nhiều người đang hiểu sai"
+doan:
+  - {id: s1, vai: hook, loi: "Đèn đỏ vẫn được rẽ phải, đúng không?", the: "RẼ PHẢI KHI ĐÈN ĐỎ / Nhiều người đang hiểu sai"}
+  - {id: s2, vai: than, loi: "Sai. Đèn đỏ là dừng, kể cả khi bạn định rẽ phải. Xe máy hay ô tô cũng vậy.", the: "SAI / Đèn đỏ là dừng"}
+  - {id: s3, vai: than, loi: "Bạn chỉ được rẽ khi có biển hoặc đèn phụ cho phép rẽ phải. Không có một trong hai thứ đó thì đứng chờ.", the: "CHỈ ĐƯỢC RẼ KHI / Có biển hoặc đèn phụ cho phép"}
+  - {id: s4, vai: than, loi: "Thấy người khác rẽ thì chưa chắc họ đúng. Ở ngã tư, bạn nhìn biển và đèn, đừng nhìn xe trước.", the: "NHÌN BIỂN VÀ ĐÈN / Đừng nhìn xe trước"}
+  - {id: s5, vai: than, loi: "Điều này có trong Luật Trật tự, an toàn giao thông đường bộ, Điều 11. Đi thi lý thuyết cũng hay gặp câu này.", the: "CÓ TRONG LUẬT / Điều 11"}
+  - {id: s6, vai: chot, loi: "Không có biển, không có đèn phụ thì đèn đỏ là đứng yên.", the: "KHÔNG BIỂN, ĐÈN PHỤ / Đèn đỏ là đứng yên"}
+  - {id: s7, vai: cta, loi: "Tag đứa bạn sắp thi bằng xe máy vào đây.", the: null}
+cta_sau_nay: "Câu nối sang nhóm n2 (sắp đủ 18 tuổi) kèm mã của video (C2)."
+vi_sao_hay:
+  - "Nói ngược một thói quen phổ biến, rồi s2 chốt ngay 'Sai' trong một từ: không để người xem chờ lâu."
+  - "s3 nói đúng ý chính (chỉ rẽ khi có biển hoặc đèn phụ), s4 chỉ ra vì sao người ta hay sai (nhìn xe trước)."
+  - "Câu chốt khép vòng 'đúng không' bằng một câu điều kiện ngắn."
+  - "CTA tag bạn bè hợp video 'Đúng hay sai': người xem muốn thử bạn mình."
+can_xac_nhan:
+  - "Khi sản xuất: mở Luật 36/2024/QH15 Điều 11 và QCVN 41:2024, trích nguyên văn; kiểm khoản cụ thể trước khi đọc số khoản."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21

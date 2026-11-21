@@ -1,0 +1,31 @@
+ma_dinh_dang: di-xe-chua-co-bang
+ten: "Đi xe nhiều năm chưa có bằng"
+giong: thay
+nhom_doi_tuong: n1
+noi_lo: "Ngại \"đi học lại\" ở tuổi này, sợ trượt lý thuyết"
+cong_thuc_hook: goi-dung-nguoi
+chu_de_vi_du: "Đi xe máy nhiều năm chưa có bằng: giờ đi học có khó không?"
+hook:
+  hinh: "Thầy đứng ở sân tập nhìn thẳng máy, phía sau là xe số dựng chân chống"
+  noi: "Đi xe máy 10 năm mà chưa có bằng?"
+  chu: "CHƯA CÓ BẰNG? / Đi học bây giờ có muộn không"
+doan:
+  - {id: s1, vai: hook, loi: "Đi xe máy 10 năm mà chưa có bằng?", the: "CHƯA CÓ BẰNG? / Đi học bây giờ có muộn không"}
+  - {id: s2, vai: than, loi: "Thầy gặp nhiều anh chị như vậy. Ai cũng ngại đi học lại, sợ nhất là thi lý thuyết.", the: "NGẠI ĐI HỌC LẠI / Sợ nhất là thi lý thuyết"}
+  - {id: s3, vai: than, loi: "Tay lái thì anh chị quen rồi. Cái cần học kỹ là luật và bài thi sa hình, vì đi đường quen khác với đi đúng bài thi.", the: "TAY LÁI ĐÃ QUEN / Cần học kỹ luật và sa hình"}
+  - {id: s4, vai: than, loi: "Lý thuyết thì thầy cho ôn theo bộ câu hỏi, câu nào hay sai thì ôn lại câu đó.", the: "ÔN LÝ THUYẾT / Câu hay sai ôn lại"}
+  - {id: s5, vai: than, loi: "Học mấy buổi, thi ở đâu, thầy nói rõ ngay từ đầu: [chờ anh xác nhận số buổi và nơi thi].", the: "HỌC MẤY BUỔI? / [chờ anh xác nhận]"}
+  - {id: s6, vai: chot, loi: "Lái quen tay rồi, giờ chỉ còn thiếu tấm bằng thôi.", the: "CHỈ CÒN THIẾU BẰNG / Học luật, học sa hình"}
+  - {id: s7, vai: cta, loi: "Nhắn Zalo 0823 279 999 để nhận bộ câu ôn thi A1.", the: null}
+cta_sau_nay: "Nhắn mã của video để nhận lộ trình học cho người đã đi xe lâu năm (C2, mồi nhử chờ anh xác nhận)."
+vi_sao_hay:
+  - "Câu đầu gọi đúng nhóm n1 bằng hoàn cảnh của họ (10 năm đi xe), không bằng tuổi; chữ trên màn hình nêu nỗi lo, không chép lại câu nói."
+  - "s2 nói đúng hai nỗi lo của nhóm (ngại học lại, sợ lý thuyết) bằng chữ của khách, rồi s3 gỡ bằng một sự thật họ tự biết: tay lái đã quen."
+  - "Mỗi đoạn một ý, câu nối 'Tay lái thì…', 'Lý thuyết thì…' giữ mạch."
+  - "Câu chốt trả lời vòng mở 'có muộn không' bằng một câu ngắn, có đối: quen tay rồi, chỉ thiếu bằng."
+can_xac_nhan:
+  - "Số buổi học và nơi thi (s5)."
+  - "Câu '10 năm' chỉ là hoàn cảnh ví dụ; nếu muốn thì đổi sang số năm hợp học viên thật hơn."
+  - "Giọng thật của thầy: cần chọn người đứng trước máy (C3)."
+trang_thai: cho_duyet
+ngay_cap_nhat: 2026-11-21
