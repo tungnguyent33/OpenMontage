@@ -23,6 +23,7 @@ Mọi bước sau đó do Python làm theo cách tất định (`may_reels/dung/
 - `cau_hoi_khach`: câu hỏi thật của khách cho chủ đề này (rỗng khi chưa có tab Câu hỏi khách);
 - `phan_hoi`: lỗi kiểm tra, điểm kịch bản của biên tập (bắt đầu bằng "Điểm kịch bản") hoặc điểm QA của vòng trước. Có mục này nghĩa là đang ở vòng sửa: sửa đúng các lỗi được nêu.
 - `ghi_chu_sua`: chỉ có khi chạy bằng lệnh `sua`. Ý kiến của người duyệt, phải làm theo.
+- `nguon_luat_da_mo`: chỉ có ở lệnh `bien-kich so-sanh`. Nguồn luật đã mở và trích ở kế hoạch cũ: được dùng lại nguyên mục, không cần mở lại link.
 
 Đọc thêm:
 - `brand/<kenh>/brand.json`:
@@ -41,7 +42,7 @@ Ghi xong `ke_hoach.json`, máy chạy **biên tập** (`skills/may-reels/bien-ta
 ## Luật phải có nguồn (bắt buộc)
 
 - Mọi ý về luật đều gắn `nguon_ids`. Mỗi nguồn phải có văn bản, `ten_ngan` (dòng hiện trên màn hình), Điều/khoản, link, ngày mở và **trích nguyên văn**.
-- Agent phải **mở link bằng WebFetch** trong lần chạy này và trích đúng câu chữ. Ưu tiên văn bản trên `chinhphu.vn`, `vbpl.vn`, `quochoi.vn`. `nguon_doi_chieu` của chủ đề là gợi ý ban đầu.
+- Agent phải **mở link bằng WebFetch** trong lần chạy này và trích đúng câu chữ. Ưu tiên văn bản trên `chinhphu.vn`, `vbpl.vn`, `quochoi.vn`. `nguon_doi_chieu` của chủ đề là gợi ý ban đầu. Ngoại lệ duy nhất: `yeu_cau.json` có `nguon_luat_da_mo` (lệnh so sánh), khi đó dùng lại nguyên các mục đó.
 - Không mở được nguồn hoặc không chắc điều khoản → không nói ý đó. Không bịa số liệu, không hứa kết quả thi.
 - Dòng nguồn trên thẻ chữ do máy tự ghép từ `nguon_ids`, nhưng **chỉ hiện ở đoạn mà lời đọc đang trích luật** ("Luật…", "Điều…", "khoản…", "Nghị định…", "QCVN…") và mỗi nguồn chỉ hiện một lần, để không che cảnh. Vẫn gắn `nguon_ids` cho mọi ý về luật (máy dùng để chặn cứng), và **caption phải ghi nguồn đầy đủ** (tên văn bản, Điều, khoản).
 

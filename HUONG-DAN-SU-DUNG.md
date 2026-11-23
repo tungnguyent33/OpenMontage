@@ -313,6 +313,19 @@ Hàng chờ có thêm cột `diem_kich_ban` (điểm biên tập) và `cong_thuc
   - Bạn sửa lời và điền các ô `[chờ anh xác nhận]` ngay trong file, nhưng **không ghi số bán hàng thật vào đây** (file lên GitHub), chỉ ghi lời.
   - Xong thì đổi `trang_thai: cho_duyet` thành `da_duyet`. Máy chỉ học theo mẫu đã duyệt.
 - **Thư viện tay nghề** (sửa tay): `hook.yaml`, `giong-noi.yaml` (xưng hô, từ tránh, cách nói số), `giu-chan.yaml`, `rubric-kich-ban.yaml` (tiêu chí, ngưỡng, giới hạn âm tiết). Mọi mục đều là `gia_thuyet` cho tới khi buổi xem lại hằng tuần có số liệu.
+- **So sánh trước sau** (chỉ viết kế hoạch, không dựng, không ghi Sheet):
+
+```powershell
+tools_local\py.cmd -m may_reels bien-kich so-sanh --ma vx-006-giao-nhau-khong-bao-hieu --ma vx-007-vong-xuyen
+```
+
+Báo cáo nằm ở `projects/_may_reels/so-sanh/BAO-CAO.md`, gồm:
+- lời cũ cạnh lời mới;
+- 5 hook;
+- điểm từng tiêu chí;
+- thời gian và chi phí thêm mỗi video.
+
+Biên tập hỏng ở video nào thì điểm video đó ghi "lỗi" (không phải 0). Máy thử lại 1 lần rồi chạy tiếp video sau.
 
 **Nguồn luật: máy tra, bạn xác nhận.** `san-xuat` từ chối chủ đề có nội dung luật mà `nguon_doi_chieu` chưa ghi tới mức khoản. Với QCVN, mức cần đạt là mục, phụ lục hoặc số hiệu biển/vạch. Mỗi lần nhắc một Điều đều phải có khoản. Lý do từ chối ghi ở cột `ghi_chu_may` của tab Ý tưởng. Chủ đề ghi "Không cần nguồn luật" thì không bị kiểm tra.
 

@@ -309,6 +309,7 @@ class KetQuaBienTap:
     giay_agent: float = 0.0
     so_luot_agent: int = 0
     chi_phi_agent_usd: float = 0.0
+    loi_agent: str = ""          # biên tập (claude -p) hỏng: điểm 0 là điểm giả, không phải điểm kịch bản
 
     @property
     def dat(self) -> bool:
@@ -404,11 +405,13 @@ def bien_tap(P: Path, *, goc: Path = GOC, agent: Callable[..., dict] = goi_agent
             agent_tc = {x.get("ma"): x for x in agent_tc if isinstance(x, dict)}
         kq.goi_y_sua = [str(x)[:300] for x in out.get("goi_y_sua") or []][:8]
         if ra.get("is_error") or not agent_tc:
-            kq.canh_bao.append(f"biên tập không ghi được diem.json: {str(ra.get('result'))[:200]}")
+            kq.loi_agent = f"biên tập không ghi được diem.json: {str(ra.get('result'))[:200]}"
+            kq.canh_bao.append(kq.loi_agent)
     kq.tieu_chi, kq.diem = tinh_diem(rb, agent_tc, km)
     kq.giay = round(time.monotonic() - t0, 1)
     ket = {"ma_video": kq.ma_video, "diem_kich_ban": kq.diem, "nguong": kq.nguong, "dat": kq.dat, "chan": kq.chan,
-           "tieu_chi": kq.tieu_chi, "goi_y_sua": kq.goi_y_sua, "canh_bao": kq.canh_bao, "kiem_may": km.tran,
+           "tieu_chi": kq.tieu_chi, "goi_y_sua": kq.goi_y_sua, "canh_bao": kq.canh_bao, "loi_agent": kq.loi_agent,
+           "kiem_may": km.tran,
            "do": km.do, "cong_thuc_hook": kq.cong_thuc_hook, "rubric_phien_ban": rb.get("phien_ban"),
            "agent": {"so_luot": kq.so_luot_agent, "giay": round(kq.giay_agent, 1),
                      "chi_phi_usd": round(kq.chi_phi_agent_usd, 4)}, "giay": kq.giay}

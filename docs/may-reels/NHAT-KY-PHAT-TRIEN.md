@@ -4,6 +4,37 @@ Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết 
 
 File tạo ngày 2026-11-19. Các mục từ 2026-11-15 đến 2026-11-18 (cuối file) chuyển nguyên văn từ `KE-HOACH.md` mục 1, 7–10 ngày 2026-11-21; các phiên đó còn ở lịch sử git của nhánh `kenh-vanxuan`. Quyết định đã chốt: `QUYET-DINH.md`.
 
+## 2026-11-23: C2b việc 6, so sánh trước sau
+
+**Mục tiêu:** viết lại 3 video đã làm bằng bộ biên kịch (chỉ kế hoạch, không dựng), chấm cạnh bản cũ bằng cùng một biên tập, báo chi phí thêm.
+
+**Đã làm:**
+- Lệnh `bien-kich so-sanh --ma <mã> [--ma ...]` (`may_reels/so_sanh_kich_ban.py`). Kịch bản cũ lấy từ `ke_hoach.json`, hoặc dựng lại từ `artifacts/script.json` với dự án dựng tay (vx-005). Kết quả và báo cáo ở `projects/_may_reels/so-sanh/` (bị git bỏ qua). Không đụng `projects/<mã>/`, không ghi Sheet.
+- Sửa lỗi báo cáo ghi "Điểm cũ 0" khi biên tập hỏng: `KetQuaBienTap.loi_agent`. So sánh ghi "lỗi" cho bản đó, thử lại đúng 1 lần (cả người viết lẫn biên tập), rồi chạy tiếp video sau. Có test.
+- Lần chạy 2026-11-22 hỏng cả 3 video vì phiên đó đi qua router AI local (Connection refused). Đã gỡ cấu hình router, chạy lại 2026-11-23 bằng Claude Code trực tiếp.
+
+**Kết quả** (ngưỡng 75, không vòng sửa nào):
+
+| Video | Cũ | Mới |
+|---|---|---|
+| vx-005 A1 lái xe 150cc | 59 | 86 |
+| vx-006 ngã tư không đèn, không biển | 73 | 90 |
+| vx-007 vòng xuyến | 79 | 84 |
+
+- Biên tập thêm trung bình 51 s và 0,43 USD mỗi video (claude -p tự báo; gói Claude Code không tính theo lượt). Người viết lần đầu 324 s, 1,97 USD.
+- Biên tập bắt được ở bản mới:
+  - câu không có trong trích nguồn (vx-007 "ngược chiều kim đồng hồ"; vx-006 "xe to hay xe nhỏ");
+  - lời kêu gọi lệch người xem (vx-005);
+  - câu đọc tên luật dài; chữ trên màn hình lặp lời nói.
+- Người duyệt sửa tay sau khi chấm (chưa chấm lại):
+  - vx-005 s6 thêm ý A1 đổi sang hạng A vẫn giới hạn dưới 175 phân khối (Điều 89 khoản 3);
+  - vx-005 kêu gọi đổi thành mời học hạng A. Câu này chưa có trong danh sách CTA của kênh;
+  - vx-007 giữ câu ngược chiều kim đồng hồ như điều quan sát trên đường, bỏ gắn nguồn luật.
+
+**Còn dở:** luồng sản xuất (`qua_bien_tap`) vẫn coi biên tập hỏng là điểm 0.
+
+**Test:** `tests/may_reels` 358/358. Toàn bộ repo 3307 qua, 1 hỏng (test webp upstream).
+
 ## 2026-11-21 (2): C2b, bộ biên kịch
 
 **Mục tiêu:** kịch bản đạt mức người viết nội dung chuyên nghiệp; lỗi kịch bản bị bắt trước khi tốn công sinh giọng và dựng. Chạy theo `LO-TRINH.md` bước 3, trước C1 và C2.

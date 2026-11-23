@@ -1,6 +1,6 @@
 # Máy Reels: bộ biên kịch (viết lời)
 
-Skill cho agent viết kế hoạch (`claude -p`). Được gọi từ `skills/may-reels/san-xuat-khong-hoi.md`, bước 1, khi chạy lệnh `san-xuat` hoặc `sua`. Skill áp dụng cho **mọi kênh**; mọi giá trị riêng đọc từ `brand/<kenh>/`.
+Skill cho agent viết kế hoạch (`claude -p`). Được gọi từ `skills/may-reels/san-xuat-khong-hoi.md`, bước 1, khi chạy lệnh `san-xuat`, `sua` hoặc `bien-kich so-sanh`. Skill áp dụng cho **mọi kênh**; mọi giá trị riêng đọc từ `brand/<kenh>/`.
 
 Skill này lo phần **lời**: lời đọc, thẻ chữ, câu hook, câu chốt, CTA. Phần chọn cảnh, caption và nguồn luật vẫn theo `san-xuat-khong-hoi.md`.
 

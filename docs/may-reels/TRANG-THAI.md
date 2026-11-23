@@ -10,7 +10,7 @@ Người chỉ duyệt ở hai chỗ trên Sheet: duyệt chủ đề (cổng A)
 
 Thứ tự các bước tiếp theo: xem LO-TRINH.md (chỉ có ở máy).
 
-## Cập nhật lần cuối: 2026-11-21 (C2b: bộ biên kịch)
+## Cập nhật lần cuối: 2026-11-23 (C2b việc 6: so sánh trước sau)
 
 ## Các prompt đã chạy
 
@@ -32,7 +32,7 @@ Lấy từ git log và `LO-TRINH.md`. Chi tiết từng phiên: `NHAT-KY-PHAT-TR
 | C0: Nạp chiến lược | 2026-11-21 | `e6c9288` (.gitignore `81798b7`) | `dinh-dang.yaml`, `lich.yaml`, schema, `chien-luoc kiem-tra` |
 | M: Trí nhớ dự án | 2026-11-21 | `daa8eeb` | File này, `QUYET-DINH.md`, tách `KE-HOACH.md`, `test_tai_lieu.py` |
 | C0b-1: Trạm phân tích | 2026-11-20 | repo riêng | Xong phần thử nghiệm (ở repo `tram-phan-tich`) |
-| C2b: Bộ biên kịch | 2026-11-21 | commit của phiên này | `bien-kich.md`, `bien-tap.md`, `may_reels/bien_tap.py`; thư viện hook, giọng nói, giữ chân, rubric kịch bản; 16 kịch bản mẫu chờ duyệt. Việc 1–5 xong; việc 6 (so sánh trước sau) chưa xong |
+| C2b: Bộ biên kịch | 2026-11-21, 2026-11-23 | 6d0f07f (việc 1–5), commit việc 6 | `bien-kich.md`, `bien-tap.md`, `may_reels/bien_tap.py`; thư viện hook, giọng nói, giữ chân, rubric kịch bản; 16 kịch bản mẫu chờ duyệt. Việc 6: `bien-kich so-sanh` trên vx-005/006/007, điểm kịch bản cũ 59/73/79 → mới 86/90/84, biên tập thêm ~51 s mỗi video |
 | C1: Chủ đề theo nhóm, lịch tuần | — | — | chưa chạy |
 | C2: Kịch bản chuyển đổi, mã VX | — | — | chưa chạy |
 | C3: Video giọng thật của thầy | — | — | chưa chạy |
@@ -58,6 +58,7 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 - `dung-lai --ma <mã>`: dựng lại theo mẫu hiện tại, giữ kế hoạch.
 - `thay-canh`: thay cảnh tạm bằng cảnh thật khi Cần quay ghi "Đã quay".
 - `chien-luoc kiem-tra --kenh <mã>`: kiểm dữ liệu chiến lược của kênh.
+- `bien-kich so-sanh --ma <mã video> [--ma ...]`: viết lại kịch bản video đã làm bằng bộ biên kịch (chỉ kế hoạch), chấm cạnh bản cũ, báo cáo ở `projects/_may_reels/so-sanh/BAO-CAO.md`.
 - `cham-lai --kenh <mã>`: chấm lại video trong Hàng chờ theo rubric.
 - `hieu-chinh --kenh <mã>`: so điểm máy với `diem_cua_toi`, đề xuất sửa rubric.
 - `nguon-luat [ap-dung] --kenh <mã>`: máy đề xuất điều khoản luật; `ap-dung` chép nguồn đã xác nhận.
@@ -72,7 +73,7 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 - `may_reels/`: code Python của máy (Sheet, job, sản xuất, chấm điểm, kho, nguồn luật, đăng, dọn dẹp). Điểm vào `__main__.py`.
 - `may_reels/dung/`: bộ dựng tất định (kiểm kế hoạch, giọng, cảnh, HyperFrames `hf.py`, tự kiểm).
 - `skills/may-reels/`: skill cho agent `claude -p` (sản xuất, biên kịch, biên tập, chấm điểm, tra nguồn luật, gắn nhãn cảnh, gợi ý quay).
-- `may_reels/bien_tap.py`: biên tập kịch bản trước khi dựng (máy kiểm chữ, biên tập riêng, điểm).
+- `may_reels/bien_tap.py`, `may_reels/so_sanh_kich_ban.py`: biên tập kịch bản trước khi dựng (máy kiểm chữ, biên tập riêng, điểm), so sánh trước sau.
 - `brand/<kênh>/hook.yaml`, `brand/<kênh>/giong-noi.yaml`, `brand/<kênh>/giu-chan.yaml`, `brand/<kênh>/rubric-kich-ban.yaml`: thư viện tay nghề của bộ biên kịch (sửa tay).
 - `brand/<kênh>/kich-ban-mau/`: kịch bản mẫu mỗi định dạng; chỉ mẫu `da_duyet` được dùng làm ví dụ.
 - `docs/may-reels/tham-khao/marketingskills/`: nguồn tham khảo (MIT, ghim commit), không phải skill.
@@ -91,7 +92,8 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 
 ## Đang dở
 
-- **C2b việc 6 (so sánh trước sau) chưa xong.** Lần chạy 2026-11-21 hỏng vì hết hạn mức Claude. Code dở để ngoài commit việc 1–5; chạy lại ở phiên sau, khi hạn mức hồi.
+- **Biên tập hỏng khi sản xuất thật** (`san_xuat.qua_bien_tap`) vẫn tính điểm 0 và trả người viết sửa theo điểm giả. `bien-kich so-sanh` đã xử lý đúng (ghi "lỗi", thử lại 1 lần); luồng sản xuất chưa sửa.
+- **Lời kêu gọi mời học hạng A** (người duyệt sửa vx-005 trong bản so sánh) chưa có trong danh sách `cta` của kênh; thêm vào thư mục kênh gốc trước khi dựng.
 - **vx-007 "Chờ duyệt"**, bản `vx-007-vong-xuyen-v3.mp4` (2026-11-20, `dung-lai`): điểm 70 (dưới 75) vì trần tổng "phần lớn là cảnh tạm" (40% cảnh thật); kỹ thuật 96. `text-wrap:balance` cho tiêu đề thêm **sau** khi dựng v3.
 - vx-006: người dùng đã đổi sang "Duyệt" (2026-11-20); dựng ngày 2026-11-16 theo mẫu cũ (chữ dưới 42px).
 - Dữ liệu C0 chưa có code sản xuất nào dùng (sản xuất vẫn theo `san-xuat.yaml khung_nhip`); C1, C2 sẽ dùng.
@@ -108,7 +110,7 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 
 1. `brand/vanxuan/ban-hang.yaml` (chỉ có ở máy): còn thiếu khoản gồm/không gồm, ngày hết hạn ưu đãi, xác nhận sân thực hành và câu "không phát sinh", số buổi, quy trình, giấy tờ, lịch khai giảng, mồi nhử, người đồng ý lên hình. Chặn một phần C1, và C2, C4.
 2. Kho cảnh chưa có "thầy nói trước máy" (7 định dạng cần), "học viên nói trước máy", "nhận bằng". Chặn C3 phần 2.
-3. Duyệt kịch bản mẫu sau khi C2b chạy (`cho_duyet` → `da_duyet`).
+3. Duyệt 16 kịch bản mẫu C2b trong `brand/vanxuan/kich-ban-mau/` (`cho_duyet` → `da_duyet`).
 4. Facebook: `fb_reels.page_id` trong `brand/vanxuan/dang-bai.yaml` và token trong `.env` (`CAI-DAT-DANG-BAI.md` mục A). YouTube: `kenh_id`, `made_for_kids`, `contains_synthetic_media`. Giờ đăng, số video mỗi ngày (`QUYET-DINH.md` câu 6).
 5. Giấy phép thương mại của VieNeu và PhoWhisper: chưa xác minh.
 6. Bốn quyết định chấm điểm của máy (`QUYET-DINH.md` B3); gợi ý tự động hóa (2026-11-20) chưa chọn.
@@ -118,10 +120,11 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 
 ## Việc tiếp theo
 
-C2b việc 6 (so sánh trước sau), rồi C1, C2, C3 phần 1. Thứ tự đầy đủ và điều kiện từng bước: LO-TRINH.md (chỉ có ở máy).
+C1 (chủ đề theo nhóm và lịch tuần), rồi C2, C3 phần 1. Thứ tự đầy đủ và điều kiện từng bước: LO-TRINH.md (chỉ có ở máy).
 
 ## Test
 
+- 2026-11-23 (C2b việc 6): `tests/may_reels` 358/358. Toàn bộ repo: 3307 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-21 (C2b việc 1–5): `tests/may_reels` 355/355. Toàn bộ repo: 3305 qua, 18 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-21 (bước M): `tests/may_reels` 312/312. Toàn bộ repo: 3258 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-21 (C0 commit): `tests/may_reels` 306/306. Toàn bộ repo: 3237 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").

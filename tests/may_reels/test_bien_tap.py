@@ -387,3 +387,92 @@ def test_san_xuat_khong_co_rubric_kich_ban_thi_bo_qua(nha_may):
                   dung=dung_gia({"kt-005-cd-a": [(MA_OK, {"diem_qa": 90})]}), log=lambda s: None)
     assert ds[0].trang_thai == "cho_duyet" and bt == [] and ds[0].diem_kich_ban is None
     assert {d["diem_kich_ban"] for d in S.doc_dong(bang, HANG_CHO)} == {""}
+
+
+# ---------------------------------------------------------------- so sánh trước sau
+def test_so_sanh_viet_lai_chi_ke_hoach_va_bao_cao(repo_bt):
+    from may_reels.so_sanh_kich_ban import THU_MUC, so_sanh
+    goc = repo_bt
+    P = goc / "projects" / "kt-005-cd-a"
+    P.mkdir()
+    cu = ke_hoach(ma_video="kt-005-cd-a")
+    (P / "ke_hoach.json").write_text(json.dumps(cu, ensure_ascii=False), encoding="utf-8")
+    (P / "reel_job.json").write_text(json.dumps({"ma_video": "kt-005-cd-a", "kenh": "kenhthu", "ma_chu_de": "cd-a",
+                                                 "chu_de": "A?"}), encoding="utf-8")
+    truoc = sorted(p.name for p in P.iterdir())
+    viet = []
+
+    def agent(prompt, *, du_an, goc):
+        if "bien-tap.md" in prompt:
+            return agent_bien_tap([])(prompt, du_an=du_an, goc=goc)
+        viet.append(json.loads((du_an / "yeu_cau.json").read_text(encoding="utf-8")))
+        kh = kh_moi(ma_video="kt-005-cd-a")
+        kh["doan"][4]["loi"] = "Có biển thì nhường bên trái, không biển thì bên phải."
+        (du_an / "ke_hoach.json").write_text(json.dumps(kh, ensure_ascii=False), encoding="utf-8")
+        return {"result": "ok", "duration_ms": 5000, "total_cost_usd": 0.3}
+
+    import may_reels.bien_tap as mod
+    ds = so_sanh(["kt-005-cd-a"], goc=goc, agent=agent,
+                 bien_tap=lambda p, goc, log, cau_truc=True: mod.bien_tap(p, goc=goc, log=log, cau_truc=cau_truc,
+                                                                         agent=agent_bien_tap([])),
+                 log=lambda s: None)
+    k = ds[0]
+    assert not k.loi and k.cu.diem == 85 and k.moi.diem == 85 and k.loi_ke_hoach == []
+    assert viet[0]["nguon_luat_da_mo"] == cu["nguon_luat"] and viet[0]["che_do"].startswith("so_sanh")
+    assert sorted(p.name for p in P.iterdir()) == truoc            # không đụng dự án gốc
+    bc = (goc / THU_MUC / "BAO-CAO.md").read_text(encoding="utf-8")
+    assert "Nhớ ba điều này" in bc and "Có biển thì nhường bên trái" in bc and "**chọn**" in bc
+
+
+def test_ke_hoach_cu_tu_script_json(tmp_path):
+    from may_reels.so_sanh_kich_ban import ke_hoach_cu
+    P = tmp_path / "p"
+    (P / "artifacts").mkdir(parents=True)
+    secs = [{"id": f"s{i}", "text": f"Lời {i}.", **({"source_ref": "Luật X, Điều 1 — https://x.vn"} if i in (2, 3) else {})}
+            for i in range(1, 6)]
+    (P / "artifacts" / "script.json").write_text(json.dumps({"title": "T", "sections": secs}), encoding="utf-8")
+    kh = ke_hoach_cu(P, {"ma_video": "m", "kenh": "k", "ma_chu_de": "c"}, SX, {"tru_cot": "1 phút luật mới"})
+    assert [d["vai"] for d in kh["doan"]] == ["hook", "than", "than", "chot", "cta"]
+    assert kh["khung_nhip"] == "mot-phut-luat-moi" and len(kh["nguon_luat"]) == 1
+    assert kh["nguon_luat"][0]["link"] == "https://x.vn" and kh["doan"][1]["nguon_ids"] == ["n1"]
+
+
+def _du_an_so_sanh(goc, ma):
+    P = goc / "projects" / ma
+    P.mkdir()
+    (P / "ke_hoach.json").write_text(json.dumps(ke_hoach(ma_video=ma), ensure_ascii=False), encoding="utf-8")
+    (P / "reel_job.json").write_text(json.dumps({"ma_video": ma, "kenh": "kenhthu", "ma_chu_de": "cd-a", "chu_de": "A?"}),
+                                     encoding="utf-8")
+
+
+def test_so_sanh_bien_tap_loi_ghi_loi_thu_lai_1_lan_va_chay_tiep(repo_bt):
+    """Biên tập hỏng: báo cáo ghi "lỗi" (không phải điểm 0), thử lại đúng 1 lần, video sau vẫn chạy."""
+    from may_reels.so_sanh_kich_ban import THU_MUC, so_sanh
+    import may_reels.bien_tap as mod
+    goc = repo_bt
+    for ma in ("kt-006-cd-a", "kt-007-cd-a"):
+        _du_an_so_sanh(goc, ma)
+    goi_bt = []
+
+    def bt_agent(prompt, *, du_an, goc):
+        goi_bt.append(du_an)
+        if "kt-006" in str(du_an):
+            return {"is_error": True, "result": "Connection refused", "duration_ms": 100}
+        return agent_bien_tap([])(prompt, du_an=du_an, goc=goc)
+
+    def agent(prompt, *, du_an, goc):
+        (du_an / "ke_hoach.json").write_text(json.dumps(kh_moi(ma_video=du_an.parent.name), ensure_ascii=False),
+                                             encoding="utf-8")
+        return {"result": "ok", "duration_ms": 1000, "total_cost_usd": 0.1}
+
+    ds = so_sanh(["kt-006-cd-a", "kt-007-cd-a"], goc=goc, agent=agent,
+                 bien_tap=lambda p, goc, log, cau_truc=True: mod.bien_tap(p, goc=goc, log=log, cau_truc=cau_truc,
+                                                                         agent=bt_agent),
+                 log=lambda s: None)
+    loi, ok = ds
+    assert sum("kt-006" in str(p) for p in goi_bt) == 4          # cũ 2 lần + mới 2 lần, không hơn
+    assert loi.moi is None and "biên tập bản cũ lỗi" in loi.loi and "biên tập bản mới lỗi" in loi.loi
+    assert not ok.loi and ok.cu.diem == 85 and ok.moi.diem == 85
+    bc = (goc / THU_MUC / "BAO-CAO.md").read_text(encoding="utf-8")
+    assert "| kt-006-cd-a | lỗi | lỗi |" in bc and "| kt-007-cd-a | 85 | 85 |" in bc
+    assert "Connection refused" in bc

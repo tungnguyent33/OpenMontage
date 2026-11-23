@@ -204,7 +204,7 @@ Thiết kế và kết quả chạy: `NHAT-KY-PHAT-TRIEN.md`, mục 2026-11-16. 
 - **Kịch bản mẫu chỉ dùng khi đã duyệt.** `brand/<kenh>/kich-ban-mau/*.yaml` máy soạn ở trạng thái `cho_duyet`; người viết chỉ dùng mẫu `da_duyet` làm ví dụ. Mẫu được commit lên repo công khai nên số liệu bán hàng luôn để ô `[chờ anh xác nhận]`.
 - **Hàng chờ có thêm 2 cột máy:** `diem_kich_ban` và `cong_thuc_hook`, nối vào cuối. Mục đích: buổi xem lại hằng tuần (C5) so được công thức hook nào thắng.
 - **Nguồn tham khảo** marketingskills (MIT, commit `5b2b400`) chép vào `docs/may-reels/tham-khao/marketingskills/`, không cài thành skill.
-- File: `may_reels/bien_tap.py`, `may_reels/san_xuat.py` (`qua_bien_tap`), `brand/vanxuan/hook.yaml`, `giong-noi.yaml`, `giu-chan.yaml`, `rubric-kich-ban.yaml`.
+- File: `may_reels/bien_tap.py`, `may_reels/san_xuat.py` (`qua_bien_tap`), `may_reels/so_sanh_kich_ban.py`, `brand/vanxuan/hook.yaml`, `giong-noi.yaml`, `giu-chan.yaml`, `rubric-kich-ban.yaml`.
 
 ---
 

@@ -9,6 +9,7 @@
     python -m may_reels dung-lai --ma <mã video>
     python -m may_reels thay-canh
     python -m may_reels chien-luoc kiem-tra --kenh <mã> [--chi-tiet]
+    python -m may_reels bien-kich so-sanh --ma <mã video> [--ma ...]
     python -m may_reels dang [--that]
     python -m may_reels dang-nhap drive
     python -m may_reels dang-nhap youtube --kenh <mã>
@@ -221,6 +222,17 @@ def lenh_chien_luoc(a) -> int:
     return 1 if bc.loi else 0
 
 
+def lenh_bien_kich_so_sanh(a) -> int:
+    from may_reels.so_sanh_kich_ban import _diem, so_sanh
+    from tools_local.nap_kenh import nap_env
+    nap_env()
+    ds = so_sanh(a.ma)
+    for k in ds:
+        print(f"  {k.ma_video}: cũ {_diem(k.cu)} -> mới {_diem(k.moi)} | thêm {k.giay_them:.0f}s, "
+              f"{k.usd_them:.2f} USD" + (f" | LỖI: {k.loi}" if k.loi else ""))
+    return 1 if any(k.loi for k in ds) else 0
+
+
 def lenh_dung_lai(a) -> int:
     from may_reels.sua import GOC, dung_lai
     ma = a.ma
@@ -364,6 +376,11 @@ def main(argv: list[str] | None = None) -> int:
     p2.add_argument("--chi-tiet", action="store_true", help="liệt kê hết mục trống và giả thuyết")
     p2.set_defaults(ham=lenh_chien_luoc)
 
+    bk = sub.add_parser("bien-kich", help="bộ biên kịch: viết lời và biên tập kịch bản").add_subparsers(dest="lenh", required=True)
+    p = bk.add_parser("so-sanh", help="viết lại kịch bản các video đã làm bằng quy trình mới (chỉ kế hoạch), chấm cạnh bản cũ")
+    p.add_argument("--ma", action="append", required=True, help="mã video đã làm, lặp lại cho nhiều video")
+    p.set_defaults(ham=lenh_bien_kich_so_sanh)
+
     p = sub.add_parser("dung-lai", help="dựng lại một video theo mẫu hiện tại, giữ nguyên kế hoạch, cập nhật Hàng chờ")
     p.add_argument("--ma", required=True, help="mã video, ví dụ vx-007-vong-xuyen")
     p.set_defaults(ham=lenh_dung_lai)
@@ -411,7 +428,7 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(ham=lenh_dang_nhap)
 
     a = ap.parse_args(argv)
-    dai = a.ham in (lenh_san_xuat, lenh_sua, lenh_thay_canh, lenh_dung, lenh_cham_lai, lenh_nguon_luat, lenh_kho_nap,
+    dai = a.ham in (lenh_san_xuat, lenh_bien_kich_so_sanh, lenh_sua, lenh_thay_canh, lenh_dung, lenh_cham_lai, lenh_nguon_luat, lenh_kho_nap,
                     lenh_kho_thieu)
     if dai:
         giu_may_thuc(True)
