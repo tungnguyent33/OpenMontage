@@ -389,6 +389,50 @@ def test_san_xuat_khong_co_rubric_kich_ban_thi_bo_qua(nha_may):
     assert {d["diem_kich_ban"] for d in S.doc_dong(bang, HANG_CHO)} == {""}
 
 
+def bien_tap_hong(lan_hong: int, goi: list, diem: int = 82):
+    """Biên tập hỏng lan_hong lần đầu (điểm giả 0 kèm loi_agent), sau đó chấm được `diem`."""
+    def ham(P, *, goc, log=None):
+        goi.append(P.name)
+        if len(goi) <= lan_hong:
+            return BT.KetQuaBienTap(P.name, diem=0, nguong=75, so_luot_agent=1, giay_agent=2,
+                                    loi_agent="biên tập không ghi được diem.json: hết hạn mức")
+        return BT.KetQuaBienTap(P.name, diem=diem, nguong=75, cong_thuc_hook="noi-nguoc", so_luot_agent=1)
+    return ham
+
+
+def test_san_xuat_bien_tap_hong_ca_lan_thu_lai_khong_dung_diem_gia(nha_may):
+    goc, bang = nha_may
+    _co_rubric(goc)
+    viet, bt = [], []
+    ds = san_xuat(bang, "kenhthu", 1, goc=goc, agent=agent_viet(viet), bien_tap=bien_tap_hong(2, bt),
+                  dung=dung_gia({"kt-005-cd-a": [(MA_OK, {"diem_qa": 90})]}), log=lambda s: None)
+    k = ds[0]
+    assert k.trang_thai == "cho_duyet" and k.diem_kich_ban is None
+    assert len(bt) == 2 and len(viet) == 1          # thử lại đúng 1 lần, KHÔNG trả người viết sửa theo điểm 0
+    assert not viet[0].get("phan_hoi")
+    assert k.so_luot_agent == 1 + 2
+    hang = S.doc_dong(bang, HANG_CHO)
+    assert {d["diem_kich_ban"] for d in hang} == {""}
+    assert all(d["canh_bao"].startswith(BT.CANH_BAO_LOI_BIEN_TAP) for d in hang)
+    assert not any("Kịch bản dưới ngưỡng" in d["canh_bao"] for d in hang)
+    nk = [d for d in S.doc_dong(bang, NHAT_KY) if d["buoc"] == "bien_tap"]
+    assert len(nk) == 1 and nk[0]["ket_qua"] == "loi" and "biên tập lỗi" in nk[0]["chi_tiet"]
+    assert "kịch bản 0/" not in nk[0]["chi_tiet"]
+    sx = [d for d in S.doc_dong(bang, NHAT_KY) if d["buoc"] == "san_xuat"]
+    assert "kịch bản -" in sx[0]["chi_tiet"] and "kịch bản None" not in sx[0]["chi_tiet"]
+
+
+def test_san_xuat_bien_tap_hong_mot_lan_thu_lai_duoc(nha_may):
+    goc, bang = nha_may
+    _co_rubric(goc)
+    viet, bt = [], []
+    ds = san_xuat(bang, "kenhthu", 1, goc=goc, agent=agent_viet(viet), bien_tap=bien_tap_hong(1, bt),
+                  dung=dung_gia({"kt-005-cd-a": [(MA_OK, {"diem_qa": 90})]}), log=lambda s: None)
+    k = ds[0]
+    assert k.trang_thai == "cho_duyet" and k.diem_kich_ban == 82 and len(bt) == 2 and len(viet) == 1
+    assert not any(BT.CANH_BAO_LOI_BIEN_TAP in d["canh_bao"] for d in S.doc_dong(bang, HANG_CHO))
+
+
 # ---------------------------------------------------------------- so sánh trước sau
 def test_so_sanh_viet_lai_chi_ke_hoach_va_bao_cao(repo_bt):
     from may_reels.so_sanh_kich_ban import THU_MUC, so_sanh

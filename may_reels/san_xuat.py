@@ -260,8 +260,11 @@ def qua_bien_tap(P: Path, kq: KetQuaJob, *, kenh: str, goc: Path, agent: Callabl
                  bien_tap: Callable, ghi_yeu_cau: Callable[[str], None], log: Callable[[str], None] = print,
                  bang=None):
     """Biên tập kịch bản trước khi dựng: dưới ngưỡng thì trả về người viết sửa, tối đa rubric-kich-ban.yaml
-    so_vong_sua vòng, rồi vẫn đi tiếp (kèm cảnh báo). Kênh chưa có rubric-kich-ban.yaml: bỏ qua bước này."""
-    from may_reels.bien_tap import CANH_BAO_DUOI_NGUONG as CB_KB, co_rubric, doc_rubric_kb
+    so_vong_sua vòng, rồi vẫn đi tiếp (kèm cảnh báo). Kênh chưa có rubric-kich-ban.yaml: bỏ qua bước này.
+    Biên tập hỏng (claude -p không ghi được diem.json): thử lại 1 lần; vẫn hỏng thì KHÔNG coi là điểm 0, không trả
+    người viết sửa theo điểm giả: dừng biên tập, đi tiếp với kế hoạch hiện có, diem_kich_ban để trống, kèm cảnh báo."""
+    from may_reels.bien_tap import (CANH_BAO_DUOI_NGUONG as CB_KB, CANH_BAO_LOI_BIEN_TAP, bien_tap_thu_lai,
+                                    co_rubric, doc_rubric_kb)
     if not co_rubric(kenh, goc):
         log(f"  [{P.name}] bỏ qua biên tập: chưa có brand/{kenh}/rubric-kich-ban.yaml")
         return None
@@ -270,7 +273,7 @@ def qua_bien_tap(P: Path, kq: KetQuaJob, *, kenh: str, goc: Path, agent: Callabl
     for v in range(so_vong + 1):
         kq.vong_kich_ban = v
         log(f"  [{P.name}] biên tập kịch bản vòng {v}")
-        kb = bien_tap(P, goc=goc, log=log)
+        kb = bien_tap_thu_lai(bien_tap, P, goc=goc, log=log)
         kq.so_luot_agent += kb.so_luot_agent
         kq.giay_agent += kb.giay_agent
         kq.chi_phi_agent_usd += kb.chi_phi_agent_usd
@@ -279,11 +282,18 @@ def qua_bien_tap(P: Path, kq: KetQuaJob, *, kenh: str, goc: Path, agent: Callabl
                 them_nhat_ky(bang, NHAT_KY, [{
                     "thoi_gian": bay_gio_vn(), "kenh": kenh, "ma": kq.ma_video, "buoc": "bien_tap", "che_do": "that",
                     "ket_qua": "ok" if kb.dat else "loi",
-                    "chi_tiet": (f"kịch bản {kb.diem}/{kb.nguong}; vòng {v}; hook {kb.cong_thuc_hook}; "
-                                 f"agent {kb.giay_agent:.0f}s" + (f"; CHẶN: {'; '.join(kb.chan)}" if kb.chan else ""))[:500],
+                    "chi_tiet": ((f"biên tập lỗi (đã thử lại 1 lần), không có điểm kịch bản; vòng {v}; {kb.loi_agent}"
+                                  if kb.loi_agent else
+                                  f"kịch bản {kb.diem}/{kb.nguong}; vòng {v}; hook {kb.cong_thuc_hook}; "
+                                  f"agent {kb.giay_agent:.0f}s" + (f"; CHẶN: {'; '.join(kb.chan)}" if kb.chan else "")))[:500],
                     "chi_phi_vnd": "0", "thoi_gian_chay_giay": str(kb.giay), "so_luot_tro_ly": str(kb.so_luot_agent)}])
             except Exception:  # pragma: no cover
                 pass
+        if kb.loi_agent:
+            log(f"  [{P.name}] biên tập lỗi cả lần thử lại: đi tiếp không có điểm kịch bản")
+            kq.diem_kich_ban, kq.cong_thuc_hook = None, kb.cong_thuc_hook
+            kq.canh_bao_kich_ban = [CANH_BAO_LOI_BIEN_TAP]
+            return kb
         if kb.dat or v == so_vong:
             break
         ph = kb.phan_hoi()
@@ -299,6 +309,11 @@ def qua_bien_tap(P: Path, kq: KetQuaJob, *, kenh: str, goc: Path, agent: Callabl
     if not kb.dat:
         kq.canh_bao_kich_ban = [f"{CB_KB} ({kb.diem}/{kb.nguong})"]
     return kb
+
+
+def _kb(kq: KetQuaJob) -> str:
+    """Điểm kịch bản để in: '-' khi chưa chấm hoặc biên tập lỗi (không in điểm giả)."""
+    return "-" if kq.diem_kich_ban is None else str(kq.diem_kich_ban)
 
 
 def cham_mac_dinh(ma_video: str, *, goc: Path = GOC, log: Callable[[str], None] = print, tom: dict | None = None):
@@ -451,7 +466,7 @@ def san_xuat_mot(bang: BangNguon, chu_de: dict, ma_video: str, *, goc: Path = GO
             them_nhat_ky(bang, NHAT_KY, [{
                 "thoi_gian": bay_gio_vn(), "kenh": kenh, "ma": ma_video, "buoc": "san_xuat", "che_do": "that",
                 "ket_qua": "ok" if kq.trang_thai in ("cho_duyet", "cho_quay") else "loi",
-                "chi_tiet": (f"{kq.trang_thai}; QA {kq.diem_qa}; kịch bản {kq.diem_kich_ban}; vòng sửa {kq.vong}; "
+                "chi_tiet": (f"{kq.trang_thai}; QA {kq.diem_qa}; kịch bản {_kb(kq)}; vòng sửa {kq.vong}; "
                              f"agent {kq.giay_agent:.0f}s "
                              f"(claude báo {kq.chi_phi_agent_usd:.2f} USD); "
                              f"{'; '.join(kq.canh_bao)} {kq.loi}")[:500],
@@ -482,7 +497,7 @@ def san_xuat(bang: BangNguon, kenh: str, so_luong: int, *, goc: Path = GOC, log:
             i_moi += 1
         log(f"== {ma_video}: {cd.get('chu_de')}")
         kq = san_xuat_mot(bang, cd, ma_video, goc=goc, log=log, **kw)
-        log(f"   -> {kq.trang_thai} | QA {kq.diem_qa} | kịch bản {kq.diem_kich_ban} | {kq.giay:.0f}s | "
+        log(f"   -> {kq.trang_thai} | QA {kq.diem_qa} | kịch bản {_kb(kq)} | {kq.giay:.0f}s | "
             f"{'; '.join(kq.canh_bao)} {kq.loi}")
         ket_qua.append(kq)
     return ket_qua

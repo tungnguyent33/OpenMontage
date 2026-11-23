@@ -33,6 +33,7 @@ GOC = Path(__file__).resolve().parent.parent
 SKILL_BIEN_TAP = "skills/may-reels/bien-tap.md"
 THU_MUC = "bien_tap"
 CANH_BAO_DUOI_NGUONG = "Kịch bản dưới ngưỡng"
+CANH_BAO_LOI_BIEN_TAP = "Biên tập lỗi, chưa có điểm kịch bản"
 
 
 class LoiRubricKichBan(RuntimeError):
@@ -420,3 +421,17 @@ def bien_tap(P: Path, *, goc: Path = GOC, agent: Callable[..., dict] = goi_agent
     (P / "diem_kich_ban.json").write_text(json.dumps(ket, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
     log(f"  [{kq.ma_video}] kịch bản {kq.diem}/{kq.nguong}" + (f"; CHẶN: {'; '.join(kq.chan)[:200]}" if kq.chan else ""))
     return kq
+
+
+def bien_tap_thu_lai(bien_tap_fn: Callable, P: Path, *, goc: Path = GOC, log: Callable[[str], None] = print,
+                     **kw) -> KetQuaBienTap:
+    """Gọi biên tập; biên tập hỏng (loi_agent) thì thử lại đúng 1 lần. Trả kết quả lần cuối, cộng dồn lượt, giây và
+    chi phí của cả hai lần. Vẫn hỏng thì kết quả còn loi_agent: người gọi quyết (KHÔNG dùng điểm 0 của nó)."""
+    kqb = bien_tap_fn(P, goc=goc, log=log, **kw)
+    if not kqb.loi_agent:
+        return kqb
+    log(f"  biên tập lỗi, thử lại 1 lần: {kqb.loi_agent[:200]}")
+    kqb2 = bien_tap_fn(P, goc=goc, log=log, **kw)
+    for a in ("so_luot_agent", "giay_agent", "chi_phi_agent_usd"):
+        setattr(kqb2, a, getattr(kqb2, a) + getattr(kqb, a))
+    return kqb2

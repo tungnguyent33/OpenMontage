@@ -84,13 +84,8 @@ def _diem(kqb) -> str:
 
 def _bien_tap_1_lan_thu_lai(bien_tap: Callable, P: Path, *, goc: Path, log: Callable[[str], None], **kw):
     """Gọi biên tập; hỏng thì thử lại đúng 1 lần; vẫn hỏng thì ném LoiBienTap."""
-    kqb = bien_tap(P, goc=goc, log=log, **kw)
-    if not kqb.loi_agent:
-        return kqb
-    log(f"  biên tập lỗi, thử lại 1 lần: {kqb.loi_agent[:200]}")
-    kqb2 = bien_tap(P, goc=goc, log=log, **kw)
-    for a in ("so_luot_agent", "giay_agent", "chi_phi_agent_usd"):
-        setattr(kqb2, a, getattr(kqb2, a) + getattr(kqb, a))
+    from may_reels.bien_tap import bien_tap_thu_lai
+    kqb2 = bien_tap_thu_lai(bien_tap, P, goc=goc, log=log, **kw)
     if kqb2.loi_agent:
         raise LoiBienTap(kqb2.loi_agent)
     return kqb2

@@ -205,6 +205,7 @@ Thiết kế và kết quả chạy: `NHAT-KY-PHAT-TRIEN.md`, mục 2026-11-16. 
 - **Hàng chờ có thêm 2 cột máy:** `diem_kich_ban` và `cong_thuc_hook`, nối vào cuối. Mục đích: buổi xem lại hằng tuần (C5) so được công thức hook nào thắng.
 - **Nguồn tham khảo** marketingskills (MIT, commit `5b2b400`) chép vào `docs/may-reels/tham-khao/marketingskills/`, không cài thành skill.
 - File: `may_reels/bien_tap.py`, `may_reels/san_xuat.py` (`qua_bien_tap`), `may_reels/so_sanh_kich_ban.py`, `brand/vanxuan/hook.yaml`, `giong-noi.yaml`, `giu-chan.yaml`, `rubric-kich-ban.yaml`.
+- **Cập nhật 2026-11-23: biên tập hỏng không phải điểm 0.** Biên tập (`claude -p`) không ghi được `diem.json` thì thử lại 1 lần (`bien_tap.bien_tap_thu_lai`, dùng chung cho sản xuất và `bien-kich so-sanh`). Vẫn hỏng: sản xuất dừng biên tập, dựng tiếp với kế hoạch hiện có, `diem_kich_ban` trống, cảnh báo "Biên tập lỗi, chưa có điểm kịch bản"; `so-sanh` ghi "lỗi". Lý do: điểm 0 là điểm giả, trả người viết sửa theo nó chỉ tốn lượt agent và có thể làm hỏng kịch bản tốt. Không chặn video vì người vẫn duyệt ở cổng B.
 
 ---
 

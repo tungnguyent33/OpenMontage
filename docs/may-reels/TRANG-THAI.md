@@ -10,7 +10,7 @@ Người chỉ duyệt ở hai chỗ trên Sheet: duyệt chủ đề (cổng A)
 
 Thứ tự các bước tiếp theo: xem LO-TRINH.md (chỉ có ở máy).
 
-## Cập nhật lần cuối: 2026-11-23 (C2b việc 6: so sánh trước sau)
+## Cập nhật lần cuối: 2026-11-23 (sửa điểm 0 giả khi sản xuất; thêm Điều 89 khoản 3 điểm a)
 
 ## Các prompt đã chạy
 
@@ -92,7 +92,7 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 
 ## Đang dở
 
-- **Biên tập hỏng khi sản xuất thật** (`san_xuat.qua_bien_tap`) vẫn tính điểm 0 và trả người viết sửa theo điểm giả. `bien-kich so-sanh` đã xử lý đúng (ghi "lỗi", thử lại 1 lần); luồng sản xuất chưa sửa.
+- Nguồn `a1-xe-150cc` đã thêm Điều 89 khoản 3 điểm a (chu-de.md, brand.json, kết quả tra nguồn); tab Ý tưởng trên Sheet còn `nguon_de_xuat` cũ, ô Ý chính chưa có ý đổi sang hạng A.
 - **Lời kêu gọi mời học hạng A** (người duyệt sửa vx-005 trong bản so sánh) chưa có trong danh sách `cta` của kênh; thêm vào thư mục kênh gốc trước khi dựng.
 - **vx-007 "Chờ duyệt"**, bản `vx-007-vong-xuyen-v3.mp4` (2026-11-20, `dung-lai`): điểm 70 (dưới 75) vì trần tổng "phần lớn là cảnh tạm" (40% cảnh thật); kỹ thuật 96. `text-wrap:balance` cho tiêu đề thêm **sau** khi dựng v3.
 - vx-006: người dùng đã đổi sang "Duyệt" (2026-11-20); dựng ngày 2026-11-16 theo mẫu cũ (chữ dưới 42px).
@@ -124,6 +124,7 @@ C1 (chủ đề theo nhóm và lịch tuần), rồi C2, C3 phần 1. Thứ tự
 
 ## Test
 
+- 2026-11-23 (sửa điểm 0 giả): `tests/may_reels` 360/360. Toàn bộ repo: 3309 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-23 (C2b việc 6): `tests/may_reels` 358/358. Toàn bộ repo: 3307 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-21 (C2b việc 1–5): `tests/may_reels` 355/355. Toàn bộ repo: 3305 qua, 18 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-21 (bước M): `tests/may_reels` 312/312. Toàn bộ repo: 3258 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").

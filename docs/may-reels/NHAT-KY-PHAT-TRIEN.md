@@ -4,6 +4,17 @@ Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết 
 
 File tạo ngày 2026-11-19. Các mục từ 2026-11-15 đến 2026-11-18 (cuối file) chuyển nguyên văn từ `KE-HOACH.md` mục 1, 7–10 ngày 2026-11-21; các phiên đó còn ở lịch sử git của nhánh `kenh-vanxuan`. Quyết định đã chốt: `QUYET-DINH.md`.
 
+## 2026-11-23 (2): sửa điểm 0 giả khi sản xuất, thêm Điều 89 khoản 3 điểm a
+
+**Đã làm:**
+- `san_xuat.qua_bien_tap`: biên tập hỏng thì thử lại 1 lần; vẫn hỏng thì không trả người viết sửa theo điểm 0, dựng tiếp với kế hoạch hiện có, `diem_kich_ban` trống, cảnh báo "Biên tập lỗi, chưa có điểm kịch bản" (`bien_tap.CANH_BAO_LOI_BIEN_TAP`). Nhật ký ghi "biên tập lỗi", không ghi "kịch bản 0/75"; dòng `san_xuat` và log in "kịch bản -" thay cho "None".
+- Hàm thử lại chung `bien_tap.bien_tap_thu_lai`; `so_sanh_kich_ban._bien_tap_1_lan_thu_lai` gọi nó rồi ném `LoiBienTap` như trước.
+- Nguồn `a1-xe-150cc`: ô "Nguồn cần đối chiếu" trong `chu-de.md` của kênh gốc (theo yêu cầu người dùng, sao lưu `chu-de.md.bak-20261123-225509`) đổi từ "… và Điều 89" thành "Luật 36/2024/QH15 Điều 57 khoản 1 điểm a; Điều 89 khoản 2 điểm a và khoản 3 điểm a"; nạp lại `brand.json`. `projects/_may_reels/nguon_luat/vanxuan/a1-xe-150cc.json` (ngoài git, sao lưu `.json.bak-20261123`) thêm nguyên văn khoản 3 điểm a. Nguyên văn lấy từ nguồn n4 của kế hoạch so sánh vx-005; phần đầu câu đối chiếu lại khớp từng chữ trên hethongphapluat.com (không phải trang chính thức).
+
+**Chưa làm:** tab Ý tưởng trên Sheet còn `nguon_de_xuat` cũ của `a1-xe-150cc` (không ghi Sheet trong phiên này). Ô "Ý chính" của chủ đề chưa có ý "đổi sang hạng A vẫn dưới 175 phân khối".
+
+**Test:** `tests/may_reels` 360/360 (thêm 2 test biên tập hỏng khi sản xuất).
+
 ## 2026-11-23: C2b việc 6, so sánh trước sau
 
 **Mục tiêu:** viết lại 3 video đã làm bằng bộ biên kịch (chỉ kế hoạch, không dựng), chấm cạnh bản cũ bằng cùng một biên tập, báo chi phí thêm.
