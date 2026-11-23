@@ -15,6 +15,8 @@ File tạo ngày 2026-11-19. Các mục từ 2026-11-15 đến 2026-11-18 (cuố
 
 **Test:** `tests/may_reels` 360/360 (thêm 2 test biên tập hỏng khi sản xuất).
 
+**Sau đó:** người dùng đọc 16 kịch bản mẫu, thấy ổn; đổi cả 16 sang `da_duyet` (`ngay_cap_nhat` 2026-11-23). Mẫu không lên Sheet (file ví dụ cho người viết, không phải video). `tests/may_reels` 360/360.
+
 ## 2026-11-23: C2b việc 6, so sánh trước sau
 
 **Mục tiêu:** viết lại 3 video đã làm bằng bộ biên kịch (chỉ kế hoạch, không dựng), chấm cạnh bản cũ bằng cùng một biên tập, báo chi phí thêm.

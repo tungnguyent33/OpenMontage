@@ -26,5 +26,5 @@ vi_sao_hay:
 can_xac_nhan:
   - "Cần câu hỏi thật của khách (tab Câu hỏi khách, C1). Chụp bình luận phải ẩn tên và ảnh người viết."
   - "CTA 'Bạn chọn A hay B?' chỉ hợp khi câu hỏi có hai lựa chọn; không thì dùng câu khác trong brand.json cta."
-trang_thai: cho_duyet
-ngay_cap_nhat: 2026-11-21
+trang_thai: da_duyet
+ngay_cap_nhat: 2026-11-23

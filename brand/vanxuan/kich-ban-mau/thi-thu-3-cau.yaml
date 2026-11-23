@@ -26,5 +26,5 @@ vi_sao_hay:
 can_xac_nhan:
   - "Ba câu hỏi lấy từ bộ đề chính thức, có nguồn (dinh-dang.yaml dieu_kien)."
   - "Quy định điểm liệt chỉ đúng tới hết 28/02/2027 (xem y_chinh của chủ đề cau-diem-liet); sau ngày đó phải kiểm lại."
-trang_thai: cho_duyet
-ngay_cap_nhat: 2026-11-21
+trang_thai: da_duyet
+ngay_cap_nhat: 2026-11-23

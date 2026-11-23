@@ -27,5 +27,5 @@ can_xac_nhan:
   - "Ngày khai giảng, giờ học, số buổi (ban-hang.yaml lich_khai_giang). Định dạng chỉ làm khi có ngày thật chưa qua."
   - "Câu 'nghỉ Tết về quê' hợp mùa trước Tết (lich.yaml); ngoài mùa thì bỏ vế này."
   - "s5 'ôn trên điện thoại': chỉ giữ khi bộ câu ôn hoặc công cụ ôn trên website gửi được cho học viên."
-trang_thai: cho_duyet
-ngay_cap_nhat: 2026-11-21
+trang_thai: da_duyet
+ngay_cap_nhat: 2026-11-23

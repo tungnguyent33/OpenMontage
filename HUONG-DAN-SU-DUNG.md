@@ -311,7 +311,7 @@ Hàng chờ có thêm cột `diem_kich_ban` (điểm biên tập) và `cong_thuc
 
 Biên tập hỏng (ví dụ hết hạn mức `claude -p`): máy thử lại 1 lần. Vẫn hỏng thì video **vẫn được dựng** với kịch bản đang có, cột `diem_kich_ban` để trống, cột `canh_bao` ghi "Biên tập lỗi, chưa có điểm kịch bản", tab Nhật ký ghi dòng `bien_tap` là `loi`. Máy không coi lỗi này là điểm 0 và không bắt người viết sửa theo điểm đó. Muốn có điểm kịch bản thì đổi video sang Sửa hoặc xem kỹ kịch bản khi duyệt.
 
-- **Kịch bản mẫu chờ bạn duyệt:** `brand/vanxuan/kich-ban-mau/`, mỗi định dạng một file.
+- **Kịch bản mẫu:** `brand/vanxuan/kich-ban-mau/`, mỗi định dạng một file. Mẫu không hiện trên Sheet: duyệt bằng cách đổi `trang_thai: cho_duyet` thành `da_duyet` trong file (16 mẫu đã duyệt ngày 2026-11-23). Người viết chỉ học theo mẫu `da_duyet`.
   - Bạn sửa lời và điền các ô `[chờ anh xác nhận]` ngay trong file, nhưng **không ghi số bán hàng thật vào đây** (file lên GitHub), chỉ ghi lời.
   - Xong thì đổi `trang_thai: cho_duyet` thành `da_duyet`. Máy chỉ học theo mẫu đã duyệt.
 - **Thư viện tay nghề** (sửa tay): `hook.yaml`, `giong-noi.yaml` (xưng hô, từ tránh, cách nói số), `giu-chan.yaml`, `rubric-kich-ban.yaml` (tiêu chí, ngưỡng, giới hạn âm tiết). Mọi mục đều là `gia_thuyet` cho tới khi buổi xem lại hằng tuần có số liệu.
