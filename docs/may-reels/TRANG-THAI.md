@@ -32,7 +32,7 @@ Lấy từ git log và `LO-TRINH.md`. Chi tiết từng phiên: `NHAT-KY-PHAT-TR
 | C0: Nạp chiến lược | 2026-11-21 | `e6c9288` (.gitignore `81798b7`) | `dinh-dang.yaml`, `lich.yaml`, schema, `chien-luoc kiem-tra` |
 | M: Trí nhớ dự án | 2026-11-21 | `daa8eeb` | File này, `QUYET-DINH.md`, tách `KE-HOACH.md`, `test_tai_lieu.py` |
 | C0b-1: Trạm phân tích | 2026-11-20 | repo riêng | Xong phần thử nghiệm (ở repo `tram-phan-tich`) |
-| C2b: Bộ biên kịch | 2026-11-21, 2026-11-23 | 6d0f07f (việc 1–5), commit việc 6 | `bien-kich.md`, `bien-tap.md`, `may_reels/bien_tap.py`; thư viện hook, giọng nói, giữ chân, rubric kịch bản; 16 kịch bản mẫu (đã duyệt 2026-11-23). Việc 6: `bien-kich so-sanh` trên vx-005/006/007, điểm kịch bản cũ 59/73/79 → mới 86/90/84, biên tập thêm ~51 s mỗi video |
+| C2b: Bộ biên kịch | 2026-11-21, 2026-11-23 | `6d0f07f` (việc 1–5), `bdecc1b` (việc 6), `358ad96` (sửa điểm 0 giả khi sản xuất) | `bien-kich.md`, `bien-tap.md`, `may_reels/bien_tap.py`; thư viện hook, giọng nói, giữ chân, rubric kịch bản; 16 kịch bản mẫu (đã duyệt 2026-11-23). Việc 6: `bien-kich so-sanh` trên vx-005/006/007, điểm kịch bản cũ 59/73/79 → mới 86/90/84, biên tập thêm ~51 s mỗi video |
 | C1: Chủ đề theo nhóm, lịch tuần | — | — | chưa chạy |
 | C2: Kịch bản chuyển đổi, mã VX | — | — | chưa chạy |
 | C3: Video giọng thật của thầy | — | — | chưa chạy |
