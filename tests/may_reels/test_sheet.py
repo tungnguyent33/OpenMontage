@@ -10,7 +10,7 @@ import pytest
 
 from may_reels import sheet as S
 from may_reels.chu_de import nap_chu_de
-from may_reels.cot_sheet import CAN_QUAY, HANG_CHO, NHAT_KY, QUYEN_HINH, TAT_CA, Y_TUONG, NGUOI
+from may_reels.cot_sheet import CAN_QUAY, CAU_HOI_KHACH, HANG_CHO, NHAT_KY, QUYEN_HINH, TAT_CA, Y_TUONG, NGUOI
 from tests.may_reels.sheet_gia import BangGia
 
 REPO = Path(__file__).resolve().parents[2]
@@ -30,7 +30,11 @@ def cot(tab_gia, ten):
 
 # ---------------------------------------------------------------- cấu trúc cột
 def test_khai_bao_cot_dung_yeu_cau():
-    assert [t.ten for t in TAT_CA] == ["Ý tưởng", "Hàng chờ", "Cần quay", "Số liệu", "Nhật ký", "Quyền hình"]
+    assert [t.ten for t in TAT_CA] == ["Ý tưởng", "Hàng chờ", "Cần quay", "Số liệu", "Nhật ký", "Quyền hình",
+                                       "Câu hỏi khách"]
+    # Câu hỏi khách: người thêm dòng, máy chỉ đánh mã và ghi chủ đề đã dùng.
+    assert CAU_HOI_KHACH.cot_nguoi == ["kenh", "ngay", "nen_tang", "cau_hoi", "nhom"]
+    assert CAU_HOI_KHACH.khoa == ("ma_cau_hoi",)
     # Quyền hình: người xác nhận, máy chỉ ghi lại đã áp dụng hay chưa.
     assert QUYEN_HINH.cot_nguoi == ["xac_nhan_quyen", "ghi_chu_nguoi"]
     assert QUYEN_HINH.lay("xac_nhan_quyen").lua_chon == ("Chờ", "Đồng ý", "Không")
@@ -42,7 +46,9 @@ def test_khai_bao_cot_dung_yeu_cau():
     assert CAN_QUAY.cot_nguoi == ["trang_thai_quay", "ghi_chu_nguoi"]
     assert Y_TUONG.ten_cot == ["ma", "kenh", "tru_cot", "dinh_dang", "chu_de", "hook_de_xuat",
                                "nguon_doi_chieu", "diem", "duyet_chu_de", "trang_thai_san_xuat", "nguon_de_xuat",
-                               "trich_nguyen_van", "link_nguon", "ngay_tra", "ghi_chu_may", "xac_nhan_nguon"]
+                               "trich_nguyen_van", "link_nguon", "ngay_tra", "ghi_chu_may", "xac_nhan_nguon",
+                               "doi_tuong", "noi_lo", "tang", "moi_nhu", "ngay_du_kien", "cau_hoi_khach",
+                               "nguon_y_tuong"]
     assert Y_TUONG.cot_nguoi == ["duyet_chu_de", "xac_nhan_nguon"]
     assert Y_TUONG.lay("xac_nhan_nguon").lua_chon == ("Đúng", "Sai")
     assert Y_TUONG.lay("duyet_chu_de").lua_chon == ("Chờ", "Làm", "Bỏ")
@@ -104,7 +110,7 @@ def test_init_them_cot_thieu_vao_cuoi_khong_dung_cot_va_du_lieu_cua_nguoi():
 def test_init_che_do_thu_khong_ghi():
     b = BangGia()
     kq = S.khoi_tao(b, thu=True)
-    assert len(kq.tab_tao_moi) == len(TAT_CA) == 6 and b.tabs == [] and b.yeu_cau_dinh_dang == []
+    assert len(kq.tab_tao_moi) == len(TAT_CA) == 7 and b.tabs == [] and b.yeu_cau_dinh_dang == []
 
 
 # ---------------------------------------------------------------- ghi theo khóa

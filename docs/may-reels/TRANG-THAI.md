@@ -10,7 +10,7 @@ Người chỉ duyệt ở hai chỗ trên Sheet: duyệt chủ đề (cổng A)
 
 Thứ tự các bước tiếp theo: xem LO-TRINH.md (chỉ có ở máy).
 
-## Cập nhật lần cuối: 2026-11-23 (nhập dữ liệu bán hàng; ưu đãi thường xuyên; cấm "không phát sinh")
+## Cập nhật lần cuối: 2026-11-25 (C1: chủ đề theo nhóm và lịch tuần)
 
 ## Các prompt đã chạy
 
@@ -33,7 +33,7 @@ Lấy từ git log và `LO-TRINH.md`. Chi tiết từng phiên: `NHAT-KY-PHAT-TR
 | M: Trí nhớ dự án | 2026-11-21 | `daa8eeb` | File này, `QUYET-DINH.md`, tách `KE-HOACH.md`, `test_tai_lieu.py` |
 | C0b-1: Trạm phân tích | 2026-11-20 | repo riêng | Xong phần thử nghiệm (ở repo `tram-phan-tich`) |
 | C2b: Bộ biên kịch | 2026-11-21, 2026-11-23 | `6d0f07f` (việc 1–5), `bdecc1b` (việc 6), `358ad96` (sửa điểm 0 giả khi sản xuất) | `bien-kich.md`, `bien-tap.md`, `may_reels/bien_tap.py`; thư viện hook, giọng nói, giữ chân, rubric kịch bản; 16 kịch bản mẫu (đã duyệt 2026-11-23). Việc 6: `bien-kich so-sanh` trên vx-005/006/007, điểm kịch bản cũ 59/73/79 → mới 86/90/84, biên tập thêm ~51 s mỗi video |
-| C1: Chủ đề theo nhóm, lịch tuần | — | — | chưa chạy |
+| C1: Chủ đề theo nhóm, lịch tuần | 2026-11-25 | (commit C1) | `y-tuong --tuan`, `skills/may-reels/y-tuong.md`, tab Câu hỏi khách, 7 cột mới tab Ý tưởng, chủ đề máy ở `chu-de-may.md` (`QUYET-DINH.md` B13). Chạy thật 2026-W49: 7/7 chủ đề, 1 lượt agent, 110 s, 0,77 USD |
 | C2: Kịch bản chuyển đổi, mã VX | — | — | chưa chạy |
 | C3: Video giọng thật của thầy | — | — | chưa chạy |
 | C0b-2: Nối kết quả trạm | — | — | chưa chạy |
@@ -62,6 +62,7 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 - `cham-lai --kenh <mã>`: chấm lại video trong Hàng chờ theo rubric.
 - `hieu-chinh --kenh <mã>`: so điểm máy với `diem_cua_toi`, đề xuất sửa rubric.
 - `nguon-luat [ap-dung] --kenh <mã>`: máy đề xuất điều khoản luật; `ap-dung` chép nguồn đã xác nhận.
+- `y-tuong --kenh <mã> [--tuan YYYY-Www]`: lấp 7 ô lịch tuần bằng chủ đề có nhóm, nỗi lo, tầng (tab Ý tưởng); đọc tab Câu hỏi khách.
 - `kho nap --kenh <mã>`: nạp clip mới quay vào kho cảnh.
 - `kho thieu --kenh <mã>`: danh sách cần quay theo buổi.
 - `dung-luong`: báo dung lượng media (chỉ đọc).
@@ -75,6 +76,7 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 - `skills/may-reels/`: skill cho agent `claude -p` (sản xuất, biên kịch, biên tập, chấm điểm, tra nguồn luật, gắn nhãn cảnh, gợi ý quay).
 - `may_reels/bien_tap.py`, `may_reels/so_sanh_kich_ban.py`: biên tập kịch bản trước khi dựng (máy kiểm chữ, biên tập riêng, điểm), so sánh trước sau.
 - `brand/<kênh>/hook.yaml`, `brand/<kênh>/giong-noi.yaml`, `brand/<kênh>/giu-chan.yaml`, `brand/<kênh>/rubric-kich-ban.yaml`: thư viện tay nghề của bộ biên kịch (sửa tay).
+- `may_reels/y_tuong.py`: chủ đề theo lịch tuần (C1). Chủ đề máy đề xuất ghi vào `<KENH_GOC_DIR>/<kênh>/chu-de-may.md` (ngoài repo), `nap_kenh.py` đọc cùng `chu-de.md`, ghi bản đọc vào `brand/<kênh>/_local/chu-de-may.json` (chỉ có ở máy, không commit).
 - `brand/<kênh>/kich-ban-mau/`: kịch bản mẫu mỗi định dạng; chỉ mẫu `da_duyet` được dùng làm ví dụ.
 - `docs/may-reels/tham-khao/marketingskills/`: nguồn tham khảo (MIT, ghim commit), không phải skill.
 - `brand/<kênh>/`: dữ liệu từng kênh. `brand.json` do `tools_local/nap_kenh.py` sinh; cấu hình `san-xuat.yaml`, `rubric.yaml`, `dang-bai.yaml`, `dinh-dang.yaml`, `lich.yaml`; bản mẫu `*.mau.yaml`.
@@ -92,6 +94,8 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 
 ## Đang dở
 
+- **Tuần 2026-W49 có 7 chủ đề chờ duyệt** trên tab Ý tưởng (3 chuyển đổi đều dùng định dạng `di-xe-chua-co-bang` vì học phí chưa có số buổi và chưa có lịch khai giảng). Hai chủ đề luật `bien-cam-nguoc-chieu`, `bia-mot-lon` cần `nguon-luat` trước khi sản xuất. Chủ đề chuyển đổi chưa có mồi nhử: CTA chỉ mời nhắn hỏi.
+- Tab Câu hỏi khách còn trống: tuần này chưa có chủ đề nào từ câu hỏi thật.
 - Nguồn `a1-xe-150cc` đã thêm Điều 89 khoản 3 điểm a (chu-de.md, brand.json, kết quả tra nguồn); tab Ý tưởng trên Sheet còn `nguon_de_xuat` cũ, ô Ý chính chưa có ý đổi sang hạng A.
 - **Lời kêu gọi mời học hạng A** (người duyệt sửa vx-005 trong bản so sánh) chưa có trong danh sách `cta` của kênh; thêm vào thư mục kênh gốc trước khi dựng.
 - **vx-007 "Chờ duyệt"**, bản `vx-007-vong-xuyen-v3.mp4` (2026-11-20, `dung-lai`): điểm 70 (dưới 75) vì trần tổng "phần lớn là cảnh tạm" (40% cảnh thật); kỹ thuật 96. `text-wrap:balance` cho tiêu đề thêm **sau** khi dựng v3.
@@ -108,7 +112,7 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 
 ## Chờ người dùng
 
-1. `brand/vanxuan/ban-hang.yaml` (chỉ có ở máy; 2026-11-23 đã xác nhận khoản gồm/không gồm, 3 sân thực hành, câu chi phí thay "không phát sinh", ưu đãi 2 người là thường xuyên): còn thiếu số tiền phí thi lại, số buổi, quy trình, giấy tờ, lịch khai giảng, mồi nhử, người đồng ý lên hình. Chặn một phần C1, và C2, C4.
+1. `brand/vanxuan/ban-hang.yaml` (chỉ có ở máy; 2026-11-23 đã xác nhận khoản gồm/không gồm, 3 sân thực hành, câu chi phí thay "không phát sinh", ưu đãi 2 người là thường xuyên): còn thiếu số tiền phí thi lại, số buổi, quy trình, giấy tờ, lịch khai giảng, mồi nhử, người đồng ý lên hình. Thiếu số buổi và lịch khai giảng thì `y-tuong` không làm được định dạng học phí, lịch khai giảng (dùng dự phòng); chặn C2, C4.
 2. Kho cảnh chưa có "thầy nói trước máy" (7 định dạng cần), "học viên nói trước máy", "nhận bằng". Chặn C3 phần 2.
 3. ~~Duyệt 16 kịch bản mẫu C2b~~: người dùng duyệt cả 16 ngày 2026-11-23 (`da_duyet`).
 4. Facebook: `fb_reels.page_id` trong `brand/vanxuan/dang-bai.yaml` và token trong `.env` (`CAI-DAT-DANG-BAI.md` mục A). YouTube: `kenh_id`, `made_for_kids`, `contains_synthetic_media`. Giờ đăng, số video mỗi ngày (`QUYET-DINH.md` câu 6).
@@ -116,14 +120,16 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 6. Bốn quyết định chấm điểm của máy (`QUYET-DINH.md` B3); gợi ý tự động hóa (2026-11-20) chưa chọn.
 7. vx-006: xem khung giây 20,2 (agent cho rằng sơ đồ vẽ sai thứ tự xe). Đổi vx-006 sang Sửa kèm ghi chú nếu cần.
 8. Nghe 0–16 s của `canh-quay/Nhieu_hoc_vien_nu_Cancanh.mp4` (thầy có nói "vừa xoay bánh đi vòng quay lại chứ"?).
-9. Thả 15–20 video mẫu vào `<KENH_GOC_DIR>/vanxuan/mau/video/` và chạy trạm (chặn C0b-2).
+9. Duyệt 7 chủ đề tuần 2026-W49 (tab Ý tưởng, `duyet_chu_de`), dán câu hỏi thật của khách vào tab Câu hỏi khách (bỏ tên, số điện thoại; ghi cột `kenh`).
+10. Thả 15–20 video mẫu vào `<KENH_GOC_DIR>/vanxuan/mau/video/` và chạy trạm (chặn C0b-2).
 
 ## Việc tiếp theo
 
-C1 (chủ đề theo nhóm và lịch tuần), rồi C2, C3 phần 1. Thứ tự đầy đủ và điều kiện từng bước: LO-TRINH.md (chỉ có ở máy).
+C2 (kịch bản chuyển đổi, mã VX; cần người đổi "Làm" cho ít nhất 2 chủ đề chuyển đổi), hoặc C3 phần 1 trong lúc chờ. Thứ tự đầy đủ và điều kiện từng bước: LO-TRINH.md (chỉ có ở máy).
 
 ## Test
 
+- 2026-11-25 (C1): `tests/may_reels` 408/408 (thêm 36 test). Toàn bộ repo: 3357 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-23 (ưu đãi thường xuyên): `tests/may_reels` 372/372. Toàn bộ repo (chạy 2026-11-25): 3320 qua, 19 bỏ qua, 2 hỏng: `test_fal_resume_output_format[webp]` (từ trước) và `tests/lib/test_terminal_frame_pacing.py::test_trace_matches_the_actual_terminal_scene_cursor` (phụ thuộc môi trường: hỏng khi thiếu `PYTHONUTF8=1` vì đọc stdout bằng cp1252; đặt `PYTHONUTF8=1` thì qua 8/8; không liên quan thay đổi lần này).
 - 2026-11-23 (sửa điểm 0 giả): `tests/may_reels` 360/360. Toàn bộ repo: 3309 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-23 (C2b việc 6): `tests/may_reels` 358/358. Toàn bộ repo: 3307 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").

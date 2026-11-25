@@ -98,6 +98,14 @@ Y_TUONG = Tab(
         _m("ngay_tra"),
         _m("ghi_chu_may", "lý do không đề xuất, mâu thuẫn với y_chinh, hiệu lực, lý do chưa sản xuất"),
         _n("xac_nhan_nguon", ("Đúng", "Sai"), "người xác nhận nguon_de_xuat; Đúng = cho áp dụng vào chu-de.md"),
+        # Chủ đề theo nhóm và lịch tuần (C1, lệnh y-tuong): thêm sau cột cũ, sheet init chỉ nối cột thiếu vào cuối.
+        _m("doi_tuong", "mã nhóm đối tượng (doi-tuong.yaml), ví dụ n1"),
+        _m("noi_lo", "nỗi lo video gỡ (doi-tuong.yaml noi_lo, hoặc chữ của khách)"),
+        _m("tang", "keo_xem / niem_tin / chuyen_doi"),
+        _m("moi_nhu", "mã mồi nhử đã xác nhận (ban-hang.yaml moi_nhu); trống = chưa có mồi hợp nhóm"),
+        _m("ngay_du_kien", "ngày đăng dự kiến theo lịch tuần (YYYY-MM-DD)"),
+        _m("cau_hoi_khach", "nguyên văn câu hỏi của khách mà chủ đề trả lời (tab Câu hỏi khách)"),
+        _m("nguon_y_tuong", "cau-hoi-khach:<mã> / ma-tran / luat; 'thử mới' khi dành cho nhóm hoặc định dạng chưa thử"),
     ),
     # Một Sheet cho mọi kênh: mã chủ đề chỉ duy nhất trong một kênh, nên khóa gồm cả kênh.
     khoa=("kenh", "ma"),
@@ -187,6 +195,22 @@ QUYEN_HINH = Tab(
     mo_ta="Cảnh mới có mặt người: chưa được dùng cho tới khi người chọn Đồng ý.",
 )
 
+CAU_HOI_KHACH = Tab(
+    "Câu hỏi khách",
+    (
+        # Người thêm dòng (dán câu hỏi thật của khách); máy chỉ đánh mã cho dòng mới và ghi chủ đề đã dùng câu đó.
+        _m("ma_cau_hoi", "máy đánh mã cho dòng mới (ch-xxxxxx)"),
+        _n("kenh", mo_ta="mã kênh (thư mục brand/<kenh>/); bắt buộc"),
+        _n("ngay", mo_ta="ngày khách hỏi (YYYY-MM-DD)"),
+        _n("nen_tang", mo_ta="Facebook / TikTok / YouTube / Zalo / gọi điện / tại trung tâm"),
+        _n("cau_hoi", mo_ta="nguyên văn câu hỏi, ĐÃ BỎ tên và số điện thoại người hỏi"),
+        _n("nhom", mo_ta="mã nhóm nếu biết (n1..), để trống nếu không biết"),
+        _m("da_dung_cho", "mã chủ đề đã dùng câu hỏi này (lệnh y-tuong)"),
+    ),
+    khoa=("ma_cau_hoi",),
+    mo_ta="Câu hỏi thật của khách; nguồn chủ đề ưu tiên số 1 của lệnh y-tuong.",
+)
+
 SO_LIEU = Tab(
     "Số liệu",
     (
@@ -225,7 +249,7 @@ NHAT_KY = Tab(
     mo_ta="Sổ chạy và chi phí. Chỉ thêm dòng.",
 )
 
-TAT_CA: tuple[Tab, ...] = (Y_TUONG, HANG_CHO, CAN_QUAY, SO_LIEU, NHAT_KY, QUYEN_HINH)
+TAT_CA: tuple[Tab, ...] = (Y_TUONG, HANG_CHO, CAN_QUAY, SO_LIEU, NHAT_KY, QUYEN_HINH, CAU_HOI_KHACH)
 
 
 def tab_theo_ten(ten: str) -> Tab:

@@ -4,6 +4,18 @@ Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết 
 
 File tạo ngày 2026-11-19. Các mục từ 2026-11-15 đến 2026-11-18 (cuối file) chuyển nguyên văn từ `KE-HOACH.md` mục 1, 7–10 ngày 2026-11-21; các phiên đó còn ở lịch sử git của nhánh `kenh-vanxuan`. Quyết định đã chốt: `QUYET-DINH.md`.
 
+## 2026-11-25: C1, chủ đề theo nhóm và lịch tuần
+
+**Đã làm:**
+- Lệnh `y-tuong --kenh <mã> [--tuan YYYY-Www] [--thu]` (`may_reels/y_tuong.py`), skill `skills/may-reels/y-tuong.md`. Python lấy ô của tuần từ `lich.yaml`, lọc định dạng theo `dieu_kien` (dữ kiện `da_xac_nhan` của `ban-hang.yaml`, câu hỏi khách), áp mùa (2 ô chuyển đổi đầu), đưa agent câu hỏi khách chưa dùng, ma trận nhóm × nỗi lo chưa làm, chủ đề luật còn lại, lịch sử 60 ngày, nhóm/định dạng chưa thử. Agent ghi `y_tuong.json`; Python kiểm (định dạng đúng ô, nhóm, nỗi lo, cụm từ cấm, câu sáo, hook sáo, gấp gáp giả, số tiền đã xác nhận, dữ kiện bán hàng, trùng 60 ngày, 1 chủ đề thử mới), sai thì một vòng sửa, rồi bỏ kèm lý do ở Nhật ký.
+- Tab Ý tưởng thêm cột máy `doi_tuong`, `noi_lo`, `tang`, `moi_nhu`, `ngay_du_kien`, `cau_hoi_khach`, `nguon_y_tuong`. Tab mới "Câu hỏi khách" (cột người `kenh`, `ngay`, `nen_tang`, `cau_hoi`, `nhom`; máy `ma_cau_hoi`, `da_dung_cho`), `sheet.danh_ma_dong`. `sheet init` đã chạy trên Sheet thật (cũng thêm 2 cột C2b của Hàng chờ còn thiếu).
+- Chủ đề mới ghi `<KENH_GOC_DIR>/<kênh>/chu-de-may.md`; `nap_kenh.py` đọc thêm file này (`tep`) và ghi vào `brand/<kênh>/_local/chu-de-may.json`, không vào `brand.json` (trước khi commit thấy `y_chinh` của chủ đề máy có học phí; `brand.json` được commit), `nguon-luat ap-dung` sửa đúng file, `sheet nap-chu-de` không đè ô `dinh_dang` đã có. `san_xuat._yeu_cau` đổi ô `cau_hoi_khach` (chuỗi) thành danh sách. Quyết định: `QUYET-DINH.md` B13.
+- Chạy thật tuần 2026-W49: 7/7 chủ đề đạt ở vòng 1 (5 mới, 2 chủ đề luật dùng lại: `bien-cam-nguoc-chieu`, `bia-mot-lon`), 1 lượt agent, 110 s, claude báo 0,77 USD. Không chủ đề chuyển đổi nào bị bỏ; thứ Năm và Chủ Nhật dùng dự phòng `di-xe-chua-co-bang` vì `hoc-phi-gom-gi` thiếu số buổi (`khoa_hoc.so_buoi`) và `lich-khai-giang` thiếu ngày khai giảng. Chưa có mồi nhử nên 3 chủ đề chuyển đổi ghi cảnh báo "CTA chỉ mời nhắn hỏi". Tab Câu hỏi khách trống nên không có chủ đề từ câu hỏi thật, thứ Sáu không làm được `tra-loi-binh-luan`.
+
+**Mâu thuẫn với prompt đã xử lý:** prompt không nói chủ đề mới lưu ở đâu; `san-xuat`, `nguon-luat` đọc chủ đề từ `brand.json` (sinh từ `chu-de.md`), nên dùng file riêng `chu-de-may.md` thay vì sửa `chu-de.md`. Thêm cột `cau_hoi_khach`, `nguon_y_tuong` ngoài 6 cột prompt nêu (để sản xuất nhận câu hỏi khách và buổi xem lại biết nguồn chủ đề). Cột `dinh_dang` đã có nên không tạo lại.
+
+**Test:** `tests/may_reels` 408/408 (thêm 36 test: `test_y_tuong.py`, `test_nap_kenh.py`, `test_nguon_luat.py`, `test_sheet.py`). Toàn bộ repo: 3357 qua, 19 bỏ qua, 1 hỏng (`test_fal_resume_output_format[webp]`, từ trước).
+
 ## 2026-11-23 (3): nhập dữ liệu bán hàng, ưu đãi thường xuyên, cấm "không phát sinh"
 
 **Đã làm:**

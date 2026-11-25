@@ -331,6 +331,22 @@ Báo cáo nằm ở `projects/_may_reels/so-sanh/BAO-CAO.md`, gồm:
 
 Biên tập hỏng ở video nào thì điểm video đó ghi "lỗi" (không phải 0). Máy thử lại 1 lần rồi chạy tiếp video sau.
 
+**Chủ đề theo lịch tuần (`y-tuong`).** Mỗi tuần 7 ô theo `brand/<kênh>/lich.yaml` (3 chuyển đổi, 2 niềm tin, 2 kéo xem). Máy lấp các ô còn trống bằng chủ đề ghi rõ cho ai (`doi_tuong`), gỡ nỗi lo gì (`noi_lo`), ở tầng nào (`tang`), ngày đăng dự kiến (`ngay_du_kien`). Chủ đề mới ở trạng thái Chờ: bạn chọn Làm hoặc Bỏ ở `duyet_chu_de` như mọi chủ đề khác.
+
+```powershell
+tools_local\py.cmd -m may_reels sheet init                                   # lần đầu: thêm cột và tab Câu hỏi khách
+tools_local\py.cmd -m may_reels y-tuong --kenh vanxuan --thu                  # xem các ô, định dạng làm được, dữ kiện còn thiếu
+tools_local\py.cmd -m may_reels y-tuong --kenh vanxuan                        # lấp tuần tới (agent viết, máy kiểm, ghi Sheet)
+tools_local\py.cmd -m may_reels y-tuong --kenh vanxuan --tuan 2026-W50        # một tuần cụ thể (tuần ISO)
+```
+
+- **Tab "Câu hỏi khách"** (cột vàng là của bạn): dán câu hỏi thật của khách, **đã bỏ tên và số điện thoại**, ghi `kenh` (bắt buộc), ngày, nền tảng, nhóm nếu biết. Máy tự đánh `ma_cau_hoi` và ghi `da_dung_cho` khi đã dùng câu đó cho một chủ đề. Đây là nguồn chủ đề ưu tiên số 1; sau đó là cặp nhóm × nỗi lo chưa làm (`doi-tuong.yaml`), rồi chủ đề luật còn lại.
+- **Mùa** (`lich.yaml mua_dang_chay`): trong mùa, 2 ô chuyển đổi đầu tiên của tuần phải nói với nhóm của mùa.
+- **Định dạng không làm được** (thiếu dữ kiện trong `ban-hang.yaml`, ví dụ học phí chưa có số buổi, chưa có lịch khai giảng): máy dùng định dạng cùng tầng của ngày khác, cột `nguon_y_tuong` ghi "dự phòng". Không còn định dạng nào thì ô bị bỏ, lý do ghi ở Nhật ký (`y_tuong.bo`).
+- **Máy kiểm trước khi ghi:** định dạng đúng ô, nhóm và nỗi lo có trong `doi-tuong.yaml`, không cụm từ cấm, câu sáo, hook sáo, gấp gáp giả; số tiền chỉ là số đã xác nhận; chủ đề chuyển đổi chỉ dựa vào mục `da_xac_nhan` của `ban-hang.yaml`; không trùng (cùng nhóm, nỗi lo, định dạng) trong 60 ngày; ít nhất 1 chủ đề cho nhóm hoặc định dạng chưa thử (`nguon_y_tuong` ghi "thử mới"). Sai thì agent sửa một vòng; vẫn sai thì bỏ chủ đề đó, ghi lý do.
+- **Chủ đề mới** ghi vào `chu-de-may.md` ở thư mục kênh gốc (file của máy, sao lưu trước khi sửa). `chu-de.md` của bạn không bị đụng; `nap_kenh.py` đọc cả hai file; chủ đề của máy chỉ nằm ở `brand/<kênh>/_local/` (không lên GitHub vì có thể nhắc học phí). Chủ đề luật có sẵn trong `chu-de.md` thì máy dùng lại, chỉ ghi thêm cột trên Sheet.
+- **Chủ đề có nội dung luật** vẫn qua `nguon-luat` như dưới đây (lệnh in sẵn danh sách mã). Ô ngày đã có chủ đề (chưa Bỏ) thì chạy lại không ghi đè; muốn lấp lại một ngày thì chọn Bỏ chủ đề cũ.
+
 **Nguồn luật: máy tra, bạn xác nhận.** `san-xuat` từ chối chủ đề có nội dung luật mà `nguon_doi_chieu` chưa ghi tới mức khoản. Với QCVN, mức cần đạt là mục, phụ lục hoặc số hiệu biển/vạch. Mỗi lần nhắc một Điều đều phải có khoản. Lý do từ chối ghi ở cột `ghi_chu_may` của tab Ý tưởng. Chủ đề ghi "Không cần nguồn luật" thì không bị kiểm tra.
 
 ```powershell
@@ -347,7 +363,7 @@ tools_local\py.cmd -m may_reels nguon-luat ap-dung --kenh vanxuan    # chép ngu
    Không tìm được điều khoản khớp thì ô đề xuất để trống, lý do ghi ở `ghi_chu_may`. Nếu `y_chinh` mâu thuẫn với văn bản, `ghi_chu_may` ghi "MÂU THUẪN y_chinh", và máy không tự sửa `y_chinh`. Chủ đề đã có giá trị ở `xac_nhan_nguon` thì không bị tra đè.
 2. Bạn đọc đoạn trích và mở link, rồi chọn `xac_nhan_nguon` = **Đúng** hoặc **Sai**. Máy không bao giờ tự áp dụng đề xuất chưa được xác nhận.
 3. `nguon-luat ap-dung` xử lý từng dòng theo xác nhận:
-   - **Đúng:** máy sao lưu `chu-de.md` trong thư mục kênh gốc thành `chu-de.md.bak-<giờ>`, chỉ đổi ô nguồn của dòng đó, rồi chạy `nap_kenh.py` và `sheet nap-chu-de`.
+   - **Đúng:** máy sao lưu `chu-de.md` trong thư mục kênh gốc thành `chu-de.md.bak-<giờ>`, chỉ đổi ô nguồn của dòng đó, rồi chạy `nap_kenh.py` và `sheet nap-chu-de`. Chủ đề do `y-tuong` đề xuất thì máy sửa `chu-de-may.md` (sao lưu `chu-de-may.md.bak-<giờ>`).
    - **Sai:** máy giữ nguyên và in nhắc. Bạn sửa `y_chinh` trong `chu-de.md`, xóa ô `xac_nhan_nguon`, rồi chạy lại `nguon-luat`.
 
 ```powershell

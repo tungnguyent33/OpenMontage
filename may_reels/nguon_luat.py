@@ -249,25 +249,39 @@ def ap_dung(bang: BangNguon, kenh: str, *, goc: Path = GOC, thu_muc_kenh: Path |
     if not dung:
         log("Không có đề xuất 'Đúng' nào cần áp dụng.")
         return kq
-    f = thu_muc_kenh / "chu-de.md"
-    text = f.read_bytes().decode("utf-8")
+    # Chủ đề máy đề xuất (y-tuong) nằm ở chu-de-may.md (brand.json ghi "tep"); còn lại ở chu-de.md của người.
+    theo_tep: dict[str, list[dict]] = {}
     for d in dung:
-        text, cu = sua_dong_chu_de(text, d["ma"], d["nguon_de_xuat"])
-        kq["ap_dung"].append((d["ma"], cu, d["nguon_de_xuat"]))
-        log(f"{'[thử] ' if thu else ''}{d['ma']}: {cu!r} -> {d['nguon_de_xuat']!r}")
+        theo_tep.setdefault((cd.get(d["ma"]) or {}).get("tep") or "chu-de.md", []).append(d)
+    van_ban: dict[str, str] = {}
+    for tep, ds in theo_tep.items():
+        f = thu_muc_kenh / tep
+        if not f.is_file():
+            raise RuntimeError(f"Không thấy {tep} của kênh {kenh} (KENH_GOC_DIR)")
+        text = f.read_bytes().decode("utf-8")
+        for d in ds:
+            text, cu = sua_dong_chu_de(text, d["ma"], d["nguon_de_xuat"])
+            kq["ap_dung"].append((d["ma"], cu, d["nguon_de_xuat"]))
+            log(f"{'[thử] ' if thu else ''}{d['ma']} ({tep}): {cu!r} -> {d['nguon_de_xuat']!r}")
+        van_ban[tep] = text
     if thu:
         return kq
-    sl = f.with_name(f"chu-de.md.bak-{datetime.now().strftime('%Y%m%d-%H%M%S')}")
-    shutil.copy2(f, sl)
-    kq["sao_luu"] = sl
-    f.write_bytes(text.encode("utf-8"))
+    sao_luu = []
+    for tep, text in van_ban.items():
+        f = thu_muc_kenh / tep
+        sl = f.with_name(f"{tep}.bak-{datetime.now().strftime('%Y%m%d-%H%M%S')}")
+        shutil.copy2(f, sl)
+        sao_luu.append(sl)
+        f.write_bytes(text.encode("utf-8"))
+    sl = sao_luu[0]
+    kq["sao_luu"], kq["sao_luu_tat_ca"] = sl, sao_luu
     nap(kenh, goc)
     nap_chu_de(bang, kenh, goc=goc)
     ghi_theo_khoa(bang, Y_TUONG, [{"kenh": kenh, "ma": m, "ghi_chu_may": f"Đã áp dụng vào chu-de.md ({bay_gio_vn()})"}
                                   for m, _c, _n in kq["ap_dung"]])
     them_nhat_ky(bang, NHAT_KY, [{"thoi_gian": bay_gio_vn(), "kenh": kenh, "ma": "", "buoc": "nguon_luat.ap_dung",
                                   "che_do": "that", "ket_qua": "ok",
-                                  "chi_tiet": f"áp dụng {[m for m, *_ in kq['ap_dung']]}; sao lưu {sl.name}"[:500],
+                                  "chi_tiet": f"áp dụng {[m for m, *_ in kq['ap_dung']]}; sao lưu {[x.name for x in sao_luu]}"[:500],
                                   "chi_phi_vnd": "0", "thoi_gian_chay_giay": "0", "so_luot_tro_ly": "0"}])
-    log(f"Đã sao lưu {sl.name}, chạy nap_kenh.py và sheet nap-chu-de.")
+    log(f"Đã sao lưu {', '.join(x.name for x in sao_luu)}, chạy nap_kenh.py và sheet nap-chu-de.")
     return kq

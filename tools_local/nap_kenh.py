@@ -57,6 +57,8 @@ FILE_CAN_DOC = [
 ]
 
 BIEN_KENH_GOC = "KENH_GOC_DIR"
+CHU_DE_MAY = "chu-de-may.md"  # bảng chủ đề máy đề xuất (may_reels/y_tuong.py), cùng cột với chu-de.md
+CHU_DE_MAY_JSON = "chu-de-may.json"  # bản đọc của máy, ở brand/<id>/_local/ (gitignore)
 THU_MUC_LOCAL = "_local"  # brand/<id>/_local/: bị gitignore, chứa nội dung không đưa lên repo public
 CONTEXT_CAN = ["business", "brand-style", "icp", "voice-analysis"]
 ANH_DUOI = {".jpg", ".jpeg", ".png", ".webp"}
@@ -363,6 +365,24 @@ def main(argv: list[str] | None = None) -> int:
     if not tien_to or not tm_video:
         canh_bao.append("cau-hinh.yaml thiếu tien_to_ma_video hoặc thu_muc_video: không dò được chủ đề đã làm")
     chu_de = doc_chu_de(doc(kenh / "chu-de.md"), videos_dir, tien_to) if (kenh / "chu-de.md").exists() else []
+    # Chủ đề máy đề xuất (lệnh `python -m may_reels y-tuong`) nằm ở file riêng: chu-de.md là file người sửa tay.
+    # Ý chính của chủ đề máy có thể nhắc học phí, ưu đãi đã xác nhận: ghi vào brand/<id>/_local/ (gitignore),
+    # KHÔNG ghi vào brand.json (được commit). may_reels.chu_de.doc_brand ghép lại khi đọc.
+    chu_de_may = []
+    if (kenh / CHU_DE_MAY).exists():
+        co = {r["ma"] for r in chu_de}
+        for r in doc_chu_de(doc(kenh / CHU_DE_MAY), videos_dir, tien_to):
+            if r["ma"] in co:
+                canh_bao.append(f"{CHU_DE_MAY}: mã {r['ma']} trùng chu-de.md, bỏ dòng của máy")
+                continue
+            co.add(r["ma"])
+            chu_de_may.append({**r, "tep": CHU_DE_MAY})
+    f_may = out / THU_MUC_LOCAL / CHU_DE_MAY_JSON
+    if chu_de_may:
+        f_may.parent.mkdir(parents=True, exist_ok=True)
+        f_may.write_text(json.dumps(chu_de_may, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    elif f_may.exists():
+        f_may.unlink()
 
     qh = ch.get("quyen_hinh") or {}
     kho_dir = kenh / "canh-quay" / "_kho"
@@ -419,6 +439,8 @@ def main(argv: list[str] | None = None) -> int:
         "context": ctx,
         "cam": banned,
         "chu_de": chu_de,
+        "chu_de_may": {"so_luong": len(chu_de_may), "ban_local": f"brand/{ma}/{THU_MUC_LOCAL}/{CHU_DE_MAY_JSON}"}
+        if chu_de_may else None,
         "anh_that": anh,
         "kho_canh": kho,
         "kho_md": "canh-quay/_kho/KHO.md" if (kho_dir / "KHO.md").exists() else None,

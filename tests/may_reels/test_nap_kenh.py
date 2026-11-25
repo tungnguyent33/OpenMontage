@@ -132,3 +132,25 @@ def test_brand_json_da_commit_khong_co_duong_dan_tuyet_doi():
     for f in (REPO / "brand").glob("*/brand.json"):
         raw = f.read_text(encoding="utf-8")
         assert ":\\\\" not in raw and ":/" not in raw.replace("://", ""), f
+
+
+def test_doc_them_chu_de_may_bo_ma_trung(nap, tmp_path):
+    mod, root = nap
+    kenh = tao_kenh(tmp_path)
+    (kenh / mod.CHU_DE_MAY).write_text(
+        CHU_DE.replace("| chu-de-a | t1 | hoi-dap | Chủ đề A |", "| chu-de-c | t2 | chua-bang | Chủ đề C |"),
+        encoding="utf-8")
+    assert mod.main([str(kenh), "--out", str(root / "brand")]) == 0
+    raw, b = doc_brand(root)
+    # chủ đề của máy (ý chính có thể nhắc học phí) chỉ nằm trong _local/ (gitignore), không vào brand.json
+    assert [r["ma"] for r in b["chu_de"]] == ["chu-de-a", "chu-de-b"] and "chu-de-c" not in raw
+    f = root / "brand" / "kenhthu" / mod.THU_MUC_LOCAL / mod.CHU_DE_MAY_JSON
+    may = json.loads(f.read_text(encoding="utf-8"))
+    assert [r["ma"] for r in may] == ["chu-de-c"] and may[0]["tep"] == mod.CHU_DE_MAY
+    assert b["chu_de_may"]["so_luong"] == 1
+    assert any("chu-de-b" in x and "trùng" in x for x in b["canh_bao"])
+    from may_reels.chu_de import doc_brand as doc_brand_may
+    assert [r["ma"] for r in doc_brand_may("kenhthu", root)["chu_de"]] == ["chu-de-a", "chu-de-b", "chu-de-c"]
+    (kenh / mod.CHU_DE_MAY).unlink()            # bỏ file của máy -> bản _local cũ cũng bị xóa
+    assert mod.main([str(kenh), "--out", str(root / "brand")]) == 0
+    assert not f.exists()

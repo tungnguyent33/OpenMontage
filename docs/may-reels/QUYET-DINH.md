@@ -213,6 +213,17 @@ Thiết kế và kết quả chạy: `NHAT-KY-PHAT-TRIEN.md`, mục 2026-11-16. 
 - **Không hứa "không phát sinh".** Thêm vào `quy-tac-rieng.yaml` `cum_tu_cam`: "không phát sinh", "không phát sinh chi phí", "trọn gói 100%", "không mất thêm đồng nào". Câu chi phí đã duyệt: "Đã gồm học, khám sức khỏe và lệ phí thi. Ngoài ra chỉ còn lệ phí cấp bằng theo quy định, và phí thi lại nếu chưa đạt." Lý do: còn lệ phí cấp bằng và phí thi lại người học tự trả.
 - File: `schemas/may-reels/ban-hang.schema.json`, `may_reels/chien_luoc.py`, `may_reels/bien_tap.py`, `brand/vanxuan/quy-tac-rieng.yaml`, `brand/vanxuan/rubric-kich-ban.yaml`, `skills/may-reels/bien-kich.md`.
 
+### B13. Chủ đề theo lịch tuần: file riêng của máy, dự phòng, ô mùa (2026-11-25, C1; máy đề xuất, **chờ người xác nhận**)
+
+- **Chủ đề máy đề xuất ghi vào `<KENH_GOC_DIR>/<kênh>/chu-de-may.md`**, cùng cột với `chu-de.md`. `tools_local/nap_kenh.py` đọc cả hai (mã trùng: giữ dòng của `chu-de.md`, cảnh báo), dòng của máy KHÔNG vào `brand.json` (được commit) mà vào `brand/<kênh>/_local/chu-de-may.json` (gitignore) vì ý chính có thể nhắc học phí, ưu đãi đã xác nhận; `may_reels.chu_de.doc_brand` và `dung.ke_hoach.doc_brand` ghép lại khi đọc (`ghep_chu_de_may`), dòng ghi `tep: chu-de-may.md`; `nguon-luat ap-dung` sửa đúng file. Lý do: `chu-de.md` là file người sửa tay và còn được script bên dự án Facebook đọc; `san-xuat`, `nguon-luat`, `kho thieu` vẫn chạy y nguyên vì đều đọc brand.json.
+- **Ô không có định dạng nào làm được** (thiếu dữ kiện `ban-hang.yaml` hoặc chưa có câu hỏi khách): dùng định dạng làm được của ngày khác cùng tầng, ghi "dự phòng". Lý do: lấp đủ 7 ô mà không nói dữ kiện chưa xác nhận. Lịch Chủ Nhật trong `lich.yaml` đã ghi cách dự phòng riêng (video chuyển đổi ra nhiều tin nhắn nhất tuần trước); khi có số liệu tin nhắn (C4, C5) sẽ thay cách chung này.
+- **Ô mùa:** 2 ô chuyển đổi đầu tiên của tuần (`y_tuong.SO_O_MUA`). Mùa tính theo sự kiện (`theo_su_kien`) chưa có ngày mốc thì không áp.
+- **Câu trong ngoặc kép ở `dieu_kien_duoc_noi` của mùa** (ví dụ "có bằng trước Tết") bị chặn trong chủ đề cho tới khi `ban-hang.yaml` có lịch khai giảng đã xác nhận.
+- **"Chưa thử"** = nhóm hoặc định dạng chưa có dòng Ý tưởng nào đã qua sản xuất (chủ đề đã làm trước đây được quy về định dạng luật qua trụ cột).
+- **Dinh_dang trên Sheet:** `sheet nap-chu-de` chỉ ghi ô `dinh_dang` của chủ đề chưa làm khi ô trống, để mã định dạng của `dinh-dang.yaml` mà `y-tuong` ghi không bị đè bằng `hoi-dap`.
+- **Tab "Câu hỏi khách"** do người thêm dòng; máy đánh `ma_cau_hoi` (băm nội dung) cho dòng chưa có mã (`sheet.danh_ma_dong`, đọc lại trước khi ghi) và chỉ ghi `da_dung_cho`. Cột `kenh` là của người, bắt buộc.
+- File: `may_reels/y_tuong.py`, `skills/may-reels/y-tuong.md`, `may_reels/cot_sheet.py`, `may_reels/sheet.py`, `may_reels/chu_de.py`, `may_reels/nguon_luat.py`, `tools_local/nap_kenh.py`.
+
 ---
 
 ## C. Còn chưa chốt

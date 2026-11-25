@@ -393,6 +393,10 @@
       "thu_muc_da_lam": []
     }
   ],
+  "chu_de_may": {
+    "so_luong": 5,
+    "ban_local": "brand/vanxuan/_local/chu-de-may.json"
+  },
   "anh_that": [
     "image/HocLyThuyet.jpg",
     "image/Hướng dẫn học viên học lưu động.jpg",

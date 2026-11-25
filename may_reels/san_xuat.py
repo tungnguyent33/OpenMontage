@@ -204,7 +204,9 @@ def _yeu_cau(P: Path, job: dict, chu_de: dict, brand: dict, sx: dict, phan_hoi: 
     if dd:
         yc["dinh_dang"] = {k: dd.get(k) for k in ("ma", "ten", "tang", "nhom_chinh", "hook_mau", "giong")}
     # Câu hỏi khách (tab Câu hỏi khách, C1). Chưa có tab thì để rỗng: người viết dùng noi_lo trong doi-tuong.yaml.
-    yc["cau_hoi_khach"] = list(chu_de.get("cau_hoi_khach") or [])
+    # Ô Sheet là một chuỗi (lệnh y-tuong ghi một câu); đổi thành danh sách, không tách từng ký tự.
+    chk = chu_de.get("cau_hoi_khach") or []
+    yc["cau_hoi_khach"] = [chk] if isinstance(chk, str) else list(chk)
     if phan_hoi:
         yc["phan_hoi"] = phan_hoi
     if ghi_chu_sua:

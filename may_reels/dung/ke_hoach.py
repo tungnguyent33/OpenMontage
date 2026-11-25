@@ -19,7 +19,9 @@ NHAN_VAI = {"hook": "Hook", "than": "Thân", "chot": "Chốt", "cta": "CTA"}
 
 
 def doc_brand(kenh: str, goc: Path | None = None) -> dict:
-    return json.loads(((goc or GOC) / "brand" / kenh / "brand.json").read_text(encoding="utf-8"))
+    from may_reels.chu_de import ghep_chu_de_may
+    return ghep_chu_de_may(json.loads(((goc or GOC) / "brand" / kenh / "brand.json").read_text(encoding="utf-8")),
+                           kenh, goc or GOC)
 
 
 def doc_san_xuat(kenh: str, goc: Path | None = None) -> dict:

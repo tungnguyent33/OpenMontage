@@ -459,3 +459,44 @@ def doc_dong(bang: BangNguon, tab: Tab) -> list[dict[str, str]]:
         if any(d.values()):
             out.append(d)
     return out
+
+
+def danh_ma_dong(bang: BangNguon, tab: Tab, tao_ma: Callable[[dict[str, str]], str], *,
+                 thu: bool = False) -> list[tuple[int, str]]:
+    """Tab do NGƯỜI thêm dòng (Câu hỏi khách): đánh mã vào cột khóa (cột của máy, một cột) cho dòng có dữ liệu mà
+    chưa có mã. Mã do `tao_ma(dòng)` tính từ nội dung; trùng mã đã có thì thêm hậu tố -2, -3...
+    Ngay trước khi ghi đọc lại: dòng đích đổi nội dung (người chèn, xóa, sửa) thì tính lại, tối đa SO_LAN_THU lần.
+    Trả về [(số dòng, mã)]. Không đụng cột nào khác."""
+    if len(tab.khoa) != 1:
+        raise LoiSheet(f"Tab {tab.ten!r}: danh_ma_dong cần đúng một cột khóa")
+    k = tab.khoa[0]
+    ws = tim_tab(bang, tab.ten)
+    if ws is None:
+        raise LoiCauTruc(f"Chưa có tab {tab.ten!r}: chạy `python -m may_reels sheet init` trước")
+    for _ in range(SO_LAN_THU):
+        hang = ws.doc_tat_ca()
+        cot = ban_do_cot(hang[0] if hang else [])
+        thieu = [t for t in tab.ten_cot if t not in cot]
+        if thieu:
+            raise LoiCauTruc(f"Tab {tab.ten!r} thiếu cột {thieu}: chạy `python -m may_reels sheet init`")
+        da_co = {_o(h, cot[k]) for h in hang[1:]} - {""}
+        can: list[tuple[int, str, list[str]]] = []
+        for so_dong, h in enumerate(hang[1:], start=2):
+            d = {ten: _o(h, i) for ten, i in cot.items()}
+            if d.get(k) or not any(d.get(c) for c in tab.cot_nguoi):
+                continue
+            goc_ma = tao_ma(d)
+            ma, n = goc_ma, 2
+            while ma in da_co:
+                ma, n = f"{goc_ma}-{n}", n + 1
+            da_co.add(ma)
+            can.append((so_dong, ma, list(h)))
+        if thu or not can:
+            return [(r, m) for r, m, _h in can]
+        moi = ws.doc_tat_ca()
+        if ban_do_cot(moi[0] if moi else []) != cot or any(
+                r - 1 >= len(moi) or [chuan(x) for x in moi[r - 1]] != [chuan(x) for x in h] for r, _m, h in can):
+            continue
+        ws.ghi_o([(r, cot[k], m) for r, m, _h in can])
+        return [(r, m) for r, m, _h in can]
+    raise LoiDongDoiCho(f"Tab {tab.ten!r}: dòng bị thay đổi liên tục trong lúc đánh mã, đã thử {SO_LAN_THU} lần.")

@@ -218,3 +218,24 @@ def test_san_xuat_khong_can_nguon_luat_thi_khong_chan(nha_may):  # noqa: F811
     ds = san_xuat(bang, "kenhthu", 1, goc=goc, agent=agent_gia([]), log=lambda s: None,
                   dung=dung_gia({"kt-005-cd-a": [(MA_OK, {"diem_qa": 90})]}))
     assert [k.ma_video for k in ds] == ["kt-005-cd-a"]
+
+
+def test_ap_dung_chu_de_may_sua_dung_file_cua_may(kenh_thu, tmp_path):
+    goc, bang, b = kenh_thu
+    b2 = copy.deepcopy(b)
+    b2["chu_de"].append({"ma": "may-moi", "chu_de": "M?", "y_chinh": "Có", "nguon_doi_chieu": "Luật 1/2024",
+                         "tep": "chu-de-may.md"})
+    (goc / "brand/kt/brand.json").write_text(json.dumps(b2, ensure_ascii=False), encoding="utf-8")
+    tm = tmp_path / "kenh-goc"
+    tm.mkdir()
+    (tm / "chu-de.md").write_bytes(CHU_DE_MD.encode("utf-8"))
+    may = CHU_DE_MD.replace("| thieu | T | hoi-dap | Có được X? | Không | Luật 1/2024 (điều về X) | |\r\n", "").replace(
+        "| sai-roi | T | hoi-dap | S? | Có | Luật 1/2024 Điều 4 | 3 |", "| may-moi | T | luat | M? | Có | Luật 1/2024 | |")
+    (tm / "chu-de-may.md").write_bytes(may.encode("utf-8"))
+    S.ghi_theo_khoa(bang, Y_TUONG, [{"kenh": "kt", "ma": "may-moi", "nguon_de_xuat": "Luật 1/2024, Điều 2, khoản 3"}])
+    dat_nguoi(bang, "may-moi", "xac_nhan_nguon", "Đúng")
+    kq = ap_dung(bang, "kt", goc=goc, thu_muc_kenh=tm, nap=lambda k, g: None, log=lambda s: None)
+    assert [m for m, *_ in kq["ap_dung"]] == ["may-moi"]
+    assert (tm / "chu-de.md").read_bytes().decode("utf-8") == CHU_DE_MD          # file của người không đổi
+    assert "| may-moi | T | luat | M? | Có | Luật 1/2024, Điều 2, khoản 3 |" in (tm / "chu-de-may.md").read_text(encoding="utf-8")
+    assert [x.name.split(".bak-")[0] for x in kq["sao_luu_tat_ca"]] == ["chu-de-may.md"]

@@ -19,6 +19,7 @@
     python -m may_reels hieu-chinh --kenh <mã>
     python -m may_reels nguon-luat --kenh <mã> [--ma ...] [--thu]
     python -m may_reels nguon-luat ap-dung --kenh <mã> [--thu]
+    python -m may_reels y-tuong --kenh <mã> [--tuan YYYY-Www] [--thu]
 
 --thu: chỉ in ra việc sẽ làm, không ghi gì lên Sheet.
 `dang` mặc định là CHẠY THỬ; chỉ --that mới đăng thật (chỉ người dùng được bật).
@@ -292,6 +293,17 @@ def lenh_nguon_luat(a) -> int:
     return 1 if any(d.loi for d in ds) else 0
 
 
+def lenh_y_tuong(a) -> int:
+    from may_reels.y_tuong import chay, in_ket_qua
+    from tools_local.nap_kenh import nap_env
+    nap_env()
+    kq = chay(mo_tu_env(), a.kenh, a.tuan, thu=a.thu)
+    if not a.thu and (kq.chu_de or kq.bo):
+        print(in_ket_qua(kq).replace("--kenh <mã>", f"--kenh {a.kenh}"))
+        print("Duyệt ở cột duyet_chu_de (tab Ý tưởng): Làm / Bỏ. Ô trống = Chờ.")
+    return 0 if kq.chu_de or a.thu or not kq.bo else 1
+
+
 def lenh_kho_nap(a) -> int:
     from may_reels.kho import nap
     kq = nap(mo_tu_env(), a.kenh, thu=a.thu)
@@ -411,6 +423,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--thu", action="store_true", help="chỉ in việc sẽ làm")
     p.set_defaults(ham=lenh_nguon_luat)
 
+    p = sub.add_parser("y-tuong", help="lấp 7 ô của lịch tuần bằng chủ đề theo nhóm, nỗi lo, tầng (tab Ý tưởng)")
+    p.add_argument("--kenh", required=True)
+    p.add_argument("--tuan", help="tuần ISO, ví dụ 2026-W49; bỏ trống = tuần tới")
+    p.add_argument("--thu", action="store_true", help="chỉ in các ô và định dạng làm được, không gọi agent, không ghi")
+    p.set_defaults(ham=lenh_y_tuong)
+
     kho = sub.add_parser("kho", help="kho cảnh của kênh").add_subparsers(dest="lenh", required=True)
     p = kho.add_parser("nap", help="nạp file trong canh-quay/moi-quay: phân tích, chép lời, gắn nhãn, nap_kenh.py")
     p.add_argument("--kenh", required=True)
@@ -429,7 +447,7 @@ def main(argv: list[str] | None = None) -> int:
 
     a = ap.parse_args(argv)
     dai = a.ham in (lenh_san_xuat, lenh_bien_kich_so_sanh, lenh_sua, lenh_thay_canh, lenh_dung, lenh_cham_lai, lenh_nguon_luat, lenh_kho_nap,
-                    lenh_kho_thieu)
+                    lenh_kho_thieu, lenh_y_tuong)
     if dai:
         giu_may_thuc(True)
     try:
