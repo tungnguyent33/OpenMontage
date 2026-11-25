@@ -33,7 +33,7 @@ Lấy từ git log và `LO-TRINH.md`. Chi tiết từng phiên: `NHAT-KY-PHAT-TR
 | M: Trí nhớ dự án | 2026-11-21 | `daa8eeb` | File này, `QUYET-DINH.md`, tách `KE-HOACH.md`, `test_tai_lieu.py` |
 | C0b-1: Trạm phân tích | 2026-11-20 | repo riêng | Xong phần thử nghiệm (ở repo `tram-phan-tich`) |
 | C2b: Bộ biên kịch | 2026-11-21, 2026-11-23 | `6d0f07f` (việc 1–5), `bdecc1b` (việc 6), `358ad96` (sửa điểm 0 giả khi sản xuất) | `bien-kich.md`, `bien-tap.md`, `may_reels/bien_tap.py`; thư viện hook, giọng nói, giữ chân, rubric kịch bản; 16 kịch bản mẫu (đã duyệt 2026-11-23). Việc 6: `bien-kich so-sanh` trên vx-005/006/007, điểm kịch bản cũ 59/73/79 → mới 86/90/84, biên tập thêm ~51 s mỗi video |
-| C1: Chủ đề theo nhóm, lịch tuần | 2026-11-25 | (commit C1) | `y-tuong --tuan`, `skills/may-reels/y-tuong.md`, tab Câu hỏi khách, 7 cột mới tab Ý tưởng, chủ đề máy ở `chu-de-may.md` (`QUYET-DINH.md` B13). Chạy thật 2026-W49: 7/7 chủ đề, 1 lượt agent, 110 s, 0,77 USD |
+| C1: Chủ đề theo nhóm, lịch tuần | 2026-11-25 | `a54ca43` | `y-tuong --tuan`, `skills/may-reels/y-tuong.md`, tab Câu hỏi khách, 7 cột mới tab Ý tưởng, chủ đề máy ở `chu-de-may.md` (`QUYET-DINH.md` B13). Chạy thật 2026-W49: 7/7 chủ đề, 1 lượt agent, 110 s, 0,77 USD |
 | C2: Kịch bản chuyển đổi, mã VX | — | — | chưa chạy |
 | C3: Video giọng thật của thầy | — | — | chưa chạy |
 | C0b-2: Nối kết quả trạm | — | — | chưa chạy |
