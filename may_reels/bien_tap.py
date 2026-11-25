@@ -145,7 +145,20 @@ class KiemMay:
         self.tran.setdefault(ma, []).append(bang_chung)
 
 
-def kiem_may(kh: dict, brand: dict, rb: dict, tv: dict, *, cau_truc: bool = True) -> KiemMay:
+def co_uu_dai_thuong_xuyen(ban_hang: dict | None) -> bool:
+    """Kênh có ưu đãi thường xuyên đã xác nhận (ban-hang.yaml uu_dai thuong_xuyen: true)."""
+    return any(isinstance(u, dict) and u.get("noi_dung") and u.get("thuong_xuyen") and u.get("trang_thai") == "da_xac_nhan"
+               for u in (ban_hang or {}).get("uu_dai") or [])
+
+
+def doc_ban_hang(kenh: str, goc: Path = GOC) -> dict | None:
+    """ban-hang.yaml thật của kênh (chỉ có ở máy); không có thì None (không dùng bản mẫu thay)."""
+    p = goc / "brand" / kenh / "ban-hang.yaml"
+    return _yaml(p) if p.is_file() else None
+
+
+def kiem_may(kh: dict, brand: dict, rb: dict, tv: dict, *, cau_truc: bool = True,
+             ban_hang: dict | None = None) -> KiemMay:
     km = KiemMay()
     cfg = rb.get("kiem_tra_may") or {}
     doan = kh.get("doan") or []
@@ -181,6 +194,15 @@ def kiem_may(kh: dict, brand: dict, rb: dict, tv: dict, *, cau_truc: bool = True
             km.chan.append(f"{noi}: câu sáo đã cấm '{c}'")
         for c in tim_cum_tu(t, _cau_sao(brand, "cau_sao_cho_duyet")):
             km.them_tran("cau_sao", f"{noi}: '{c}'")
+
+    # Ưu đãi thường xuyên: không nói hạn chót, "sắp hết"
+    ut = cfg.get("uu_dai_thuong_xuyen") or {}
+    if co_uu_dai_thuong_xuyen(ban_hang) and ut.get("cum_gap_gap"):
+        for d in doan:
+            t = (d.get("loi") or "") + " . " + the_chu(d)
+            if tim_cum_tu(t, ut.get("tu_nhan_biet") or []):
+                for c in tim_cum_tu(t, ut["cum_gap_gap"]):
+                    km.chan.append(f"{d['id']}: ưu đãi thường xuyên không có hạn, không nói '{c}'")
 
     # Hook sáo (câu nói đầu + chữ hook)
     hook_sao = [h for h in (tv.get("hook") or {}).get("hook_sao") or [] if h]
@@ -380,7 +402,7 @@ def bien_tap(P: Path, *, goc: Path = GOC, agent: Callable[..., dict] = goi_agent
     kenh = kh["kenh"]
     brand, rb, tv = doc_brand(kenh, goc), doc_rubric_kb(kenh, goc), doc_thu_vien(kenh, goc)
     kq = KetQuaBienTap(kh.get("ma_video", P.name), nguong=int(rb.get("nguong", 75)))
-    km = kiem_may(kh, brand, rb, tv, cau_truc=cau_truc)
+    km = kiem_may(kh, brand, rb, tv, cau_truc=cau_truc, ban_hang=doc_ban_hang(kenh, goc))
     kq.chan, kq.canh_bao = list(km.chan), list(km.canh_bao)
     kq.cong_thuc_hook = ((kh.get("kich_ban") or {}).get("hook_chon") or {}).get("cong_thuc", "")
     bt = P / THU_MUC

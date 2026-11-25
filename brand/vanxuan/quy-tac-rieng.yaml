@@ -6,6 +6,12 @@
 cum_tu_cam:
   - tỉ lệ đỗ
   - tỷ lệ đỗ
+  # 2026-11-23: không hứa "không phát sinh". Câu thay thế đã duyệt (ban-hang.yaml cau_hoi_thuong_gap):
+  # "Đã gồm học, khám sức khỏe và lệ phí thi. Ngoài ra chỉ còn lệ phí cấp bằng theo quy định, và phí thi lại nếu chưa đạt."
+  - không phát sinh
+  - không phát sinh chi phí
+  - trọn gói 100%
+  - không mất thêm đồng nào
 
 # Quy tắc nội dung bắt buộc
 quy_tac:

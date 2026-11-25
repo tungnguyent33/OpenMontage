@@ -86,12 +86,17 @@
         "type": "object",
         "required": ["noi_dung", "het_han", "trang_thai"],
         "additionalProperties": false,
+        "description": "Ưu đãi có hạn: het_han. Ưu đãi thường xuyên: thuong_xuyen true, het_han null, ngay_xem_lai bắt buộc (ngày người xem lại ưu đãi còn áp dụng không).",
         "properties": {
           "noi_dung": {"type": "string"},
+          "thuong_xuyen": {"type": "boolean"},
           "het_han": {"$ref": "#/$defs/ngay"},
+          "ngay_xem_lai": {"$ref": "#/$defs/ngay"},
           "trang_thai": {"$ref": "#/$defs/trang_thai"},
           "ngay_cap_nhat": {"$ref": "#/$defs/ngay"}
-        }
+        },
+        "if": {"properties": {"thuong_xuyen": {"const": true}}, "required": ["thuong_xuyen"]},
+        "then": {"properties": {"het_han": {"type": "null"}, "ngay_xem_lai": {"type": "string"}}, "required": ["ngay_xem_lai"]}
       }
     },
     "cau_hoi_thuong_gap": {

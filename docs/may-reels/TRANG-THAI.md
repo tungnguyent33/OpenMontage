@@ -10,7 +10,7 @@ Người chỉ duyệt ở hai chỗ trên Sheet: duyệt chủ đề (cổng A)
 
 Thứ tự các bước tiếp theo: xem LO-TRINH.md (chỉ có ở máy).
 
-## Cập nhật lần cuối: 2026-11-23 (sửa điểm 0 giả khi sản xuất; thêm Điều 89 khoản 3 điểm a)
+## Cập nhật lần cuối: 2026-11-23 (nhập dữ liệu bán hàng; ưu đãi thường xuyên; cấm "không phát sinh")
 
 ## Các prompt đã chạy
 
@@ -108,7 +108,7 @@ Chạy bằng `tools_local\py.cmd -m may_reels …` (có `PYTHONUTF8=1`). Chi ti
 
 ## Chờ người dùng
 
-1. `brand/vanxuan/ban-hang.yaml` (chỉ có ở máy): còn thiếu khoản gồm/không gồm, ngày hết hạn ưu đãi, xác nhận sân thực hành và câu "không phát sinh", số buổi, quy trình, giấy tờ, lịch khai giảng, mồi nhử, người đồng ý lên hình. Chặn một phần C1, và C2, C4.
+1. `brand/vanxuan/ban-hang.yaml` (chỉ có ở máy; 2026-11-23 đã xác nhận khoản gồm/không gồm, 3 sân thực hành, câu chi phí thay "không phát sinh", ưu đãi 2 người là thường xuyên): còn thiếu số tiền phí thi lại, số buổi, quy trình, giấy tờ, lịch khai giảng, mồi nhử, người đồng ý lên hình. Chặn một phần C1, và C2, C4.
 2. Kho cảnh chưa có "thầy nói trước máy" (7 định dạng cần), "học viên nói trước máy", "nhận bằng". Chặn C3 phần 2.
 3. ~~Duyệt 16 kịch bản mẫu C2b~~: người dùng duyệt cả 16 ngày 2026-11-23 (`da_duyet`).
 4. Facebook: `fb_reels.page_id` trong `brand/vanxuan/dang-bai.yaml` và token trong `.env` (`CAI-DAT-DANG-BAI.md` mục A). YouTube: `kenh_id`, `made_for_kids`, `contains_synthetic_media`. Giờ đăng, số video mỗi ngày (`QUYET-DINH.md` câu 6).
@@ -124,6 +124,7 @@ C1 (chủ đề theo nhóm và lịch tuần), rồi C2, C3 phần 1. Thứ tự
 
 ## Test
 
+- 2026-11-23 (ưu đãi thường xuyên): `tests/may_reels` 372/372. Toàn bộ repo (chạy 2026-11-25): 3320 qua, 19 bỏ qua, 2 hỏng: `test_fal_resume_output_format[webp]` (từ trước) và `tests/lib/test_terminal_frame_pacing.py::test_trace_matches_the_actual_terminal_scene_cursor` (phụ thuộc môi trường: hỏng khi thiếu `PYTHONUTF8=1` vì đọc stdout bằng cp1252; đặt `PYTHONUTF8=1` thì qua 8/8; không liên quan thay đổi lần này).
 - 2026-11-23 (sửa điểm 0 giả): `tests/may_reels` 360/360. Toàn bộ repo: 3309 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-23 (C2b việc 6): `tests/may_reels` 358/358. Toàn bộ repo: 3307 qua, 19 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").
 - 2026-11-21 (C2b việc 1–5): `tests/may_reels` 355/355. Toàn bộ repo: 3305 qua, 18 bỏ qua, 1 hỏng (test upstream ở "Lỗi đã biết").

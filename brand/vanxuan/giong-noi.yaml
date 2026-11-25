@@ -35,7 +35,7 @@ tu_nen_dung:
     - "nhớ nhé, vậy là, tức là, nghĩa là"
     - "học mấy buổi, thi ở đâu, mang gì"
     - "phân khối (thay cho cm3), xi-nhan, vạch, vòng số 8"
-    - "minh bạch học phí, không phát sinh (chỉ nói khi ban-hang.yaml đã xác nhận)"
+    - "minh bạch học phí: đã gồm gì, ngoài ra chỉ còn khoản gì (câu chi phí trong ban-hang.yaml; không nói 'không phát sinh')"
 
 # Từ nên tránh trong lời đọc và thẻ chữ: từ Hán Việt nặng, văn viết, giọng hành chính, tính từ quảng cáo rỗng.
 # may_reels/bien_tap.py dò các từ ở cột 'tu' (đúng dấu) trong lời đọc và thẻ chữ, TRỪ phần trích nguyên văn luật

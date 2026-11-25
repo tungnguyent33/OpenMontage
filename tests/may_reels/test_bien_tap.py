@@ -156,6 +156,46 @@ def km_cua(kh, tv, rb, brand=BRAND, cau_truc=True):
     return BT.kiem_may(kh, brand, rb, tv, cau_truc=cau_truc)
 
 
+BH_TX = {"uu_dai": [{"noi_dung": "Đăng ký từ 2 người, mỗi người giảm một khoản", "thuong_xuyen": True, "het_han": None,
+                      "ngay_xem_lai": "2027-05-23", "trang_thai": "da_xac_nhan"}]}
+
+
+def _kh_loi(loi: str, the: str | None = None) -> dict:
+    kh = ke_hoach()
+    kh["doan"][1]["loi"] = loi
+    if the is not None:
+        kh["doan"][1]["the"] = {"dong1": the, "dong2": ""}
+    return kh
+
+
+@pytest.mark.parametrize("loi,the", [("Ưu đãi giảm cho nhóm hai người sắp hết, nhắn ngay.", None),
+                                     ("Đi cùng bạn thì mỗi người được giảm.", "ƯU ĐÃI / CHỈ CÒN TUẦN NÀY"),
+                                     ("Ưu đãi này có hạn chót.", None)])
+def test_uu_dai_thuong_xuyen_khong_noi_gap_gap(loi, the, tv, rb):
+    km = BT.kiem_may(_kh_loi(loi, the), BRAND, rb, tv, cau_truc=False, ban_hang=BH_TX)
+    assert any("ưu đãi thường xuyên" in c for c in km.chan), km.chan
+
+
+def test_uu_dai_gap_gap_khong_chan_khi_khong_co_uu_dai_thuong_xuyen_hoac_khong_nhac_uu_dai(tv, rb):
+    co_han = {"uu_dai": [dict(BH_TX["uu_dai"][0], thuong_xuyen=False, het_han="2027-01-01")]}
+    for bh in (None, co_han):
+        km = BT.kiem_may(_kh_loi("Ưu đãi giảm cho nhóm hai người sắp hết."), BRAND, rb, tv, cau_truc=False, ban_hang=bh)
+        assert not any("ưu đãi thường xuyên" in c for c in km.chan)
+    km = BT.kiem_may(_kh_loi("Bằng lái hết hạn thì phải đổi."), BRAND, rb, tv, cau_truc=False, ban_hang=BH_TX)
+    assert not any("ưu đãi thường xuyên" in c for c in km.chan)     # "hết hạn" của bằng lái, không nhắc ưu đãi
+
+
+def test_cum_tu_cam_khong_phat_sinh_cua_kenh(tv, rb, brand_that):
+    qt = yaml.safe_load((KENH / "quy-tac-rieng.yaml").read_text(encoding="utf-8"))["cum_tu_cam"]
+    moi = ["không phát sinh", "không phát sinh chi phí", "trọn gói 100%", "không mất thêm đồng nào"]
+    assert set(moi) <= set(qt) and set(moi) <= set(brand_that["cam"]["cum_tu_cam_du_an"])   # brand.json đã nạp lại
+    km = BT.kiem_may(_kh_loi("Học phí trọn gói, cam kết không phát sinh."), brand_that, rb, tv, cau_truc=False)
+    assert any("không phát sinh" in c for c in km.chan)
+    duyet = "Đã gồm học, khám sức khỏe và lệ phí thi. Ngoài ra chỉ còn lệ phí cấp bằng theo quy định, và phí thi lại nếu chưa đạt."
+    km = BT.kiem_may(_kh_loi(duyet), brand_that, rb, tv, cau_truc=False)
+    assert not any("cụm từ cấm" in c for c in km.chan), km.chan
+
+
 def test_ke_hoach_co_kich_ban_hop_schema_va_qua_may_kiem(tv, rb):
     from may_reels.dung.ke_hoach import kiem_tra
     kh = kh_moi()

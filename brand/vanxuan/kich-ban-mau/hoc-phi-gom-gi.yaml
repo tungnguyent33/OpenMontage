@@ -15,16 +15,16 @@ doan:
   - {id: s3, vai: than, loi: "Học phí ở Vạn Xuân là [chờ anh xác nhận]. Thầy đọc từng khoản cho rõ.", the: "HỌC PHÍ / [chờ anh xác nhận]"}
   - {id: s4, vai: than, loi: "Khoản đã gồm: [chờ anh xác nhận các khoản gồm]. Bảng chữ hiện ngay trên màn hình.", the: "ĐÃ GỒM / [chờ anh xác nhận]"}
   - {id: s5, vai: than, loi: "Khoản chưa gồm, nếu có: [chờ anh xác nhận các khoản không gồm]. Thầy nói trước để nhà mình tính.", the: "CHƯA GỒM / [chờ anh xác nhận]"}
-  - {id: s6, vai: chot, loi: "Biết trước từng khoản thì cả nhà tính được, đóng một lần là yên tâm.", the: "NÓI TRƯỚC TỪNG KHOẢN / Đóng một lần, yên tâm"}
+  - {id: s6, vai: chot, loi: "Đã gồm học, khám sức khỏe và lệ phí thi. Ngoài ra chỉ còn lệ phí cấp bằng theo quy định, và phí thi lại nếu chưa đạt.", the: "NÓI TRƯỚC TỪNG KHOẢN / Chỉ còn lệ phí cấp bằng, thi lại"}
   - {id: s7, vai: cta, loi: "Nhắn Zalo 0823 279 999 để nhận bộ câu ôn thi A1.", the: null}
 cta_sau_nay: "Nhắn mã của video để nhận bảng chi phí trọn gói (C2, mồi nhử chờ anh soạn)."
 vi_sao_hay:
   - "Hook hỏi đúng điều phụ huynh ngại hỏi (tiền), hình là tờ giấy chưa lật: người xem chờ xem số."
   - "s2 gọi tên nỗi lo 'phát sinh' bằng chữ của khách, s3 trả ngay con số (phần thưởng sớm), s4 và s5 tách 'gồm' và 'chưa gồm' thành hai đoạn."
   - "Bán bằng bằng chứng: đọc to từng khoản, bảng chữ hiện cùng; không dùng tính từ 'rẻ', 'uy tín'."
-  - "Câu chốt có đối: biết trước từng khoản, đóng một lần."
+  - "Câu chốt là câu chi phí đã duyệt (ban-hang.yaml): nói đủ cả khoản đã gồm và khoản ngoài, thay cho lời hứa 'không phát sinh'."
 can_xac_nhan:
   - "Học phí và danh sách khoản gồm, không gồm (ban-hang.yaml khoa_hoc.gom, khong_gom). Định dạng này chỉ làm khi các mục đó da_xac_nhan."
-  - "Câu 'không phát sinh' chỉ nói khi anh xác nhận đúng như vậy."
+  - "Không nói 'không phát sinh' (cụm từ cấm từ 2026-11-23); câu chốt dùng nguyên câu thay thế anh đã duyệt."
 trang_thai: da_duyet
 ngay_cap_nhat: 2026-11-23

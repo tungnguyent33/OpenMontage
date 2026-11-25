@@ -98,7 +98,7 @@ Không dùng hook sáo (`hook.yaml` → `hook_sao`), câu sáo (`brand.json` →
    Gặp các kiểu này thì quay về sự thật (điều luật, việc cần làm, tên lỗi) và viết lại từ đó. Không chỉ thay từ đồng nghĩa.
 7. **Cụ thể.** Việc làm được ngay, tên lỗi, mốc ngày, con số có nguồn. Không có số thì nói định tính ("hay gặp"); **không** bịa phần trăm.
 8. **Cụm từ cấm:** không dùng cụm nào trong `brand.json` → `cam.cum_tu_cam` và `cam.cum_tu_cam_du_an`, ở lời, thẻ chữ, caption. Không dùng câu sáo đã chốt (`cam.cau_sao_da_chot`). Tránh cả `cam.cau_sao_cho_duyet`. Không hứa kết quả thi. Không tạo gấp gáp giả.
-9. **Số liệu bán hàng:** chỉ nói số, giá, ngày, ưu đãi có trong `ban-hang.yaml` ở trạng thái `da_xac_nhan`. Thiếu thì bỏ ý đó khỏi video. Ô `[chờ anh xác nhận]` chỉ dùng trong kịch bản mẫu, **không bao giờ** trong lời của video thật.
+9. **Số liệu bán hàng:** chỉ nói số, giá, ngày, ưu đãi có trong `ban-hang.yaml` ở trạng thái `da_xac_nhan`. Thiếu thì bỏ ý đó khỏi video. Ô `[chờ anh xác nhận]` chỉ dùng trong kịch bản mẫu, **không bao giờ** trong lời của video thật. Ưu đãi có `thuong_xuyen: true` là ưu đãi không có hạn: **không** nói hạn chót, "sắp hết", "chỉ còn", "nhanh tay" hay bất kỳ ý gấp gáp nào (máy chặn, `rubric-kich-ban.yaml` `uu_dai_thuong_xuyen`). Không hứa "không phát sinh" (cụm từ cấm); nói về chi phí thì dùng đúng câu trong `ban-hang.yaml` (`cau_hoi_thuong_gap`, mục học phí gồm gì).
 10. **CTA:** đoạn `cta` là **nguyên văn** một câu trong `brand.json` → `cta`.
     - Chọn câu hợp nhất với điều vừa học và với nhóm đối tượng. Ví dụ: video thi thử thì nhận bộ câu ôn; video "A hay B" thì bình luận để thầy chấm.
     - Đoạn này có `canh = null` và `the = null`.

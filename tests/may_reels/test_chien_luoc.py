@@ -95,6 +95,46 @@ def test_uu_dai_het_han_va_so_lieu_da_xac_nhan(tmp_path):
     assert bc.chua_du_so_lieu["dang-ky-mang-gi"] == ["quy_trinh_dang_ky"]   # giấy tờ đã có, quy trình chưa
 
 
+UD_TX = {"noi_dung": "Đăng ký từ 2 người, mỗi người giảm một khoản", "thuong_xuyen": True, "het_han": None,
+         "ngay_xem_lai": "2027-05-23", "trang_thai": "da_xac_nhan", "ngay_cap_nhat": "2026-11-23"}
+
+
+def test_uu_dai_thuong_xuyen_khong_bao_het_han_khong_bao_o_trong(tmp_path):
+    goc = _goc(tmp_path)
+    _sua(goc, "ban-hang", lambda d: d.update(uu_dai=[dict(UD_TX)]))
+    bc = CL.kiem_tra("kenhthu", goc, hom_nay=dt.date(2026, 11, 23))
+    assert not bc.loi, bc.loi_schema
+    assert bc.uu_dai_het_han == [] and bc.uu_dai_xem_lai == []
+    assert not any(x.startswith("uu_dai[") for x in bc.muc_trong.get("ban-hang", []))   # het_han null là đúng
+    assert "THƯỜNG XUYÊN" not in CL.in_bao_cao(bc)
+
+
+def test_uu_dai_thuong_xuyen_qua_ngay_xem_lai_thi_bao(tmp_path):
+    goc = _goc(tmp_path)
+    _sua(goc, "ban-hang", lambda d: d.update(uu_dai=[dict(UD_TX)]))
+    bc = CL.kiem_tra("kenhthu", goc, hom_nay=dt.date(2027, 5, 24))
+    assert bc.uu_dai_het_han == []
+    assert bc.uu_dai_xem_lai == [f"{UD_TX['noi_dung']} (ngày xem lại 2027-05-23)"]
+    assert "ƯU ĐÃI THƯỜNG XUYÊN QUÁ NGÀY XEM LẠI" in CL.in_bao_cao(bc)
+    assert CL.kiem_tra("kenhthu", goc, hom_nay=dt.date(2027, 5, 23)).uu_dai_xem_lai == []   # đúng ngày: chưa quá
+
+
+@pytest.mark.parametrize("sua,dung", [({}, True), ({"ngay_xem_lai": None}, False), ({"het_han": "2027-01-01"}, False),
+                                      ({"thuong_xuyen": False, "ngay_xem_lai": None, "het_han": "2027-01-01"}, True)])
+def test_schema_uu_dai_thuong_xuyen(sua, dung):
+    bh = CL._chuoi_hoa_ngay(yaml.safe_load((BRAND / "ban-hang.mau.yaml").read_text(encoding="utf-8")))
+    bh["uu_dai"] = [{k: v for k, v in {**UD_TX, **sua}.items() if not (k == "ngay_xem_lai" and v is None)}]
+    assert (CL.loi_schema("ban-hang", bh) == []) is dung
+
+
+def test_uu_dai_co_han_van_bao_het_han_nhu_cu(tmp_path):
+    goc = _goc(tmp_path)
+    _sua(goc, "ban-hang", lambda d: d.update(uu_dai=[{"noi_dung": "Giảm 10%", "thuong_xuyen": False, "het_han": None,
+                                                       "trang_thai": "da_xac_nhan"}]))
+    bc = CL.kiem_tra("kenhthu", goc, hom_nay=dt.date(2026, 11, 23))
+    assert bc.uu_dai_het_han == ["Giảm 10% (hết hạn chưa ghi ngày)"] and bc.uu_dai_xem_lai == []
+
+
 def test_dinh_dang_thieu_canh_khop_the_va_loai(tmp_path):
     kho = [{"ma": "a", "dung_duoc": True, "loai": "BROLL", "the": ["san-tap"]},
            {"ma": "b", "dung_duoc": False, "loai": "NOI", "the": ["noi-truoc-may"]},   # không dùng được: không tính

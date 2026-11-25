@@ -192,7 +192,11 @@
     ],
     "cum_tu_cam_du_an": [
       "tỉ lệ đỗ",
-      "tỷ lệ đỗ"
+      "tỷ lệ đỗ",
+      "không phát sinh",
+      "không phát sinh chi phí",
+      "trọn gói 100%",
+      "không mất thêm đồng nào"
     ],
     "cam_du_an": [
       "Không bịa số liệu, không dùng con số không có nguồn",
@@ -1480,6 +1484,13 @@
       "business_md": "https://van-xuan-driving-school.vercel.app/",
       "kieu": "chi_co_trong_business",
       "ghi_chu": "channel.yaml không có website: không chèn vào video"
+    },
+    {
+      "truong": "so_lieu",
+      "channel_yaml": null,
+      "business_md": "Minh bạch học phí — công khai rõ ràng từ đầu, không phát sinh chi phí ẩn.",
+      "kieu": "bi_cam",
+      "ghi_chu": "Quy tắc dự án cấm 'không phát sinh': không dùng"
     },
     {
       "truong": "so_lieu",

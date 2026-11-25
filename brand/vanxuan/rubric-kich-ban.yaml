@@ -73,6 +73,13 @@ kiem_tra_may:
     - {ma: liet-ke-phu-dinh, mau: "\\bkhông [^,.?!]{1,20}, không [^,.?!]{1,20}, không\\b", vi_du: "Không lo thủ tục, không lo đi lại, không lo phát sinh.", sua: "Nói điều xảy ra; giữ tối đa một vế phủ định."}
     - {ma: mo-dau-sao, mau: "\\b(trong thời đại|hãy tưởng tượng|nói một cách đơn giản|điều thú vị là|bạn có bao giờ)\\b", vi_du: "Hãy tưởng tượng bạn đang ở ngã tư.", sua: "Mở thẳng bằng tình huống."}
     - {ma: gach-dai, mau: "—", vi_du: "Đèn vàng — được đi.", sua: "Dùng dấu chấm, phẩy hoặc hai chấm."}
+  # Ưu đãi thường xuyên (ban-hang.yaml uu_dai thuong_xuyen: true) không có hạn: đoạn nào nhắc ưu đãi (có một từ trong
+  # tu_nhan_biet) mà có cụm gấp gáp thì CHẶN (tạo gấp gáp giả, NGUYEN-TAC.md mục 11). Chỉ áp khi kênh có ưu đãi
+  # thường xuyên đã xác nhận; kiểm lời đọc và thẻ chữ, kể cả đoạn CTA.
+  uu_dai_thuong_xuyen:
+    tu_nhan_biet: ["ưu đãi", "giảm"]
+    cum_gap_gap: ["hạn chót", "sắp hết", "hết hạn", "chỉ còn", "cuối cùng", "nhanh tay", "kẻo lỡ", "đến hết ngày",
+                  "trước ngày", "số lượng có hạn", "duy nhất hôm nay"]
 
 # Trần theo lỗi máy đo được: biên tập chấm cao hơn thì Python hạ xuống (không cho chấm bù).
 tran:

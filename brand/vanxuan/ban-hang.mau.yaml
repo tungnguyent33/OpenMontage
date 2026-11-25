@@ -38,9 +38,13 @@ lich_khai_giang:                   # mỗi lớp một mục, chỉ ngày thật
     trang_thai: gia_thuyet
     ngay_cap_nhat: null
 
-uu_dai:                            # chỉ ưu đãi thật, có ngày hết hạn. Hết hạn thì máy không dùng.
+uu_dai:                            # chỉ ưu đãi thật. Ưu đãi có hạn: ghi het_han, hết hạn thì máy không dùng.
+                                   # Ưu đãi thường xuyên: thuong_xuyen: true, het_han: null, ngay_xem_lai: YYYY-MM-DD;
+                                   # kịch bản KHÔNG nói hạn chót hay "sắp hết". Quá ngay_xem_lai thì kiem-tra báo xem lại.
   - noi_dung: ""
-    het_han: null                  # YYYY-MM-DD, bắt buộc khi có nội dung
+    thuong_xuyen: false
+    het_han: null                  # YYYY-MM-DD, bắt buộc khi có nội dung và không thường xuyên
+    ngay_xem_lai: null             # chỉ dùng khi thuong_xuyen: true
     trang_thai: gia_thuyet
     ngay_cap_nhat: null
 

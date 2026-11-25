@@ -294,7 +294,9 @@ tools_local\py.cmd -m may_reels chien-luoc kiem-tra --kenh vanxuan              
 tools_local\py.cmd -m may_reels chien-luoc kiem-tra --kenh vanxuan --chi-tiet   # liệt kê hết ô trống, giả thuyết
 ```
 
-Báo cáo gồm: thiếu file, lỗi cấu trúc, tham chiếu sai (mã nhóm, mã định dạng, khung nhịp), mùa đang chạy, ưu đãi hết hạn, định dạng chưa làm được vì thiếu số liệu, định dạng thiếu cảnh trong kho (ví dụ chưa có cảnh "thầy nói trước máy"), ô trống, số chờ xác nhận, giả thuyết chưa xác nhận. Lệnh trả mã 1 nếu có lỗi cấu trúc hoặc tham chiếu.
+Báo cáo gồm: thiếu file, lỗi cấu trúc, tham chiếu sai (mã nhóm, mã định dạng, khung nhịp), mùa đang chạy, ưu đãi hết hạn, ưu đãi thường xuyên đã quá ngày xem lại, định dạng chưa làm được vì thiếu số liệu, định dạng thiếu cảnh trong kho (ví dụ chưa có cảnh "thầy nói trước máy"), ô trống, số chờ xác nhận, giả thuyết chưa xác nhận. Lệnh trả mã 1 nếu có lỗi cấu trúc hoặc tham chiếu.
+
+**Ưu đãi thường xuyên** (không có ngày hết hạn): trong `ban-hang.yaml` ghi `thuong_xuyen: true`, `het_han: null` và `ngay_xem_lai: YYYY-MM-DD`. Máy không báo ưu đãi này hết hạn; quá `ngay_xem_lai` thì báo cáo nhắc bạn xem lại (máy vẫn dùng). Kịch bản nhắc ưu đãi thường xuyên mà nói "sắp hết", "hạn chót", "chỉ còn", "nhanh tay"… thì máy chặn (`rubric-kich-ban.yaml` → `kiem_tra_may.uu_dai_thuong_xuyen`).
 
 **Bộ biên kịch: kịch bản được biên tập trước khi dựng (từ 2026-11-21).** Mỗi video `san-xuat` qua các bước sau:
 

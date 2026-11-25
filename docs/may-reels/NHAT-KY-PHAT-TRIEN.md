@@ -4,6 +4,16 @@ Mỗi phiên một mục, mới nhất ở trên. Ghi việc đã làm, quyết 
 
 File tạo ngày 2026-11-19. Các mục từ 2026-11-15 đến 2026-11-18 (cuối file) chuyển nguyên văn từ `KE-HOACH.md` mục 1, 7–10 ngày 2026-11-21; các phiên đó còn ở lịch sử git của nhánh `kenh-vanxuan`. Quyết định đã chốt: `QUYET-DINH.md`.
 
+## 2026-11-23 (3): nhập dữ liệu bán hàng, ưu đãi thường xuyên, cấm "không phát sinh"
+
+**Đã làm:**
+- `ban-hang.yaml` (chỉ ở máy): `khoa_hoc` a1, a có `gom` (lý thuyết qua app, thực hành, khám sức khỏe, lệ phí thi sát hạch) và `khong_gom` (lệ phí cấp bằng theo quy định nhà nước, không ghi số; phí thi lại nếu chưa đạt); 3 sân thực hành `da_xac_nhan`; câu "đã gồm mọi chi phí, cam kết không phát sinh" xóa, thay bằng câu đã duyệt; ưu đãi 2 người `thuong_xuyen`, `ngay_xem_lai` 2027-05-23; `cho_xac_nhan` còn số tiền phí thi lại.
+- Schema và `chien-luoc kiem-tra`: ưu đãi thường xuyên (QUYET-DINH B12). Máy kiểm kịch bản chặn ý gấp gáp với ưu đãi thường xuyên. 4 cụm từ cấm mới, nạp lại `brand.json` (`nap_kenh.py` tự đánh dấu câu "không phát sinh chi phí ẩn" của `business.md` là `bi_cam`).
+- Ý "không phát sinh": sửa mẫu `hoc-phi-gom-gi` (đoạn chốt dùng câu đã duyệt), nhịp chốt của `hoc-phi-gom-gi` trong `dinh-dang.yaml`, một dòng `giong-noi.yaml`. `hook.yaml` và 15 mẫu còn lại không có.
+- Câu đã duyệt có "ngoài ra" (từ tránh trong `giong-noi.yaml`): một lần chỉ cảnh báo, không trừ điểm; thẻ chữ của mẫu bỏ "ngoài ra".
+
+**Test:** `tests/may_reels` 372/372 (thêm 12 test).
+
 ## 2026-11-23 (2): sửa điểm 0 giả khi sản xuất, thêm Điều 89 khoản 3 điểm a
 
 **Đã làm:**

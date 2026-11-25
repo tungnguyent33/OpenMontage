@@ -161,6 +161,7 @@ class BaoCao:
     loi_tham_chieu: list[str] = field(default_factory=list)
     muc_trong: dict[str, list[str]] = field(default_factory=dict)
     uu_dai_het_han: list[str] = field(default_factory=list)
+    uu_dai_xem_lai: list[str] = field(default_factory=list)   # ưu đãi thường xuyên đã quá ngay_xem_lai
     thieu_canh: dict[str, list[str]] = field(default_factory=dict)
     chua_du_so_lieu: dict[str, list[str]] = field(default_factory=dict)
     gia_thuyet: dict[str, list[str]] = field(default_factory=dict)
@@ -234,6 +235,10 @@ def kiem_tra(kenh: str, goc: Path = GOC, hom_nay: dt.date | None = None) -> BaoC
         tr = muc_trong({k: v for k, v in d.items() if k != "cho_xac_nhan"})
         if ten == "lich":  # mùa tính theo sự kiện thì không có ngày cố định: không tính là ô trống
             tr = [x for x in tr if not any(x in (f"mua[{m}].tu_ngay", f"mua[{m}].den_ngay") for m in theo_su_kien)]
+        if ten == "ban-hang":  # ưu đãi thường xuyên không có het_han; ưu đãi có hạn không cần ngay_xem_lai
+            bo = {f"uu_dai[{i}].{'het_han' if u.get('thuong_xuyen') else 'ngay_xem_lai'}"
+                  for i, u in enumerate(d.get("uu_dai") or []) if isinstance(u, dict)}
+            tr = [x for x in tr if x not in bo]
         if tr:
             bc.muc_trong[ten] = tr
         gt = gia_thuyet(d)
@@ -241,7 +246,12 @@ def kiem_tra(kenh: str, goc: Path = GOC, hom_nay: dt.date | None = None) -> BaoC
             bc.gia_thuyet[ten] = gt
     if bh:
         for u in bh.get("uu_dai") or []:
-            if u.get("noi_dung") and (not u.get("het_han") or u["het_han"] < bc.hom_nay):
+            if not u.get("noi_dung"):
+                continue
+            if u.get("thuong_xuyen"):  # ưu đãi thường xuyên: không có hạn, chỉ báo khi quá ngày xem lại
+                if u["ngay_xem_lai"] < bc.hom_nay:
+                    bc.uu_dai_xem_lai.append(f"{u['noi_dung']} (ngày xem lại {u['ngay_xem_lai']})")
+            elif not u.get("het_han") or u["het_han"] < bc.hom_nay:
                 bc.uu_dai_het_han.append(f"{u['noi_dung']} (hết hạn {u.get('het_han') or 'chưa ghi ngày'})")
         bc.cho_xac_nhan = [c["noi_dung"] for c in bh.get("cho_xac_nhan") or [] if c.get("noi_dung")]
     for ma, muc in CAN_SO_LIEU.items():
@@ -269,6 +279,9 @@ def in_bao_cao(bc: BaoCao, chi_tiet: bool = False) -> str:
         d += ["", f"Mùa đang chạy: {bc.mua}"]
     if bc.uu_dai_het_han:
         d += ["", "ƯU ĐÃI HẾT HẠN (máy không dùng):"] + [f"  - {x}" for x in bc.uu_dai_het_han]
+    if bc.uu_dai_xem_lai:
+        d += ["", "ƯU ĐÃI THƯỜNG XUYÊN QUÁ NGÀY XEM LẠI (xác nhận còn áp dụng rồi dời ngay_xem_lai; máy vẫn dùng):"]
+        d += [f"  - {x}" for x in bc.uu_dai_xem_lai]
     if bc.chua_du_so_lieu:
         d += ["", "ĐỊNH DẠNG CHƯA LÀM ĐƯỢC vì ban-hang.yaml chưa có số liệu đã xác nhận:"]
         d += [f"  - {m}: cần {', '.join(v)}" for m, v in bc.chua_du_so_lieu.items()]

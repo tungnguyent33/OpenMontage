@@ -51,7 +51,7 @@ dinh_dang:
     nhip:
       - {vai: hook, giay: [1.5, 3.0], mo_ta: "Câu hỏi về tiền mà phụ huynh/người học ngại hỏi"}
       - {vai: than, so_doan: [2, 4], giay_moi_doan: [3, 8], mo_ta: "Đọc to từng khoản gồm gì, không gồm gì; bảng chữ hiện cùng"}
-      - {vai: chot, giay: [2, 5], mo_ta: "Nói trước hết, không phát sinh"}
+      - {vai: chot, giay: [2, 5], mo_ta: "Câu chi phí đã duyệt: đã gồm gì, ngoài ra chỉ còn khoản gì (không hứa 'không phát sinh')"}
       - {vai: cta, giay: [3, 6], mo_ta: "Nhắn mã nhận bảng chi phí trọn gói"}
     dieu_kien: "Chỉ làm khi ban-hang.yaml có học phí và các khoản đã xác nhận"
     trang_thai: gia_thuyet
