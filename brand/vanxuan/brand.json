@@ -96,6 +96,66 @@
         "ma": "snaptik-vn-7707073360106179892-936e3b",
         "ngay": "2026-11-12",
         "ghi_chu": "Người dùng xác nhận: video của trung tâm (tải lại từ TikTok của kênh), người lái làm mẫu đã đồng ý lên hình, quay ở sân Vạn Xuân. Vẫn tránh đoạn thấy biển số (16-18 s, 29-30 s)."
+      },
+      {
+        "ma": "img-3904-8b46d9",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3905-2bc399",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3906-b5b7b3",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3907-6e0bed",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3908-abf856",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3156-ff7076",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3729-7d1f3e",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3731-309ec2",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3734-2f4338",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3736-232c87",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3654-d62a91",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
+      },
+      {
+        "ma": "img-3656-3231ef",
+        "ngay": "2026-11-26",
+        "ghi_chu": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)"
       }
     ]
   },
@@ -283,7 +343,7 @@
       "dinh_dang": "hoi-dap",
       "chu_de": "Đi xe máy cầm điện thoại xem bản đồ có bị cấm không?",
       "y_chinh": "Cầm điện thoại xem bản đồ khi xe đang chạy là bị cấm: luật cấm dùng tay cầm và sử dụng điện thoại (hoặc thiết bị điện tử khác) khi điều khiển phương tiện đang di chuyển, áp dụng cho mọi người lái, không riêng xe máy. Muốn xem bản đồ thì dừng xe ở nơi an toàn. Video không nên khẳng định gắn điện thoại lên giá đỡ là được, vì câu luật không nói tới trường hợp đó.",
-      "nguon_doi_chieu": "Luật 36/2024/QH15 (điều về người lái xe mô tô, xe gắn máy)",
+      "nguon_doi_chieu": "Luật 36/2024/QH15, Điều 9, khoản 6",
       "trend": "",
       "da_lam": false,
       "thu_muc_da_lam": []
@@ -294,7 +354,7 @@
       "dinh_dang": "hoi-dap",
       "chu_de": "Vạch liền giữa đường: có được đè lên để vượt không?",
       "y_chinh": "Vạch tim đường nét liền màu vàng (vạch 1.2 đơn, vạch 1.3 đôi): xe không được lấn làn, không được đè lên vạch, nên không được đè vạch để vượt. Vạch nét đứt (vạch 1.1): xe được cắt qua để dùng làn ngược chiều, nhưng khi vượt vẫn phải đủ điều kiện vượt xe. Vạch đôi một nét liền một nét đứt (vạch 1.4): chỉ xe ở phía nét đứt được cắt qua.",
-      "nguon_doi_chieu": "QCVN 41:2024 (phần vạch kẻ đường)",
+      "nguon_doi_chieu": "QCVN 41:2024/BGTVT, Phụ lục G, mục G1.1, vạch 1.1, 1.2, 1.3, 1.4",
       "trend": "",
       "da_lam": false,
       "thu_muc_da_lam": []
@@ -916,6 +976,602 @@
       "nguon": "trung-tam",
       "mat_nguoi": false,
       "quyen_bo_sung": null,
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3156-ff7076",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân Thanh Uyên/IMG_3156.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 92.09,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "BROLL",
+      "mo_ta": "Trên sân tập bê tông trước một tòa nhà hai tầng, nhiều học viên lần lượt chạy xe số theo vòng số 8 kẻ vạch trắng, máy cầm tay lia theo người lái, có lúc quay cận học viên nữ ngồi trên xe.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "vong-so-8",
+        "tap-xe",
+        "san-tap",
+        "san-thuc-hanh",
+        "xe-so",
+        "vach-son-trang",
+        "hoc-vien-nu",
+        "hoc-vien-nam",
+        "nhieu-hoc-vien",
+        "co-so"
+      ],
+      "doan_dung_duoc": [
+        [
+          24.0,
+          46.0
+        ],
+        [
+          62.0,
+          76.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Chỉ dùng đoạn 24–46s và 62–76s (người lái ở xa, không thấy rõ biển số); tránh 0–22s và 48–52s vì lộ biển số phía sau xe, tránh 55–60s và 78–92s vì mặt học viên quay cận. Nếu dùng các đoạn cận cần xin phép học viên trong hình và che biển số. Tắt âm thanh gốc.",
+      "ghi_chu": "Ánh sáng chiều muộn, trời xám, hơi phẳng màu; máy cầm tay lia khá nhiều, có đoạn quanh 11s chỉ quay nền sân trống. Âm thanh là tiếng nói chuyện ngoài lề, nên tắt tiếng khi dựng. Biển số xe lộ rõ quanh 3s, 19s, 50s; mặt học viên nữ quay cận quanh 57s, 80s (đeo khẩu trang) và 88s (không khẩu trang).",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3654-d62a91",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân vạn xuân/IMG_3654.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 29.34,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "THAO",
+      "mo_ta": "Một người đội mũ bảo hiểm, áo xanh, chạy xe số màu xanh theo vòng số 8 vạch sơn trắng trên sân tập ướt; nửa sau máy quay đổi chỗ, có cột dụng cụ thể dục ở tiền cảnh.",
+      "dia_diem": "san-tap",
+      "co_canh": "rong",
+      "the": [
+        "san-tap",
+        "vong-so-8",
+        "sa-hinh",
+        "san-uot",
+        "vach-son-trang",
+        "xe-cub",
+        "tap-xe",
+        "san-rong"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          18.5
+        ],
+        [
+          22.0,
+          29.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [],
+      "can_xu_ly": "Người lái đội mũ bảo hiểm có kính nhưng ở các khung gần (khoảng 11 s và 28 s) có thể nhận ra một phần mặt: cần xác nhận quyền hình với người lái hoặc chỉ dùng đoạn 0–10 s và 13–18,5 s khi người lái ở xa.",
+      "ghi_chu": "Trời âm u, sân ướt sau mưa; nửa dưới khung là nền sân trống. Khoảng 18,5–22 s máy quay di chuyển đổi vị trí; đoạn sau có cột dụng cụ thể dục che tiền cảnh.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3656-3231ef",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân vạn xuân/IMG_3656.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 39.59,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "THAO",
+      "mo_ta": "Một người đội mũ bảo hiểm, áo xanh, chạy xe số theo vòng số 8 sơn trắng trên sân tập ướt, máy đứng yên quay toàn cảnh rồi cuối clip lia sang hàng cây và dụng cụ thể dục.",
+      "dia_diem": "san-tap",
+      "co_canh": "rong",
+      "the": [
+        "vong-so-8",
+        "san-tap",
+        "san-uot",
+        "vach-son-trang",
+        "xe-so",
+        "tap-xe",
+        "san-thuc-hanh"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          33.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien"
+      ],
+      "can_xu_ly": "Khoảng 19–23s người lái chạy sát máy, mặt dưới mũ bảo hiểm có thể nhận ra: cần xin phép người lái hoặc chỉ dùng 0–18s và 24–33s (người ở xa). Kiểm tra biển số xe ở các đoạn xe đến gần trước khi dùng.",
+      "ghi_chu": "Trời âm u, sân ướt loang lổ; nửa dưới khung là nền sân trống. Từ khoảng 33s máy lia sang cây và dụng cụ thể dục ngoài trời, bỏ đoạn này.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3729-7d1f3e",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân Thanh Uyên/IMG_3729.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 8.54,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "BROLL",
+      "mo_ta": "Sân bê tông rộng trước một tòa nhà hai tầng, nhiều người không đội mũ bảo hiểm đang tập xe số; ở tiền cảnh hai người dắt rồi chạy xe máy, một xe đỏ chạy ra giữa sân.",
+      "dia_diem": "san-tap",
+      "co_canh": "rong",
+      "the": [
+        "san-tap",
+        "san-rong",
+        "san-thuc-hanh",
+        "tap-xe",
+        "xe-so",
+        "xe-may-do",
+        "nhieu-hoc-vien",
+        "hoc-vien-nu",
+        "co-so",
+        "troi-nang"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          8.5
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Người ở tiền cảnh (0–6,5s) lộ mặt, cần xin phép học viên hoặc làm mờ mặt; biển số xe máy tiền cảnh (khoảng 1,5–5s, vùng 20–50% bề ngang, 55–70% chiều cao) cần che. Đoạn 6,5–8,5s người đã xa hơn, ít rủi ro hơn nhưng vẫn cần kiểm biển số xe đỏ ở mép phải.",
+      "ghi_chu": "Máy lia chậm sang phải; trời nắng chiều, sáng đủ, nét ổn. Người tập không đội mũ bảo hiểm. Trên tòa nhà có băng rôn chữ xanh, chưa đọc rõ nội dung.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3731-309ec2",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân Thanh Uyên/IMG_3731.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 36.63,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "THAO",
+      "mo_ta": "Một học viên nữ đội mũ bảo hiểm đỏ, che mặt, chạy xe số xanh theo vạch sơn trắng cong trên sân bê tông trước dãy nhà trường, máy quay đi theo sau, có giọng người hướng dẫn ngoài khung hình.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "tap-xe",
+        "vong-so-8",
+        "duong-cong",
+        "vach-son-trang",
+        "xe-so",
+        "hoc-vien-nu",
+        "huong-dan",
+        "nhin-tu-sau",
+        "nhieu-hoc-vien"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          6.0
+        ],
+        [
+          9.5,
+          36.5
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "bien-so",
+        "mat-hoc-vien",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Che biển số xe (khoảng 4,5s–32s, vùng đuôi xe giữa khung, khoảng 35–60% bề ngang, 60–80% chiều cao). Tránh đoạn 6–9,5s có người đi xe máy trắng lộ mặt; ở 19–20s và 29–35s có người khác ở nền, cần làm mờ hoặc xin phép. Học viên chính che mặt, quay lưng.",
+      "ghi_chu": "Quay tay đi theo, hơi rung nhẹ, ánh sáng chiều tà. Biển số xe tập lộ rõ ở phần lớn clip. Băng rôn 'Trường học an toàn - thân thiện - bình đẳng' của trường xuất hiện ở nền.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3734-2f4338",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân Thanh Uyên/IMG_3734.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 44.71,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "BROLL",
+      "mo_ta": "Một học viên nữ tóc buộc dài lái xe số màu đỏ chạy vòng số 8 trên sân bê tông vạch sơn trắng trước dãy nhà hai tầng, máy cầm tay đi theo quay từ phía sau và bên cạnh.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "vong-so-8",
+        "tap-xe",
+        "hoc-vien-nu",
+        "xe-so",
+        "xe-may-do",
+        "san-tap",
+        "vach-son-trang",
+        "sa-hinh",
+        "nhin-tu-sau",
+        "bai-thi-thuc-hanh"
+      ],
+      "doan_dung_duoc": [
+        [
+          13.0,
+          19.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Ưu tiên chỉ dùng đoạn 13-19s (quay lưng/nghiêng, không thấy biển số). Nếu dùng đoạn khác phải che biển số 19-N1 172.05 (nằm khoảng 40-60% bề ngang, 55-80% chiều cao khung) và tránh 0-7s, 35-37s vì lộ mặt học viên và người đứng xem; nếu vẫn dùng thì cần xin phép học viên nữ và những người đứng xem. Lời bình nhắc tuổi của học viên, không nên dùng nguyên tiếng gốc.",
+      "ghi_chu": "Máy cầm tay đi theo nên hơi rung; ánh sáng chiều muộn, đủ sáng. Biển số xe học viên rõ ở nhiều đoạn (khoảng 9-12s, 20-33s, 39-44s); mặt học viên rõ ở 0-7s và 35-37s; người đứng xem lộ mặt ở 1.9s, 27.9s, 31.7s, 35.4s. Có giọng người quay bình luận suốt clip. Băng rôn 'Trường học an toàn - thân thiện' trên tòa nhà.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3736-232c87",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân Thanh Uyên/IMG_3736.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 9.0,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "BROLL",
+      "mo_ta": "Trên sân bê tông trước một tòa nhà hai tầng, một người nữ ngồi trên xe số màu đỏ chạy đi theo vạch sơn cong trong khi một người nam và một người nữ đứng nói chuyện; máy lia theo xe.",
+      "dia_diem": "san-tap",
+      "co_canh": "rong",
+      "the": [
+        "san-tap",
+        "san-thuc-hanh",
+        "tap-xe",
+        "xe-so",
+        "xe-may-do",
+        "hoc-vien-nu",
+        "vach-son-trang",
+        "duong-cong",
+        "truong-hoc"
+      ],
+      "doan_dung_duoc": [
+        [
+          4.5,
+          9.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Chỉ dùng đoạn 4,5–9,0 s để tránh mặt hai người đứng nói chuyện (0–4 s, khoảng 0–60% bề ngang) và biển số xe đỏ lộ rõ ở đầu clip (0–1,5 s). Người lái xe vẫn thấy mặt ở cỡ nhỏ: cần xin phép người lái hoặc làm mờ. Người ngồi trên xe ở nền xa (khoảng 40–60% bề ngang, 45–55% chiều cao) cũng cần cân nhắc.",
+      "ghi_chu": "Trời chiều, ánh sáng hơi phẳng. Tòa nhà nền là trường học có băng rôn 'Trường học an toàn - thân thiện - bình đẳng', không phải biển hiệu trung tâm. Từ khoảng 4,5 s trở đi hai người đứng nói chuyện đã ra khỏi khung, chỉ còn xe chạy trên sân.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3904-8b46d9",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân sát hạch/IMG_3904.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 62.34,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "BROLL",
+      "mo_ta": "Máy cầm tay quay dọc theo các học viên nữ đội mũ bảo hiểm hở mặt chạy xe máy số và xe tay ga qua đường cong vòng tròn trên sân sa hình, phía sau là hàng rào xanh và cây chuối.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "sa-hinh",
+        "san-thuc-hanh",
+        "bai-thi-thuc-hanh",
+        "duong-cong",
+        "tap-xe",
+        "hoc-vien-nu",
+        "nhieu-hoc-vien",
+        "xe-so",
+        "xe-tay-ga",
+        "vach-son-trang",
+        "mui-ten",
+        "nhin-tu-sau"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          15.0
+        ],
+        [
+          22.0,
+          33.0
+        ],
+        [
+          37.0,
+          62.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Mặt học viên nữ thấy rõ ở hầu hết các khung (đội mũ hở mặt): cần xin phép các học viên trong hình trước khi đăng. Chỉ dùng các đoạn 0–15s, 22–33s, 37–62s để tránh biển số cận cảnh 15–22s; nếu vẫn dùng đoạn đó thì che biển số (vùng khoảng 70–95% bề ngang, 45–60% chiều cao). Tắt tiếng gốc vì lời nói có từ tục.",
+      "ghi_chu": "Trời âm u, ánh sáng đều; máy cầm tay lia theo xe. Khoảng 15–22s xe tay ga chạy sát máy lộ biển số sau; quanh 33–37s gáy một học viên che sát ống kính. Lời nói (7–29s) là người hướng dẫn nhắc đi chậm qua cung, có từ tục: không dùng tiếng gốc.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3905-2bc399",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân sát hạch/IMG_3905.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 31.88,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "BROLL",
+      "mo_ta": "Một học viên nữ áo đỏ đô chạy xe số màu đen qua các đường cong vạch trắng trên sân sát hạch A1, người quay đi theo và bình luận cách vào cua.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "sa-hinh",
+        "duong-cong",
+        "hoc-vien-nu",
+        "xe-so",
+        "tap-xe",
+        "san-tap",
+        "vach-son-trang",
+        "hang-a",
+        "huong-dan",
+        "bai-thi-thuc-hanh"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          8.0
+        ],
+        [
+          10.5,
+          31.5
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Mặt học viên nữ thấy rõ ở khoảng 5–8 s, 13–16 s và 21–24 s, không tránh được bằng cắt đoạn: cần xin phép học viên trước khi đăng. Biển số sau xe đọc được ở khoảng 11–13 s (giữa khung, khoảng 40–50% bề ngang, 40–45% chiều cao) và nhỏ hơn ở 27–31,5 s: làm mờ biển số hoặc bỏ các đoạn đó.",
+      "ghi_chu": "Quay cầm tay, lia theo xe; khoảng 8–10,5 s máy dí sát tay lái, rung và mất bố cục. Lời bình ngoài khung về lỗi cua sớm, bám vạch trong làm bánh sau ra ngoài; có câu 'mấy bà con gái' nên cân nhắc khi dùng tiếng gốc. Có học viên khác đội mũ ở nền.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3906-b5b7b3",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân sát hạch/IMG_3906.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 28.34,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "THAO",
+      "mo_ta": "Một người nữ đeo khẩu trang, áo khoác đen, chạy xe số màu đen theo vòng số 8 trên sân sát hạch kẻ vạch trắng; máy quay xoay theo xe.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "vong-so-8",
+        "san-thuc-hanh",
+        "sa-hinh",
+        "vach-son-trang",
+        "xe-so",
+        "hoc-vien-nu",
+        "tap-xe",
+        "bai-thi-thuc-hanh",
+        "troi-nang"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          7.0
+        ],
+        [
+          17.0,
+          26.0
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so",
+        "nguoi-ngoai"
+      ],
+      "can_xu_ly": "Biển số đọc rõ khoảng 7.5–10.5s (cận sau xe), thấy nhỏ ở 15.3s và 27.1s: chỉ dùng đoạn 0–7s và 17–26s, hoặc che biển số. Người nữ đeo khẩu trang nhưng lộ mắt, cận mặt ở khoảng 5–7s: cần xin phép học viên trong hình. Người và xe khác ở nền 15–18s và 27s: tránh hoặc cắt khung.",
+      "ghi_chu": "Máy lia theo xe, khung đổi nhiều (gần ở 5.9s, quay sau lưng ở 8.3s). Từ khoảng 15s có người khác và xe khác ở nền. Âm thanh là tiếng trò chuyện xung quanh, không dùng làm lời.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3907-6e0bed",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân sát hạch/IMG_3907.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 24.0,
+      "thoi_luong": 27.5,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "THAO",
+      "mo_ta": "Một nữ học viên mặc áo nâu chạy xe số vòng qua các đường cong vạch trắng trên sân tập, máy quay cầm tay lia theo, có giọng người hướng dẫn ngoài khung.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "san-tap",
+        "sa-hinh",
+        "vong-so-8",
+        "duong-cong",
+        "vach-son-trang",
+        "hoc-vien-nu",
+        "tap-xe",
+        "xe-so",
+        "huong-dan",
+        "bai-thi-thuc-hanh"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          9.0
+        ],
+        [
+          12.0,
+          27.5
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Mặt học viên nhìn rõ ở nhiều đoạn (rõ nhất khoảng 3–7 s): cần xin phép học viên trước khi đăng. Biển số đọc được khoảng 9,5–11,5 s (đã loại khỏi đoạn dùng được); biển số sau xe còn thấy nhỏ khoảng 17 s và 26 s: làm mờ nếu dùng các đoạn này.",
+      "ghi_chu": "Máy cầm tay lia theo xe, đôi lúc khung cắt mất người (khoảng 8 s xe đi sát máy chỉ thấy nửa người). Trời âm u, đủ sáng. Phía xa có vài người khác chạy xe trên sân.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
+      "dung_duoc": true,
+      "ly_do_loai": []
+    },
+    {
+      "ma": "img-3908-abf856",
+      "file_tuong_doi": "canh-quay/moi-quay/Sân sát hạch/IMG_3908.MOV",
+      "ton_tai": true,
+      "loai_file": "video",
+      "rong": 2160,
+      "cao": 3840,
+      "huong": "doc",
+      "fps": 23.98,
+      "thoi_luong": 36.68,
+      "co_am_thanh": true,
+      "ngay_nap": "2026-11-26",
+      "loai": "BROLL",
+      "mo_ta": "Học viên chạy xe số đen tập vòng số 8 trên sân sát hạch, máy cầm tay quay theo, có đoạn ngắn lia qua nhóm người đứng chờ.",
+      "dia_diem": "san-tap",
+      "co_canh": "trung",
+      "the": [
+        "vong-so-8",
+        "tap-xe",
+        "xe-so",
+        "san-tap",
+        "san-thuc-hanh",
+        "vach-son-trang",
+        "mui-ten",
+        "hoc-vien-nu",
+        "hoc-vien-cho",
+        "troi-nang"
+      ],
+      "doan_dung_duoc": [
+        [
+          0.0,
+          6.0
+        ],
+        [
+          8.5,
+          36.5
+        ]
+      ],
+      "chat_luong": "dung-duoc",
+      "rui_ro": [
+        "mat-hoc-vien",
+        "bien-so"
+      ],
+      "can_xu_ly": "Thấy rõ mặt học viên nữ áo nâu (khoảng 10-12s, 28-33s) và một học viên khác (khoảng 13-14s): cần xin phép học viên hoặc làm mờ mặt. Biển số xe lộ ở khoảng 19-21s, 25-27s, 34-36.5s: che biển số (vùng phía sau xe, khoảng 30-45% bề ngang tính từ trái, 65-75% chiều cao) hoặc tránh các đoạn đó.",
+      "ghi_chu": "Máy cầm tay, có lúc quay rất cận chân/xe (khoảng 15-18s). Quanh 7-8s lia qua nhóm người đứng chờ rồi chuyển cảnh ở 8.13s. Lời nói là người sau máy bình luận, không phải nói trước ống kính.",
+      "nguon": "trung-tam",
+      "mat_nguoi": true,
+      "quyen_bo_sung": "Người dùng chọn Đồng ý ở tab Quyền hình (2026-11-26 22:21:07)",
       "dung_duoc": true,
       "ly_do_loai": []
     },
